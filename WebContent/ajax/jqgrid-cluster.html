@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">	
+<style type="text/css">
+.add-site-form { padding-top: 5px; margin: 0 auto; width: 100%;  }
+.add-site-form table { font-family: "微软雅黑", Arial, Helvetica, sans-serif; color: #666666; font-size: 14px; font-weight: bold; width: 100%; }
+.add-site-form table tr { border: 15px solid #ffffff; }
+.add-site-form table tr td:first-child { width: 150px; text-align: center; padding-right: 10px; }
+.add-site-form table tr td:last-child input { width: 100%; }
+.add-site-form table tr td:last-child textarea { width: 100%; }
+</style>
+<script>
+function getXMLRequester( ){    
+	$.ajax({
+    	url:host+ "/upm_api/v1.0/dashboards/orders?siteId="+siteId,
+        method: "get",
+        async: true,
+        dataType: "json",
+        success: function(result, status, xhr) {
+        	debugger;
+        	changeData(result);
+        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
+        },
+        error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+        	alert("未连接服务器");
+            console.error("未连接服务器 =" + status);
+        }
+	});
+	function changeData(obj_data){
+		switch (obj_data.result){
+		case 1:
+		 	console.log("成功信息"+obj_data.msg);
+		 	showPie(obj_data.data);
+			break;
+		case 0:
+			alert("警告信息"+obj_data.msg);
+			console.warn("警告信息"+obj_data.msg);
+            break;
+        case -1:
+        	alert("错误信息"+obj_data.msg);
+        	console.error("错误信息"+obj_data.msg);
+        	break;
+        case -9:
+        	console.error("错误信息"+obj_data.msg);
+        	window.location="login.html";
+        	break;
+		default:
+			console.log("返回result异常");
+		}
+	
+	}
+}
+getXMLRequester();
+</script>
+</head>
+<body>
+<div class="row">
+
+	<!-- col -->
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+
+			<!-- PAGE HEADER -->
+			<i class="fa-fw fa fa-table"></i>
+				Tables
+			<span>>
+				集群
+			</span>
+		</h1>
+	</div>
+	<!-- end col -->
+
+	<!-- right side of the page with the sparkline graphs -->
+	<!-- col -->
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		<!-- sparks -->
+		<ul id="sparks">
+			<li class="sparks-info">
+				<h5> 交易金额<span class="txt-color-blue">￥47,171</span></h5>
+				<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
+					1300, 1877, 2500, 2577, 2000, 2100, 3000, 2700, 3631, 2471, 2700, 3631, 2471
+				</div>
+			</li>
+			<li class="sparks-info">
+				<h5>  资源使用指数 <span class="txt-color-purple"><i class="fa fa-arrow-circle-up" data-rel="bootstrap-tooltip" title="Increased"></i>&nbsp;45%</span></h5>
+				<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
+					110,150,300,130,400,240,220,310,220,300, 270, 210
+				</div>
+			</li>
+			<li class="sparks-info">
+				<h5>  资源占用量 <span class="txt-color-greenDark"><i class="fa fa-shopping-cart"></i>&nbsp;2447</span></h5>
+				<div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm">
+					110,150,300,130,400,240,220,310,220,300, 270, 210
+				</div>
+			</li>
+		</ul>
+		<!-- end sparks -->
+	</div>
+	<!-- end col -->
+
+</div>
+<!-- end row -->
+
+<!--
+	The ID "widget-grid" will start to initialize all widgets below
+	You do not need to use widgets if you dont want to. Simply remove
+	the <section></section> and you can use wells or panels instead
+	-->
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+	<div>
+		<strong>集群名称</strong>
+		<input type="text" name="search">
+		<button id="cluster-search">查询</button>
+	</div>
+	<br>
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="" >
+					<button class="btn btn-default btn-success" id="jqgrid-add" type="submit">新增</button>
+					
+					<!-- <button class="btn btn-default btn-info" disabled="disabled" id="jqgrid-bedata" type="submit">编辑</button>
+					 -->
+					<button class="btn btn-default btn-danger" id="jqgrid-delete" type="submit">删除</button>
+				</div>
+				<br>
+				<div id="pjqgrid">
+				<table id="jqgrid"></table>
+				</div>
+
+				<!-- <br>
+				<a href="javascript:void(0)" id="m1">Get Selected id's</a><br>
+				<a href="javascript:void(0)" id="m1s">Select(Unselect) row 13</a> -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+</section>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+</div>
+</div>
+</div>
+
+<div id="dialog_simple" title="Dialog Simple Title">
+	<p>
+		确认删除
+	</p>
+</div>
+<script type="text/javascript" src="js/plugin/jqgrid/grid.locale-en.min.js"></script>
+<script type="text/javascript">
+
+	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
+	 *
+	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+	 *
+	 * // activate tooltips
+	 * $("[rel=tooltip]").tooltip();
+	 *
+	 * // activate popovers
+	 * $("[rel=popover]").popover();
+	 *
+	 * // activate popovers with hover states
+	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
+	 *
+	 * // activate inline charts
+	 * runAllCharts();
+	 *
+	 * // setup widgets
+	 * setup_widgets_desktop();
+	 *
+	 * // run form elements
+	 * runAllForms();
+	 *
+	 ********************************
+	 *
+	 * pageSetUp() is needed whenever you load a page.
+	 * It initializes and checks for all basic elements of the page
+	 * and makes rendering easier.
+	 *
+	 */
+
+
+	pageSetUp();
+	$(function(){
+		pagefunction();
+	});
+
+	/*
+	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+	 * eg alert("my home function");
+	 *
+	 * var pagefunction = function() {
+	 *   ...
+	 * }
+	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
+	 *
+	 */
+
+	 function pagefunction() {
+		loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
+
+		function run_jqgrid_function() {
+			/**
+			 * [addForm description]摸态框
+			 * @param {[type]} name [description]
+			 */
+			function addForm(name){
+		      	$('#myModal').modal({
+		      		remote:name+'.html',
+		      		show	:true
+		      	}).on("hidden.bs.modal", function() {  
+		    		$(this).removeData("bs.modal");
+		    		pagefunction();
+				});
+	     	}
+	     	//jquery ui
+	     	$('#dialog_simple').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "删除提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;删除",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						deleteArea(id);
+						$(this).dialog("close");
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}]
+				// ,
+				// close: function() {
+				// 	//pagefunction();
+				// }
+			});
+
+	     	function changedeleteData(obj_data){
+	        	switch (obj_data.result){
+	        		case 1:
+	        			alert("成功信息"+obj_data.msg);
+	        		 	console.log("成功信息"+obj_data.msg);
+	        		 		$("#pjqgrid").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#pjqgrid").append(html);
+							
+							pagefunction();
+	        			break;
+	        		case 0:
+	        			alert("警告信息"+obj_data.msg);
+						console.warn("警告信息"+obj_data.msg);
+			            break;
+			        case -1:
+			        	alert("错误信息"+obj_data.msg);
+			        	console.error("错误信息"+obj_data.msg);
+			        	break;
+			        case -9:
+			        	console.error("错误信息"+obj_data.msg);
+			        	window.location="login.html";
+			        	break;
+	        		default:
+	        			alert("测试代码");
+	        	}
+	        }
+
+	     	function deleteArea(obj_id){
+	     		$.ajax({
+                	url:host+ "/upm_api/v1.0/clusters/"+obj_id,
+	                method: "delete",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+	                   changedeleteData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            	});
+	     	}
+	     	
+
+			function setDefintionList(cellvalue, options, rowObject){
+				var data = "";
+				for(var  i =0 ; i < cellvalue.length; i++){
+					data = data  +cellvalue[i].name+"\n";
+				}
+				return data;	
+			}
+
+			function setJqgrid(obj_after_data){
+				if($("#jqgrid tr:visible").length==0){
+					jQuery("#jqgrid").jqGrid({
+						data : obj_after_data,
+						datatype : "local",
+						height : 'auto',
+						colNames : ["所属区域","集群名称","备份","最大使用率","最大主机数量","软件","可用"],
+						colModel : [
+							{ name : "areaName", index : "areaName", editable : true },
+							{ name : "name", index : "name", editable : true },
+							{ name : "nfSBackupName", index : "nfSBackupName", editable : true },
+							{ name : "maxUsage", index : "maxUsage", editable : true },
+							{ name : "maxHostCount", index : "maxHostCount", editable : true },
+							{ name : "definitionSubServList", index : "definitionSubServList", editable : true, formatter: setDefintionList },
+							{ name : "enabledText", index : "enabledText", editable : true }
+							],
+						rowNum : 10000,
+						toolbarfilter: true,
+						viewrecords : true,
+						sortorder : "asc",
+						editurl : "dummy.html",
+						caption : "cluster",
+					//	multiselect : true,
+						rownumbers : true,
+						autowidth : true,
+						onSelectRow: function(id,status){   
+							if(status==false){  
+				                //      $("#jqgrid").resetSelection();
+				        			 jQuery("#jqgrid").jqGrid('resetSelection');
+				                  }  
+							    
+							    return(true);
+			        	},
+
+					});
+	     		}else{
+	     			   jQuery("#jqgrid").setGridParam({
+	                    data:obj_after_data,
+	                    datatype:"local"
+	                }).trigger("reloadGrid");
+	     		}
+				
+				
+				jQuery("#m1").click(function() {
+					var s;
+					s = jQuery("#jqgrid").jqGrid('getGridParam', 'selarrrow');
+					alert(s);
+				});
+
+				jQuery("#m1s").click(function() {
+					jQuery("#jqgrid").jqGrid('setSelection', "13");
+				});
+
+				// remove classes
+				$(".ui-jqgrid").removeClass("ui-widget ui-widget-content");
+			    $(".ui-jqgrid-view").children().removeClass("ui-widget-header ui-state-default");
+			    $(".ui-jqgrid-labels, .ui-search-toolbar").children().removeClass("ui-state-default ui-th-column ui-th-ltr");
+			    $(".ui-jqgrid-pager").removeClass("ui-state-default");
+			    $(".ui-jqgrid").removeClass("ui-widget-content");
+
+			    // add classes
+			    $(".ui-jqgrid-htable").addClass("table table-bordered table-hover");
+			    $(".ui-jqgrid-btable").addClass("table table-bordered table-striped");
+
+
+			    $(".ui-pg-div").removeClass().addClass("btn btn-sm btn-primary");
+			    $(".ui-icon.ui-icon-plus").removeClass().addClass("fa fa-plus");
+			    $(".ui-icon.ui-icon-pencil").removeClass().addClass("fa fa-pencil");
+			    $(".ui-icon.ui-icon-trash").removeClass().addClass("fa fa-trash-o");
+			    $(".ui-icon.ui-icon-search").removeClass().addClass("fa fa-search");
+			    $(".ui-icon.ui-icon-refresh").removeClass().addClass("fa fa-refresh");
+			    $(".ui-icon.ui-icon-disk").removeClass().addClass("fa fa-save").parent(".btn-primary").removeClass("btn-primary").addClass("btn-success");
+			    $(".ui-icon.ui-icon-cancel").removeClass().addClass("fa fa-times").parent(".btn-primary").removeClass("btn-primary").addClass("btn-danger");
+
+				$( ".ui-icon.ui-icon-seek-prev" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
+				$(".ui-icon.ui-icon-seek-prev").removeClass().addClass("fa fa-backward");
+
+				$( ".ui-icon.ui-icon-seek-first" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
+			  	$(".ui-icon.ui-icon-seek-first").removeClass().addClass("fa fa-fast-backward");
+
+			  	$( ".ui-icon.ui-icon-seek-next" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
+			  	$(".ui-icon.ui-icon-seek-next").removeClass().addClass("fa fa-forward");
+
+			  	$( ".ui-icon.ui-icon-seek-end" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
+			  	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward"); 
+
+				jQuery("#jqgrid").jqGrid('navGrid', "#pjqgrid", {
+					edit : false,
+					add : false,
+					del : true
+				});
+				jQuery("#jqgrid").jqGrid('inlineNav', "#pjqgrid");
+				/* Add tooltips */
+				$('.navtable .ui-pg-button').tooltip({
+					container : 'body'
+				});
+				
+				$("#jqgrid-delete").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择集群，在点击删除");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+					//return false;
+				});
+				
+				$("#jqgrid-add").click(function() {
+				   	addForm("ajax/jqgrid-cluster-add");
+  				});
+
+			    $(window).on('resize.jqGrid', function () {
+					jQuery("#jqgrid").jqGrid('setGridWidth', $("#content").width() );
+				})
+			}
+
+	        function changeAreaData(obj_data){
+	        	switch (obj_data.result){
+	        		case 1:
+	        		 	setJqgrid(obj_data.data);
+	        			break;
+	        		case 0:
+	        			alert("警告信息"+obj_data.msg);
+						console.warn("警告信息"+obj_data.msg);
+			            break;
+			        case -1:
+			        	alert("错误信息"+obj_data.msg);
+			        	console.error("错误信息"+obj_data.msg);
+			        	break;
+			        case -9:
+			        	console.error("错误信息"+obj_data.msg);
+			    		window.location="login.html";
+			        	break;
+	        		default:
+	        			alert("返回代码异常");
+	        	}
+	        }
+
+	        function getAreaData(){
+	        	$.ajax({
+                	url:host+ "/upm_api/v1.0/clusters?siteId="+siteId,
+	                method: "get",
+	                async: false,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+	                   changeAreaData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            	});
+	        }
+
+	        getAreaData();
+		} // end function
+	  
+       	function setTime(){
+	   		run_jqgrid_function();
+       		isSetJqgrid = 1;
+       	}
+      
+      // 	setTimeout(setTime,500);
+       
+	}
+
+	$("#cluster-search").click(function(){
+		alert("提示信息:查询成功");
+		$("#pjqgrid").html("");
+		var html="<table id='jqgrid'></table>"
+		$("#pjqgrid").append(html);
+		pagefunction();
+	});
+
+</script>
+</body>
+</html>

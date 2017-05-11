@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>新增用户</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<style type="text/css">
+.add-site-form { padding-top: 5px; margin: 0 auto; width: 100%;  }
+.add-site-form table { font-family: "微软雅黑", Arial, Helvetica, sans-serif; color: #666666; font-size: 14px; font-weight: bold; width: 100%; }
+.add-site-form table tr { border: 15px solid #ffffff; }
+.add-site-form table tr td:first-child { width: 150px; text-align: right; padding-right: 10px; }
+.add-site-form table tr td:last-child input { width: 100%; }
+.add-site-form table tr td:last-child textarea { width: 100%; }
+</style>
+</head>
+<body>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">mysql用户管理</h4>
+      </div>
+      <div class="modal-body">
+          <div class="add-site-form">
+            <form id="add-site-form">
+                    <table>
+                      
+                      <tr>
+                      <td>用户名称</td>
+                      <td><input name="username" type="text"  /></td>
+                      </tr>
+                      <tr>
+                      <td>密码</td>
+                      <td><input name="password" type="password"  /></td>
+                      </tr>
+                       <tr>
+                      <td>角色</td>
+                      <td>
+                      	<select class="selectpicker show-tick form-control" id="selectUser" name="definitionUserRoleId"  title="请选择角色">
+                            
+                         </select> 
+					            </td>
+                      </tr>
+                     
+                    </table>
+            </form>
+                </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id="ajax-btn" class="btn btn-primary">确认</button>
+      </div>
+    
+      <script>
+      $(function (){
+     	 
+ 		 /**
+	  	多选框的设置
+	   */
+	
+	   $('#selectUser').selectpicker({
+	        'selectedText': 'cat'
+	    });
+	  
+		  /**
+    * 获得所有区域 
+    */
+   function getMysqlUserFunction(){
+     $.ajax({
+               url:host+ "/upm_api/v1.0/selections/primary-roles?definitionServId=df_serv_mysql_proxy",
+               method: "get",
+               async: true,
+               dataType: "json",
+               success: function(result, status, xhr) {
+                  setOption(result);
+               },
+               error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                 alert("未连接服务器");
+                   console.error("未连接服务器 =" + status);
+               }
+           });
+      
+       function setOption(obj_data){
+         for (var i = obj_data.length - 1; i >= 0; i--) {
+            $("#selectUser").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+         }
+         $('.selectpicker').selectpicker('refresh');
+       }
+   }
+   getMysqlUserFunction();
+
+   function changeData(obj_data){
+             switch (obj_data.result){
+               case 1:
+                 console.info("成功信息"+obj_data.msg);
+                 break;
+               case 0:
+                 console.warn("警告信息"+obj_data.msg);
+                 break;
+               case -1:
+                 console.error("错误信息"+obj_data.msg);
+                 break;
+               case -9:
+                 console.error("错误信息"+obj_data.msg);
+                 window.location="login.html";
+                 break;
+               default:
+                 console.log("测试代码");
+             }
+   }
+
+		$("#ajax-btn").click(function() {
+          //将表单序列化为JSON对象    
+          debugger;
+        var servId =window.location.href.split("=")[1];// 填充内容
+		var params = $("#add-site-form").serializeObject();
+        
+ 			/**
+ 			 * ajax 函数
+ 			 */
+       $.ajax({
+               headers:{
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json' 
+               },
+               url:host+ "/upm_api/v1.0/servs/"+servId+"/users",
+               method: "post",
+               data:JSON.stringify(params),
+               dataType: "json",
+               success: function(result, status, xhr) {
+            	   debugger;
+                  changeData(result);
+               },
+               error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                 alert("未连接服务器");
+                 console.error("未连接服务器 =" + status);
+               }
+   });
+			$(this).attr("data-dismiss","modal");
+			});
+	
+	
+		  })
+  		
+      
+	
+		
+      </script>
+</body>
+</html>

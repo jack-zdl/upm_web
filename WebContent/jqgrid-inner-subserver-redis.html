@@ -1,0 +1,797 @@
+<!-- Bread crumb is created dynamically -->
+<!-- Bread crumb is created dynamically -->
+<!-- row -->
+<!-- <style type="text/css">
+.add-site-form { padding-top: 5px; margin: 0 auto; width: 100%;  }
+.add-site-form table { font-family: "微软雅黑", Arial, Helvetica, sans-serif; color: #666666; font-size: 14px; font-weight: bold; width: 100%; }
+.add-site-form table tr { border: 15px solid #ffffff; }
+.add-site-form table tr td:first-child { width: 150px; text-align: center; padding-right: 10px; }
+.add-site-form table tr td:last-child input { width: 100%; }
+.add-site-form table tr td:last-child textarea { width: 100%; }
+</style> -->
+<div class="row">
+
+	<!-- col -->
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+
+			<!-- PAGE HEADER -->
+			<i class="fa-fw fa fa-table"></i>
+				Tables
+			<span>>
+				子服务
+			</span>
+		</h1>
+	</div>
+	<!-- end col -->
+
+	<!-- right side of the page with the sparkline graphs -->
+	<!-- col -->
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
+		<!-- sparks -->
+		<ul id="sparks">
+			<li class="sparks-info">
+				<h5> My Income <span class="txt-color-blue">$47,171</span></h5>
+				<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
+					1300, 1877, 2500, 2577, 2000, 2100, 3000, 2700, 3631, 2471, 2700, 3631, 2471
+				</div>
+			</li>
+			<li class="sparks-info">
+				<h5> Site Traffic <span class="txt-color-purple"><i class="fa fa-arrow-circle-up" data-rel="bootstrap-tooltip" title="Increased"></i>&nbsp;45%</span></h5>
+				<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
+					110,150,300,130,400,240,220,310,220,300, 270, 210
+				</div>
+			</li>
+			<li class="sparks-info">
+				<h5> Site Orders <span class="txt-color-greenDark"><i class="fa fa-shopping-cart"></i>&nbsp;2447</span></h5>
+				<div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm">
+					110,150,300,130,400,240,220,310,220,300, 270, 210
+				</div>
+			</li>
+		</ul>
+		<!-- end sparks -->
+	</div>
+	<!-- end col -->
+
+</div>
+<!-- end row -->
+
+<!--
+	The ID "widget-grid" will start to initialize all widgets below
+	You do not need to use widgets if you dont want to. Simply remove
+	the <section></section> and you can use wells or panels instead
+	-->
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+	<div>
+		<strong>信息</strong>
+	</div>
+	<br>
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+				
+				<!-- <div class="" >
+					<button class="btn btn-default btn-success" id="jqgrid-area-add" type="submit">启动</button>
+
+					<button class="btn btn-default btn-danger" id="jqgrid-area-delete" type="submit">停止</button>
+
+					<!-- <button class="btn btn-default btn-info" id="jqgrid-area-bedata" type="submit">查询</button> 
+				</div> -->
+				<!-- <div id="pjqgrid">
+				<table id="jqgrid"></table>
+				</div> -->
+				<table style="width: 100%;">
+					<tr>
+						<td>
+							<span>所属区域：</span>
+							<span id="area"></span>
+						</td>
+						<td>
+							<span>所属租户：</span>
+							<span id="createLoginUserName"></span>
+						</td>
+						<td>
+							<span>版本：</span>
+							<span id="version"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span>架构：</span>
+							<span id="arch"></span>
+						</td>
+						<td>
+							<span>规模：</span>
+							<span id="scale"></span>
+						</td>
+						<td>
+							<span>接入口：</span>
+							<span id="point"></span>
+						</td>
+					</tr>
+				</table>
+                <br>
+
+
+                <div style="width: 100%;height: 40px;background-color: #FAFAFA;">
+		            <ul class="nav nav-tabs pull-right in" id="myTab">
+					  <li class="active">
+						 <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">redis</span></a>
+					  </li>
+
+					  <li>
+						 <a data-toggle="tab" href="#s2"><i class="fa fa-facebook"></i> <span class="hidden-mobile hidden-tablet">redis</span></a>
+					  </li>
+				    </ul>
+	            </div>
+
+                <!-- 测试-->
+                 <div id="myTabContent" class="tab-content">
+							<div class="tab-pane fade active in padding-5 no-padding-bottom" id="s1">
+								<section id="widget-grid" class="">
+									<!-- row -->
+									<div class="row">
+
+										 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+					<button class="btn btn-default btn-success" id="jqgrid-mysql-start" type="submit">启动</button>
+
+					<button class="btn btn-default btn-danger" id="jqgrid-mysql-stop" type="submit">停止</button>
+
+				</div>
+										<!-- NEW WIDGET START -->
+										<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+												<br>
+												<div id="mysql-pjqgrid">
+													<table id="mysql-jqgrid"></table>
+												</div>
+
+										</article>
+										<!-- WIDGET END -->
+
+									</div>
+
+								<!-- end row -->
+
+								</section>
+							</div>
+							<!-- end s1 tab pane -->
+
+							<div class="tab-pane fade in padding-5 no-padding-bottom" id="s2">
+								<section id="widget-grid" class="">
+									<div class="row">
+									 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+										<button class="btn btn-default btn-success" id="jqgrid-proxy-start" type="submit">启动</button>
+
+										<button class="btn btn-default btn-danger" id="jqgrid-proxy-stop" type="submit">停止</button>
+
+									</div>
+									<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<br>
+											<div id="proxy-pjqgrid" >
+												<table id="proxy-jqgrid" ></table>
+											</div>
+										</article>
+									</div>
+								</section>
+							</div>
+							<!-- end s2 tab pane -->
+							<!-- end s3 tab pane -->
+						</div>
+        
+
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+</section>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+</div>
+</div>
+</div>
+
+<div id="dialog_simple" title="Dialog Simple Title">
+	<p>
+		确认删除
+	</p>
+</div>
+<script type="text/javascript" src="js/plugin/jqgrid/grid.locale-en.min.js"></script>
+<script type="text/javascript">
+
+	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
+	 *
+	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
+	 *
+	 * // activate tooltips
+	 * $("[rel=tooltip]").tooltip();
+	 *
+	 * // activate popovers
+	 * $("[rel=popover]").popover();
+	 *
+	 * // activate popovers with hover states
+	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
+	 *
+	 * // activate inline charts
+	 * runAllCharts();
+	 *
+	 * // setup widgets
+	 * setup_widgets_desktop();
+	 *
+	 * // run form elements
+	 * runAllForms();
+	 *
+	 ********************************
+	 *
+	 * pageSetUp() is needed whenever you load a page.
+	 * It initializes and checks for all basic elements of the page
+	 * and makes rendering easier.
+	 *
+	 */
+
+	pageSetUp();
+	$(function(){
+		pagefunction(); 
+	});
+	/*
+	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+	 * eg alert("my home function");
+	 *
+	 * var pagefunction = function() {
+	 *   ...
+	 * }
+	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
+	 *
+	 */
+
+	   function pagefunction() {
+	   	function getServiceData(){
+
+	   		var resultData= {
+				  "result": 1,
+				  "code": null,
+				  "msg": null,
+				  "data": [{
+					      "id": "3ca25101939d4b33bd3ab805f80210f6",
+					      "createDateTime": "2017-03-14 15:56:55",
+					      "createLoginUserName": "admin",
+					      "name": "HAMysql服务一",
+					      "area": "区域一",
+					      "version":"5.7.1",
+					      "scale":"M1:S1",
+					      "arch":"1核1G",
+					      "point":"192.168.2.100:8080",
+					      "enabled": true,
+					      "enabledText": "是"
+					    }]
+			};
+
+	   		$.ajax({
+                	url: "UPM_API/v1.0/areas?siteId=79affb2429ef48faa57c802a88dd8e7f",
+	                method: "get",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                   changeData(resultData);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            });
+
+            function changeData(obj_data){
+            	switch (obj_data.result){
+		        		case 1:
+		        		 	console.log("成功信息"+obj_data.msg);
+		        		 	setMysqlGrid(obj_data.data[0]);
+		        			break;
+		        		case 0:
+							console.warn("警告信息"+obj_data.msg);
+				            break;
+				        case -1:
+				        	console.error("错误信息"+obj_data.msg);
+				        	break;
+				        case -9:
+				        	console.error("错误信息"+obj_data.msg);
+				        	break;
+		        		default:
+		        			console.log("测试代码");
+		        }
+            }
+
+            function setMysqlGrid(obj_data){
+            	$("#area").html(obj_data.area);
+            	$("#createLoginUserName").html(obj_data.createLoginUserName);
+            	$("#version").html(obj_data.version);
+            	$("#scale").html(obj_data.scale);
+            	$("#arch").html(obj_data.arch);
+            	$("#point").html(obj_data.point);
+            }
+	   	}
+
+	   	getServiceData();
+
+		loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
+
+		function run_jqgrid_function() {
+			
+			function addForm(name){
+		      	$('#myModal').modal({
+		      		remote:name+'.html',
+		      		show	:true
+		      	}).on("hidden.bs.modal", function() {  
+		    		$(this).removeData("bs.modal"); 
+		    		run_jqgrid_function();
+				});
+	     	}
+	     	$('#dialog_simple').dialog({
+					autoOpen : false,
+					width : 300,
+					resizable : false,
+					modal : true,
+					title : "删除提示",
+					buttons : [{
+						html : "<i class='fa fa-trash-o'></i>&nbsp;删除",
+						"class" : "btn btn-danger",
+						click : function() {
+							
+							var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+							deleteArea(id);
+							$(this).dialog("close");
+						}
+					}, {
+						html : "<i class='fa fa-times'></i>&nbsp;取消",
+						"class" : "btn btn-default",
+						click : function() {
+							$(this).dialog("close");
+						}
+					}],
+					close: function() {
+						run_jqgrid_function();
+					}
+				});
+	     	 function changeDeleteAreaData(obj_data){
+		        	switch (obj_data.result){
+		        		case 1:
+		        		 	console.log("成功信息"+obj_data.msg);
+		        		 	alert("提示信息："+obj_data.msg);
+							$("#pjqgrid").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#pjqgrid").append(html);
+							
+							pagefunction();
+		        			break;
+		        		case 0:
+							console.warn("警告信息"+obj_data.msg);
+				            break;
+				        case -1:
+				        	console.error("错误信息"+obj_data.msg);
+				        case -9:
+				        	console.error("错误信息"+obj_data.msg);
+		        		default:
+		        			console.log("测试代码");
+		        	}
+	        }
+	     	function deleteArea(obj_id){
+	     		$.ajax({
+                	url: "UPM_API/v1.0/areas/"+obj_id,
+	                method: "delete",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                   changeDeleteAreaData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            	});
+	     	}
+
+
+	       
+	        /**
+	         * [setSubRedisJqgrid description]
+	         * 建立redis子服务表格
+	         */
+	        function setSubRedisJqgrid(obj_after_data){
+	        	jQuery("#proxy-jqgrid").jqGrid({
+					data : obj_after_data,
+					datatype : "local",
+					height : 'auto',
+					colNames : [ "服务名", "所属区域", "所属者","版本","架构","规模","状态"],
+						colModel : [
+							{ name : "name", index : "name" },
+							{ name : "area", index : "area" },
+							{ name : "createLoginUserName", index : "createLoginUserName" },
+							{ name : "version", index : "version", align : "right" },
+							{ name : "scale", index : "scale", align : "right" },
+							{ name : "arch", index : "arch", align : "right" },
+							{ name : "enabledText", index : "enabledText" }
+							],
+					rowNum : 10000,
+					toolbarfilter: true,
+					viewrecords : true,
+					sortorder : "asc",
+					editurl : "dummy.html",
+					caption : "子服务mysql详情表",
+					multiselect : true,
+					autowidth : true,
+
+				});
+
+	        	$("#jqgrid-proxy-start").click(function(){
+	        		debugger;
+					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
+					alert(id);
+					startProxyFun(id);
+				});
+
+				$("#jqgrid-proxy-stop").click(function(){
+					debugger;
+					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
+					alert(id);
+					stopProxyFun(id);
+				});
+	        }
+	        //启动redis
+	        function startProxyFun(obj_id){
+	        	debugger;
+	        	var resultData = {
+					  "result": 1,
+					  "code": null,
+					  "msg": "mysql子服务停止",
+					  "data": null
+				};
+
+				$.ajax({
+                	url: "UPM_API/v1.0/areas?siteId="+"79affb2429ef48faa57c802a88dd8e7f",
+	                method: "get",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                	debugger;
+	                  changeData(resultData);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            	});
+
+            	function changeData(obj_data){
+            		debugger;
+            		switch (obj_data.result){
+		        		case 1:
+		        		 	alert(obj_data.msg);
+		        			break;
+		        		case 0:
+							console.warn("警告信息"+obj_data.msg);
+				            break;
+				        case -1:
+				        	console.error("错误信息"+obj_data.msg);
+				        case -9:
+				    		window.location="login.html";
+				        	console.error("错误信息"+obj_data.msg);
+		        		default:
+		        			console.log("测试代码");
+		        	}
+            	}
+	        }
+	        //停止redis
+	        function stopProxyFun(obj_id){
+	        	var resultData = {
+					  "result": 1,
+					  "code": null,
+					  "msg": "mysql子服务停止",
+					  "data": null
+				};
+
+				$.ajax({
+                	url: "UPM_API/v1.0/areas?siteId="+"79affb2429ef48faa57c802a88dd8e7f",
+	                method: "get",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                	debugger;
+	                  changeData(resultData);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            	});
+
+            	function changeData(obj_data){
+            		debugger;
+            		switch (obj_data.result){
+		        		case 1:
+		        		 	alert(obj_data.msg);
+		        			break;
+		        		case 0:
+							console.warn("警告信息"+obj_data.msg);
+				            break;
+				        case -1:
+				        	console.error("错误信息"+obj_data.msg);
+				        case -9:
+				    		window.location="login.html";
+				        	console.error("错误信息"+obj_data.msg);
+		        		default:
+		        			console.log("测试代码");
+		        	}
+            	}
+	        }
+
+	        /**
+	         * [setSubMysqlJqgrid description] 建立子服务mysql详情表
+	         */
+	        function setSubMysqlJqgrid(obj_after_data){
+	        	jQuery("#mysql-jqgrid").jqGrid({
+					data : obj_after_data,
+					datatype : "local",
+					height : 'auto',
+				colNames : [ "服务名", "所属区域", "所属者","版本","架构","规模","状态"],
+						colModel : [
+							{ name : "name", index : "name" },
+							{ name : "area", index : "area" },
+							{ name : "createLoginUserName", index : "createLoginUserName" },
+							{ name : "version", index : "version", align : "right" },
+							{ name : "scale", index : "scale", align : "right" },
+							{ name : "arch", index : "arch", align : "right" },
+							{ name : "enabledText", index : "enabledText" }
+							],
+					rowNum : 10000,
+					toolbarfilter: true,
+					viewrecords : true,
+					sortorder : "asc",
+					editurl : "dummy.html",
+					caption : "子服务mysql详情表",
+					multiselect : true,
+					autowidth : true,
+
+				});
+
+				$("#jqgrid-mysql-start").click(function(){
+					var id = $("#mysql-jqgrid").jqGrid('getGridParam','selrow');
+					alert(id);
+					startMysqlFun(id);
+				});
+
+				$("#jqgrid-mysql-stop").click(function(){
+					var id = $("#mysql-jqgrid").jqGrid('getGridParam','selrow');
+					alert(id);
+					stopMysqlFun(id);
+				});
+	        }
+
+	        function stopMysqlFun(obj_id){
+	        	var resultData = {
+					  "result": 1,
+					  "code": null,
+					  "msg": "mysql子服务停止",
+					  "data": null
+				};
+
+				$.ajax({
+                	url: "UPM_API/v1.0/areas?siteId="+"79affb2429ef48faa57c802a88dd8e7f",
+	                method: "get",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                  changeData(resultData);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            	});
+
+            	function changeData(obj_data){
+            		switch (obj_data.result){
+		        		case 1:
+		        		 	alert(obj_data.msg);
+		        		 	console.warn("成功信息"+obj_data.msg);
+		        			break;
+		        		case 0:
+							console.warn("警告信息"+obj_data.msg);
+				            break;
+				        case -1:
+				        	console.error("错误信息"+obj_data.msg);
+				        	break;
+				        case -9:
+				    		window.location="login.html";
+				        	console.error("错误信息"+obj_data.msg);
+				        	break;
+		        		default:
+		        			console.log("测试代码");
+		        	}
+            	}
+
+	        }
+
+	        function startMysqlFun(obj_id){
+	        	var resultData = {
+					  "result": 1,
+					  "code": null,
+					  "msg": "mysql子服务启动",
+					  "data": null
+				};
+
+	        	$.ajax({
+                	url: "UPM_API/v1.0/areas?siteId="+"79affb2429ef48faa57c802a88dd8e7f",
+	                method: "get",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                  changeData(resultData);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            	});
+
+            	function changeData(obj_data){
+            		switch (obj_data.result){
+	        		case 1:
+	        		 	alert(obj_data.msg);
+	        			break;
+	        		case 0:
+						console.warn("警告信息"+obj_data.msg);
+			            break;
+			        case -1:
+			        	console.error("错误信息"+obj_data.msg);
+			        case -9:
+			    		window.location="login.html";
+			        	console.error("错误信息"+obj_data.msg);
+	        		default:
+	        			console.log("测试代码");
+	        	}
+            	}
+
+	        }
+
+	        /**
+	         * [changeSubRedisData 子服务redis
+	         * @return {[type]} [description]
+	         */
+	        function changeSubRedisData(obj_data){
+	        	switch (obj_data.result){
+	        		case 1:
+	        		 	setSubRedisJqgrid(obj_data.data);
+	        			break;
+	        		case 0:
+						console.warn("警告信息"+obj_data.msg);
+			            break;
+			        case -1:
+			        	console.error("错误信息"+obj_data.msg);
+			        case -9:
+			    		window.location="login.html";
+			        	console.error("错误信息"+obj_data.msg);
+	        		default:
+	        			console.log("测试代码");
+	        	}
+	        }
+	        /**
+	         * [changeSubMysqlData  建立子服务mysql数据处理
+	         * @return {[type]} [description]
+	         */
+	        function changeSubMysqlData(obj_data){
+	        	switch (obj_data.result){
+	        		case 1:
+	        		 	setSubMysqlJqgrid(obj_data.data);
+	        			break;
+	        		case 0:
+						console.warn("警告信息"+obj_data.msg);
+			            break;
+			        case -1:
+			        	console.error("错误信息"+obj_data.msg);
+			        case -9:
+			    		window.location="login.html";
+			        	console.error("错误信息"+obj_data.msg);
+	        		default:
+	        			console.log("测试代码");
+	        	}
+	        }
+            /**
+             * [getAreaData description]  模拟数据
+             * @return {[type]} [description]
+             */
+            
+            var resultData = {
+					  "result": 1,
+					  "code": null,
+					  "msg": null,
+					  "data": [
+					    {
+					      "id": "3ca25101939d4b33bd3ab805f80210f6",
+					      "createDateTime": "2017-03-14 15:56:55",
+					      "createLoginUserName": "admin",
+					      "name": "HAMysql服务一",
+					      "area": "区域一",
+					      "version":"5.7.1",
+					      "scale":"M1:S1",
+					      "arch":"1核1G",
+					      "enabled": true,
+					      "enabledText": "是"
+					    },
+					      {
+					      "id": "3ca25101939d4b33bd3ab805f80210f6",
+					      "createDateTime": "2017-03-14 15:56:55",
+					      "createLoginUserName": "admin",
+					      "name": "HAMysql服务二",
+					      "area": "区域一",
+					      "version":"5.7.1",
+					      "scale":"M1:S1",
+					      "arch":"1核1G",
+					      "enabled": true,
+					      "enabledText": "是"
+					    },
+					      {
+					      "id": "3ca25101939d4b33bd3ab805f80210f6",
+					      "createDateTime": "2017-03-14 15:56:55",
+					      "createLoginUserName": "admin",
+					      "name": "HAMysql服务三",
+					      "area": "区域一",
+					      "version":"5.7.1",
+					      "scale":"M1:S1",
+					      "arch":"1核1G",
+					      "enabled": true,
+					      "enabledText": "是"
+					    }]
+			};
+
+	        function getAreaData(){
+	        	$.ajax({
+                	url: "UPM_API/v1.0/areas?siteId="+"79affb2429ef48faa57c802a88dd8e7f",
+	                method: "get",
+	                async: true,
+	                dataType: "json",
+	                success: function(result, status, xhr) {
+	                   changeSubMysqlData(resultData);
+	                   changeSubRedisData(resultData);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                }
+            	});
+            	
+	        }
+	        getAreaData();
+
+		} // end function
+	  	function setTime(){
+	   		run_jqgrid_function();
+       		isSetJqgrid = 1;
+       	}
+      
+       	//setTimeout(setTime,500);
+       	
+       
+
+	}
+	  $("#search").click(function(){
+				alert("提示信息:查询成功");
+				$("#pjqgrid").html("");
+				var html="<table id='jqgrid'></table>"
+				$("#pjqgrid").append(html);
+				pagefunction();
+	        });
+
+	//loadScript("js/plugin/jqgrid/grid.locale-en.min.js", pagefunction);
+
+</script>
+ 

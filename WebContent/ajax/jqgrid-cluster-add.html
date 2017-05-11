@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>site-add</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<style type="text/css">
+.add-site-form { padding-top: 5px; margin: 0 auto; width: 100%;  }
+.add-site-form table { font-family: "微软雅黑", Arial, Helvetica, sans-serif; color: #666666; font-size: 14px; font-weight: bold; width: 100%; }
+.add-site-form table tr { border: 15px solid #ffffff; }
+.add-site-form table tr td:first-child { width: 150px; text-align: right; padding-right: 10px; }
+.add-site-form table tr td:last-child input { width: 100%; }
+.add-site-form table tr td:last-child textarea { width: 100%; }
+.start-color-red{
+	color:red;
+}
+/* 通用 */
+::-webkit-input-placeholder {  font-size:100% ;font-weight:200}
+::-moz-placeholder {  font-size:100% ;font-weight:200} /* firefox 19+ */
+:-ms-input-placeholder { font-size:100% ;font-weight:200} /* ie */
+input:-moz-placeholder { font-size:100% ;font-weight:200}
+</style>
+</head>
+<body>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">集群管理</h4>
+      </div>
+      <div class="modal-body">
+          <div class="add-site-form">
+            <form id="add-site-form">
+                    <table>
+                     <tr style="display: none;">
+                      <td>站点id</td>
+                      <td><input id="siteId" name="siteId" type="text" /></td>
+                      </tr>
+                      <tr>
+                      <td>所属区域<sup class="start-color-red">*</sup></td>
+                      <td> <select class="selectpicker  form-control" multiple data-max-options="1"  id="selectArea" title="请选择区域" name="areaId">
+                           
+                          </select> 
+                       </td>
+                      </tr>
+                      <tr>
+                      <td>集群名称<sup class="start-color-red">*</sup></td>
+                      <td><input name="name" type="text" placeholder="请输入集群名称" /></td>
+                      </tr>
+                      <tr>
+                      <td>软件列表<sup class="start-color-red">*</sup></td>
+                      <td>
+                           <select class="selectpicker show-tick form-control" 
+                           multiple="multiple" id="selectSoftware" name="subservIds[]" data-live-search="true"
+                           title="请选择软件" >
+                                        
+                           </select>
+                      </td>
+                      </tr>
+                    
+                       <tr>
+                      <td>备份储存<sup class="start-color-red">*</sup></td>
+                      <td><select class="selectpicker  form-control" multiple data-max-options="1"  id="selectNfs" name="nfsBackupId"  title="请选择NFS">
+                            
+                          </select> 
+					            </td>
+                      </tr>
+                      
+                      <tr>
+                      <td>最大使用率<sup class="start-color-red">*</sup></td>
+                      <td><input name="maxUsage" type="text"  placeholder="请输入最大使用率" /></td>
+                      </tr>
+                       <tr>
+                      <td>最大主机数量<sup class="start-color-red">*</sup></td>
+                      <td><input name="maxHostCount" type="text" placeholder="请输入最大主机数量"/></td>
+                      </tr>
+                    </table>
+            </form>
+                </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id="ajax-btn" class="btn btn-primary">确认</button>
+      </div>
+    
+      <script>
+      $(function (){
+    	 
+    		 /**
+  	  	多选框的设置
+  	   */
+  	
+  	   $('#selectSoftware').selectpicker({
+  	        'selectedText': 'cat'
+  	    });
+  	  
+		  /**
+       * 获得所有区域 
+       */
+      function getAreaFunction(){
+        $.ajax({
+                  url:host+ "/upm_api/v1.0/selections/areas?siteId="+siteId,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                     setOption(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                      console.error("未连接服务器 =" + status);
+                  }
+              });
+         
+          function setOption(obj_data){
+            for (var i = obj_data.length - 1; i >= 0; i--) {
+               $("#selectArea").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+            }
+            $('.selectpicker').selectpicker('refresh');
+          }
+      }
+      getAreaFunction();
+      /**
+       * 获得所有软件列表
+       * @description  无法查询到数据 error
+       */
+      function getSoftwareFunction(){
+         $.ajax({
+                  url:host+ "/upm_api/v1.0/selections/softwares",
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                     setOption(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("软件未连接服务器");
+                    console.error("软件未连接服务器 =" + status);
+                  }
+              });
+
+           function setOption(obj_data){
+        	  for (var i = obj_data.length - 1; i >= 0; i--) {
+                   $("#selectSoftware").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+                }
+        	  $('.selectpicker').selectpicker('refresh');
+        	   
+          }
+
+      }
+      getSoftwareFunction();
+      /**
+       * 获得nfs
+       */
+      function getNfsFunction(){
+         $.ajax({
+                  url:host+ "/upm_api/v1.0/selections/nfs-backups?siteId="+siteId,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                     setOption(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                    console.error("未连接服务器 =" + status);
+                  }
+              });
+         function setOption(obj_data){
+            for (var i = obj_data.length - 1; i >= 0; i--) {
+               $("#selectNfs").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+            }
+            $('.selectpicker').selectpicker('refresh');
+          }
+
+      }
+      getNfsFunction();
+
+      function changeData(obj_data){
+                switch (obj_data.result){
+                  case 1:
+                    console.info("成功信息"+obj_data.msg);
+                    break;
+                  case 0:
+                    console.warn("警告信息"+obj_data.msg);
+                    break;
+                  case -1:
+                    console.error("错误信息"+obj_data.msg);
+                    break;
+                  case -9:
+                    console.error("错误信息"+obj_data.msg);
+                    window.location="login.html";
+                    break;
+                  default:
+                    console.log("测试代码");
+                }
+      }
+
+  		$("#ajax-btn").click(function() {
+             //将表单序列化为JSON对象    
+            $("#siteId").attr("value",siteId);// 填充内容
+  				  var params = $("#add-site-form").serializeObject();
+            //将字符串转成数字
+             params.maxUsage= Number(params.maxUsage);
+             params.maxHostCount = Number(params.maxHostCount);
+            console.log(params);
+    			/**
+    			 * ajax 函数
+    			 */
+          $.ajax({
+                  headers:{
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json' 
+                  },
+                  url:host+ "/upm_api/v1.0/clusters",
+                  method: "post",
+                  data:JSON.stringify(params),
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                     changeData(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                    console.error("未连接服务器 =" + status);
+                  }
+      });
+			$(this).attr("data-dismiss","modal");
+			});
+  	
+	
+		  })
+      </script>
+</body>
+</html>

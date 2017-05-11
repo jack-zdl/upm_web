@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"> 
+  <style type="text/css">
+    .add-site-form { padding-top: 5px; margin: 0 auto; width: 100%;  }
+    .add-site-form table { font-family: "微软雅黑", Arial, Helvetica, sans-serif; color: #666666; font-size: 14px; font-weight: bold; width: 100%; }
+    .add-site-form table tr { border: 15px solid #ffffff; }
+    .add-site-form table tr td:first-child { width: 150px; text-align: right; padding-right: 10px; }
+    .add-site-form table tr td:last-child input { width: 100%; }
+    .add-site-form table tr td textarea { width: 100%; }
+   .error{
+  color:red;
+}
+     .start-color-red{
+     color:red;
+     top  : 50%;
+   }
+   /* 通用 */
+   ::-webkit-input-placeholder {  font-size:80% ;font-weight:100}
+   ::-moz-placeholder {  font-size:80% ;font-weight:100} /* firefox 19+ */
+   :-ms-input-placeholder { font-size:80% ;font-weight:100} /* ie */
+   input:-moz-placeholder { font-size:80% ;font-weight:100}
+ </style> 
+</head>
+<body>
+
+  <div id="dialog-message" title="Dialog Simple Title">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">区域编辑</h4>
+    </div>
+    <div class="modal-body">
+      <div class="add-site-form">
+      <form id="add-area-form">
+          <table>
+            <tr>
+              <td ><sup class="start-color-red">*</sup>区域名称 </td>
+              <td><input id="areaName"  name="name" type="text"  placeholder="请输入区域名称" /></td>
+            </tr>
+            <tr>
+              <td><sup class="start-color-red">*</sup>区域描述</td>
+              <td><textarea name="description"  id="description"  placeholder="请输入区域描述" ></textarea></td>
+            </tr>
+            <tr>
+              <td><sup class="start-color-red">*</sup>备份存储</td>
+              <td>
+               <select   class="selectpicker  form-control"  multiple data-max-options="1" id="selectNfs" name="backupStorageId"  title="请选择备份存储" >
+               </select> 
+             </td>
+           </tr>
+         </table>
+         <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" id="ajax-btn" class="btn btn-primary">确认</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  $(function(){
+	  
+  function ajaxMain(id){
+
+    function changeAreaData(obj_data){
+
+            switch (obj_data.result){
+              case 1:
+              alert("成功信息"+obj_data.msg);
+              console.info("成功信息"+obj_data.msg);
+              $('#myModal').modal('hide');
+              break;
+              case 0:
+              alert("警告信息"+obj_data.msg);
+              console.warn("警告信息"+obj_data.msg);
+              break;
+              case -1:
+              alert("错误信息"+obj_data.msg);
+              console.error("错误信息"+obj_data.msg);
+              break;
+              case -9:
+              console.error("错误信息"+obj_data.msg);
+              window.location="login.html";
+              default:
+              console.log("返回result异常");
+            }
+    }
+
+    function sendAreaAddFun(){
+      var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+        //  $("#siteId").attr("value",siteId);// 填充内容
+          var params = $("#add-area-form").serializeJSON();
+
+          $.ajax({
+            url: host+"/upm_api/v1.0/areas/"+id,
+            method: "put",
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            data:params,
+            dataType: "json",
+            success: function(result, status, xhr) {
+             changeAreaData(result);
+           },
+           error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+            alert("未连接服务器");
+            console.error("未连接服务器 =" + status);
+          }
+        });
+    }
+    sendAreaAddFun();
+  }
+
+	  $.validator.setDefaults({
+          submitHandler: function() {
+            ajaxMain();
+          }
+        });
+      // 校验
+ 	 
+      $().ready(function() {
+         $("#add-area-form").validate({
+              rules: {
+                siteId:{
+                  required:true
+                },
+                name:{
+                  required:true,
+                  maxlength:64
+                },
+                description:{
+                  required:true,
+                  maxlength:1024
+                },
+                backupStorageId:{
+                  required:true
+                }
+              },
+               messages: {
+                siteId:{
+                  required:"请输入站点信息"
+                },
+                name:{
+                  required:"请输入名称",
+                  maxlength:"最大长度64位"
+                },
+                description:{
+                  required:"请输入描述",
+                  maxlength:"最大长度为1024位"
+                },
+                backupStorageId:{
+                  required:"请选择备份存储"
+                }
+               }
+         });
+      });
+
+    	   //将表格数据填入摸态框form中
+          function editAreaFun(){
+              var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+              var rowData = $("#jqgrid").jqGrid("getRowData",id);
+              $("#areaName").val(rowData.name);
+              $("#description").html(rowData.description);
+              function getNfsSelf(){
+                $.ajax({
+                  url:host+"/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1&id="+id,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                    setOption(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                    console.error("未连接服务器 =" + status);
+                  }
+                });
+              }
+              getNfsSelf();
+              function setOption(obj_data){
+              for (var i = obj_data.length - 1; i >= 0; i--) {
+                $("#selectNfs").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+              }
+              $("#selectNfs").selectpicker('val',rowData.backupStorageId);
+              $('.selectpicker').selectpicker('refresh');
+              }
+             
+          }
+             
+      
+          editAreaFun();
+           /**
+           * 获得nfs
+           */
+          
+
+         
+          // loadScript("js/plugin/bootstrapvalidator/bootstrapValidator.min.js", pagefunction);
+
+        }); 
+      </script>
+    </body>
+    </html>

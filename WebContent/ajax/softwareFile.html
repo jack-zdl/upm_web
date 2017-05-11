@@ -1,0 +1,66 @@
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css">
+<link rel="stylesheet" type="text/css" href="../css/jquery-ui-1.8.16.custom.css">
+<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+<script type="text/javascript" src="../js/libs/jquery-2.1.1.min.js"></script>
+
+<script type="text/javascript" src="../js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/libs/jquery.jqGrid.src.js"></script>
+<div style="width: 100%"> 
+	<table id="jqgrid_file" style="width: 100%;"></table> 	
+</div>
+<script type="text/javascript">
+	(function() {
+		/**
+		 * [fileData description]
+		 * @type {Array}
+		 * 这是model模块
+		 */
+		
+		function getfileData() {
+			/**
+			 * ajax 向后台获取数据
+			 */
+			$.ajax({
+				url:host+ "./UPM_API/v1.0/softwares/images/files",
+				method: "get",
+				async: false,
+				dataType: "json",
+				success: function(result, status, xhr) {
+					setfileListGrid(result);
+				},
+				error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+					console.error("getAllDataCS  CS数据状态文本 " + status);
+				}
+			});
+
+			function setfileListGrid(obi_data) {
+				jQuery("#jqgrid_file").jqGrid({
+					data: obi_data,
+					datatype: "local",
+					height : 'auto',
+					colNames: ["名称", "大小"],
+					colModel: [{
+						name: 'name',
+						index: 'name',
+						align: "center",
+						sortable : false
+					}, {
+						name: 'size',
+						index: 'size',
+						align: "center",
+						sortable : false
+					}],
+					toolbarfilter: true,
+					viewrecords : true,
+					autowidth: true,
+					editurl : "dummy.html"
+				});
+			};
+
+		};
+		getfileData();
+	})();
+</script>
+

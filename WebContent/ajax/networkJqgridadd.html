@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>area-add</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<script src="js/plugin/my/jquery.serialize-object.min.js" type="text/javascript" ></script>
+<style type="text/css">
+.add-site-form { padding-top: 5px; margin: 0 auto; width: 100%;  }
+.add-site-form table { font-family: "微软雅黑", Arial, Helvetica, sans-serif; color: #666666; font-size: 14px; font-weight: bold; width: 100%; }
+.add-site-form table tr { border: 15px solid #ffffff; }
+.add-site-form table tr td:first-child { width: 100px; text-align: right; padding-right: 10px; }
+.add-site-form table tr td:last-child input { width: 100%; }
+.add-site-form table tr td:last-child select { width: 100%; }
+.add-site-form table tr td:last-child textnfs { width: 100%; }
+.start-color-red{
+	color:red;
+}
+/* 通用 */
+::-webkit-input-placeholder {  font-size:100% ;font-weight:200}
+::-moz-placeholder {  font-size:100% ;font-weight:200} /* firefox 19+ */
+:-ms-input-placeholder { font-size:100% ;font-weight:200} /* ie */
+input:-moz-placeholder { font-size:100% ;font-weight:200}
+</style>
+</head>
+<body>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">网段增加</h4>
+      </div>
+      <div class="modal-body">
+          <div class="add-site-form">
+            <form id="add-network-form">
+         
+                    <table>
+                   <tr style="display: none;">
+                      <td >站点id</td>
+                      <td><input id="siteId" name="siteId" type="text" /></td>
+                      </tr>
+                   
+                     <tr>
+                      <td>所属区域<sup class="start-color-red">*</sup></td>
+                      <td> <select class="form-control selectpicker "  required multiple data-max-options="1" id="areaId" name="areaId" title="请选择区域">
+                          </select> 
+           </td>
+                      </tr>
+                  
+                       <tr>
+                      <td>网段名称<sup class="start-color-red">*</sup></td>
+                      <td><input name="name" type="text" placeholder="请输入网段名称" /></td>
+                      </tr>
+                       <tr>
+                    <!--   <tr>
+                      <td>网段类型</td>
+                      <td> <select class="form-control" id="networkType" name="type" >
+                            <option  value="">请选择</option>            
+                          </select> 
+           </td>
+                      
+                      <tr> -->
+                      <td>起始IP<sup class="start-color-red">*</sup></td>
+                      <input type="hidden" name="startIp" id="startIp"/>
+                      <td><input style="width:93px"  name="startIp1"  id="startIp1" type="text"  />
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:93px" name="startIp2" id="startIp2" type="text"  /></span>
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:93px" name="startIp3" id="startIp3"  type="text"  /></span>
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:94px" name="startIp4" id="startIp4" type="text"  /></span>
+                      </td>
+                      </tr>
+                      <tr>
+                      <td>结束IP<sup class="start-color-red">*</sup></td>
+                <input type="hidden" name="endIp" id="endIp"/>
+                      <td><input style="width:93px"  name="endIp1" id="endIp1" type="text"  />
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:93px" name="endIp2" id="endIp2" type="text"  /></span>
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:93px" name="endIp3" id="endIp3" type="text"  /></span>
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:94px" name="endIp4" id="endIp4" type="text"  /></span>
+                      </td>
+                      </tr>
+                       <tr>
+                      <td>掩码<sup class="start-color-red">*</sup></td>
+                      <td><input name="prefix" type="text" placeholder="请输入掩码"/></td>
+                      </tr>
+                       <tr>
+                      <td>标识VlanId<sup class="start-color-red">*</sup></td>
+                      <td><input name="vlanId" type="text" placeholder="请输入标示VlanId"/></td>
+                      </tr>
+                      <tr>
+                      <td>网关<sup class="start-color-red">*</sup></td>
+                      <input type="hidden" name="gateway" id="gateway"/>
+                      <td><input style="width:93px"  name="gateway1"  id="gateway1" type="text"  />
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:93px" name="gateway2"  id="gateway2" type="text"  /></span>
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:93px" name="gateway3"  id="gateway3" type="text"  /></span>
+                      <span>&nbsp;.&nbsp;&nbsp;<input style="width:94px" name="gateway4"  id="gateway4" type="text"  /></span>
+                      </td>
+                      </tr>
+                    </table>
+            </form>
+                </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" id="ajax-btn" class="btn btn-primary">确认</button>
+      </div>
+      <script src="host.js"></script>
+      <script>
+      $(function(){ 
+        selectarea();
+       // networkType();
+   });
+      function selectarea(){
+        $.ajax({
+                url:host+"/upm_api/v1.0/selections/areas?siteId="+siteId,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+                  success: function(result, status, xhr) {
+                    var json;
+                    console.log(json);
+                    for(i in result){                     
+                      json=result[i];
+                      var html="<option value='"+json.id+"'>"+json.text+"</option>"
+                      $("#areaId").append(html);
+                      $('.selectpicker').selectpicker('refresh');
+                    }
+                    
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                      console.error("未连接服务器 =" + status);
+                  },
+                  complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            });
+      }
+      // function networkType(){
+      //   $.ajax({
+      //           url:host+"upm_api/v1.0/selections/networking-types",
+      //             method: "get",
+      //             async: true,
+      //             dataType: "json",
+      //             success: function(result, status, xhr) {
+      //               debugger;
+      //               var data;
+                    
+      //               for(i in result){                     
+      //                 data=result[i];
+      //                 var html="<option value='"+data.id+"'>"+data.text+"</option>"
+      //                 $("#networkType").append(html);
+      //               }
+                    
+      //             },
+      //             error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+      //               alert("未连接服务器");
+      //                 console.error("未连接服务器 =" + status);
+      //             }
+      //       });
+      // }
+      </script>
+      <script type="text/javascript">
+
+      $("#ajax-btn").click(function (){
+        debugger;
+        IPclick();
+        $("#siteId").attr("value",siteId);// 填充内容
+        var params = $("#add-network-form").serializeObject();
+        console.log(params);
+        params.vlanId = Number(params.vlanId);
+        params.prefix = Number(params.prefix);
+        debugger;
+        console.log(params);
+        $.ajax({
+              url:host+ "/upm_api/v1.0/networkings",
+              method: "post",
+              async: true,
+              contentType: "application/json; charset=utf-8",
+              data:JSON.stringify(params),
+              dataType: "json",
+              timeout:30000,
+              beforeSend:function(){
+              	$('#loading').showLoading();
+              },
+              success: function(result, status, xhr) {
+                  debugger;
+                 changenfsData(result);
+              },
+              error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                alert("未连接服务器");
+                console.error("未连接服务器 =" + status);
+              },
+              complete:function(){
+              	$('#loading').hideLoading();
+              }
+          });
+      })
+      function changenfsData(obj_data){
+          switch (obj_data.result){
+            case 1:
+              alert("成功信息:"+obj_data.msg);
+              $('#myModal').modal('hide');
+              break;
+            case 0:
+              alert("警告信息:"+obj_data.msg);
+              break;
+            case -1:
+              alert("错误信息:"+obj_data.msg);
+              break;
+            case -9:
+              window.location="login.html";
+            default:
+              alert("测试代码");
+          }
+        }
+        function IPclick(){
+         var startIp1= $("#startIp1").val();
+          var startIp2= $("#startIp2").val();
+          var startIp3= $("#startIp3").val();
+          var startIp4= $("#startIp4").val();
+          var startIp=startIp1+"."+startIp2+"."+startIp3+"."+startIp4;
+          $("#startIp").val(startIp);
+          var endIp1= $("#endIp1").val();
+        var endIp2= $("#endIp2").val();
+        var endIp3= $("#endIp3").val();
+        var endIp4= $("#endIp4").val();
+        var endIp=endIp1+"."+endIp2+"."+endIp3+"."+endIp4;
+        $("#endIp").val(endIp);
+        var gateway1= $("#gateway1").val();
+        var gateway2= $("#gateway2").val();
+        var gateway3= $("#gateway3").val();
+        var gateway4= $("#gateway4").val();
+        var gateway=gateway1+"."+gateway2+"."+gateway3+"."+gateway4;
+        $("#gateway").val(gateway);
+       }
+      </script>
+</body>
+</html>
