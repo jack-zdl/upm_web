@@ -115,9 +115,9 @@
 
 			<div class="" >
 				<button class="btn btn-default btn-success" id="jqgrid-area-add" type="submit">新增</button>
-				<button class="btn btn-default  btn-primary" id="jqgrid-area-start" type="submit">启动</button>
-				<button class="btn btn-default btn-info"  id="jqgrid-area-bedata" type="submit">编辑</button>
+				<button class="btn btn-default  btn-primary" id="jqgrid-area-start" type="submit">启用</button>
 				<button class="btn btn-default btn-warning" id="jqgrid-area-stop" type="submit">停用</button>
+				<button class="btn btn-default btn-info"  id="jqgrid-area-bedata" type="submit">编辑</button>
 				<button class="btn btn-default btn-danger" id="jqgrid-area-delete" type="submit">删除</button>
 			</div>
 			<br>
@@ -373,6 +373,14 @@
 					});
 				}
 
+				function imageLink(cellvalue, options, rowObject){
+	        		if(cellvalue === true){
+	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        		}else{
+	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        		}
+	    		}
+
 				function setJqgrid(obj_after_data){
 
 					if($("#jqgrid tr:visible").length==0){
@@ -385,7 +393,7 @@
 							{ name : "name", index : "name"},
 							{ name : "description", index : "description",  },
 							{ name : "backupStorageName",index : "backupStorageName"},
-							{ name : "enabledText", index : "enabledText", align : "left"},
+							{ name : "enabledText", index : "enabledText", align : "left",formatter:imageLink },
 							{ name : "enabled", index : "enabled", align : "left",width:0,hidden:true},
 							{ name : "backupStorageId", index : "backupStorageId", align : "left",width:0,hidden:true}],
 							rowNum : 10000,

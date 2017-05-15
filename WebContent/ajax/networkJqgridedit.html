@@ -110,7 +110,12 @@
         selectarea();
         networkType();
   });
-      
+      function editNetworkFun(){
+          var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+          var rowData = $("#jqgrid").jqGrid("getRowData",id);
+          $("#name").html();
+      }
+
       function selectarea(){
         $.ajax({
                 url:host+"/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1",
@@ -190,50 +195,14 @@
                    ipType:{
                       required:true
                    },
-                   // startIp1:{
-                   //   required:true,
-                   //    maxlength: 3
-                   // },
-                   // startIp2:{
-                   //   required:true,
-                   //    maxlength: 3
-                   // },
-                   // startIp3:{
-                   //   required:true,
-                   //    maxlength: 3
-                   // },
                    startIp4:{
                       required:true,
                       maxlength: 3
                    },
-                   //  endIp1:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  endIp2:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  endIp3:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
                    endIp4:{
                       required:true,
                       maxlength: 3
                    },
-                   // gateway1:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  gateway2:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  gateway3:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
                     gateway4:{
                       required:true,
                       maxlength: 3

@@ -19,9 +19,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -32,7 +30,6 @@ function getXMLRequester( ){
 		switch (obj_data.result){
 		case 1:
 		 	console.log("成功信息"+obj_data.msg);
-		 	showPie(obj_data.data);
 			break;
 		case 0:
 			alert("警告信息"+obj_data.msg);
@@ -64,7 +61,7 @@ getXMLRequester();
 
 			<!-- PAGE HEADER -->
 			<i class="fa-fw fa fa-table"></i>
-				Tables
+				资源管理
 			<span>>
 				集群
 			</span>
@@ -103,12 +100,6 @@ getXMLRequester();
 </div>
 <!-- end row -->
 
-<!--
-	The ID "widget-grid" will start to initialize all widgets below
-	You do not need to use widgets if you dont want to. Simply remove
-	the <section></section> and you can use wells or panels instead
-	-->
-
 <!-- widget grid -->
 <section id="widget-grid" class="">
 	<div>
@@ -123,20 +114,16 @@ getXMLRequester();
 		<!-- NEW WIDGET START -->
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="" >
-					<button class="btn btn-default btn-success" id="jqgrid-add" type="submit">新增</button>
-					
-					<!-- <button class="btn btn-default btn-info" disabled="disabled" id="jqgrid-bedata" type="submit">编辑</button>
-					 -->
-					<button class="btn btn-default btn-danger" id="jqgrid-delete" type="submit">删除</button>
+					<button class="btn btn-default btn-success" id="jqgrid-cluster-add" type="submit">新增</button>
+					<button class="btn btn-default  btn-primary" id="jqgrid-cluster-start" type="submit">启用</button>
+					<button class="btn btn-default btn-warning" id="jqgrid-cluster-stop" type="submit">停用</button>
+					<button class="btn btn-default btn-info"  id="jqgrid-cluster-edit" type="submit">编辑</button>
+					<button class="btn btn-default btn-danger" id="jqgrid-cluster-delete" type="submit">删除</button>
 				</div>
 				<br>
 				<div id="pjqgrid">
 				<table id="jqgrid"></table>
 				</div>
-
-				<!-- <br>
-				<a href="javascript:void(0)" id="m1">Get Selected id's</a><br>
-				<a href="javascript:void(0)" id="m1s">Select(Unselect) row 13</a> -->
 
 		</article>
 		<!-- WIDGET END -->
@@ -160,55 +147,25 @@ getXMLRequester();
 		确认删除
 	</p>
 </div>
+<div id="dialog_simple_start" title="Dialog Simple Title">
+	<p>
+		确认启用
+	</p>
+</div>
+<div id="dialog_simple_stop" title="Dialog Simple Title">
+	<p>
+		确认停用
+	</p>
+</div>
 <script type="text/javascript" src="js/plugin/jqgrid/grid.locale-en.min.js"></script>
 <script type="text/javascript">
-
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
-
 
 	pageSetUp();
 	$(function(){
 		pagefunction();
 	});
 
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 *
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 *
-	 */
+
 
 	 function pagefunction() {
 		loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
@@ -239,7 +196,7 @@ getXMLRequester();
 					"class" : "btn btn-danger",
 					click : function() {
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-						deleteArea(id);
+						deleteCluster(id);
 						$(this).dialog("close");
 					}
 				}, {
@@ -249,10 +206,52 @@ getXMLRequester();
 						$(this).dialog("close");
 					}
 				}]
-				// ,
-				// close: function() {
-				// 	//pagefunction();
-				// }
+			});
+
+			$('#dialog_simple_start').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "启用提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;启用",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						startCluster(id);
+						$(this).dialog("close");
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+			$('#dialog_simple_stop').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "停用提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;停用",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						stopCluster(id);
+						$(this).dialog("close");
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}]
 			});
 
 	     	function changedeleteData(obj_data){
@@ -283,7 +282,7 @@ getXMLRequester();
 	        	}
 	        }
 
-	     	function deleteArea(obj_id){
+	     	function deleteCluster(obj_id){
 	     		$.ajax({
                 	url:host+ "/upm_api/v1.0/clusters/"+obj_id,
 	                method: "delete",
@@ -305,7 +304,52 @@ getXMLRequester();
 	                }
             	});
 	     	}
+
+	     	function startCluster(obj_id){
+	     		$.ajax({
+                	url:host+ "/upm_api/v1.0/clusters/"+obj_id,
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+	                   changedeleteData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            	});
+	     	}
 	     	
+	     	function stopCluster(obj_id){
+	     		$.ajax({
+                	url:host+ "/upm_api/v1.0/clusters/"+obj_id,
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+	                   changedeleteData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            	});
+	     	}
 
 			function setDefintionList(cellvalue, options, rowObject){
 				var data = "";
@@ -337,12 +381,10 @@ getXMLRequester();
 						sortorder : "asc",
 						editurl : "dummy.html",
 						caption : "cluster",
-					//	multiselect : true,
 						rownumbers : true,
 						autowidth : true,
 						onSelectRow: function(id,status){   
 							if(status==false){  
-				                //      $("#jqgrid").resetSelection();
 				        			 jQuery("#jqgrid").jqGrid('resetSelection');
 				                  }  
 							    
@@ -412,17 +454,43 @@ getXMLRequester();
 					container : 'body'
 				});
 				
-				$("#jqgrid-delete").click(function(){
+				$("#jqgrid-cluster-delete").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择集群，在点击删除");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple').dialog('open');	
 					}
-					//return false;
+				});
+
+				$("#jqgrid-cluster-start").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+				});
+
+				$("#jqgrid-cluster-stop").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+				});
+
+				$("#jqgrid-cluster-edit").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
 				});
 				
-				$("#jqgrid-add").click(function() {
+				$("#jqgrid-cluster-add").click(function() {
 				   	addForm("ajax/jqgrid-cluster-add");
   				});
 

@@ -12,14 +12,19 @@
 .add-site-form table tr td:first-child { width: 150px; text-align: right; padding-right: 10px; }
 .add-site-form table tr td:last-child input { width: 100%; }
 .add-site-form table tr td:last-child textarea { width: 100%; }
-.start-color-red{
-	color:red;
+ .start-color-red{
+     color:red;
+     top  : 50%;
+   }
+   .error{
+  color:red;
 }
-/* 通用 */
-::-webkit-input-placeholder {  font-size:100% ;font-weight:200}
-::-moz-placeholder {  font-size:100% ;font-weight:200} /* firefox 19+ */
-:-ms-input-placeholder { font-size:100% ;font-weight:200} /* ie */
-input:-moz-placeholder { font-size:100% ;font-weight:200}
+  /* 通用 */
+  ::-webkit-input-placeholder {  font-size:80% ;font-weight:lighter}
+  ::-moz-placeholder {  font-size:80% ;font-weight:lighter} /* firefox 19+ */
+  :-ms-input-placeholder { font-size:80% ;font-weight:lighter} /* ie */
+  input:-moz-placeholder { font-size:80% ;font-weight:lighter}
+  td select {font-size: 80%;font-weight:lighter}
 </style>
 </head>
 <body>
@@ -29,25 +34,25 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
       </div>
       <div class="modal-body">
           <div class="add-site-form">
-            <form id="add-site-form">
+            <form id="add-cluster-form">
                     <table>
                      <tr style="display: none;">
                       <td>站点id</td>
                       <td><input id="siteId" name="siteId" type="text" /></td>
                       </tr>
                       <tr>
-                      <td>所属区域<sup class="start-color-red">*</sup></td>
+                      <td><sup class="start-color-red">*</sup>所属区域</td>
                       <td> <select class="selectpicker  form-control" multiple data-max-options="1"  id="selectArea" title="请选择区域" name="areaId">
                            
                           </select> 
                        </td>
                       </tr>
                       <tr>
-                      <td>集群名称<sup class="start-color-red">*</sup></td>
-                      <td><input name="name" type="text" placeholder="请输入集群名称" /></td>
+                      <td><sup class="start-color-red">*</sup>集群名称</td>
+                      <td><input name="name" type="text" placeholder="   请输入集群名称" /></td>
                       </tr>
                       <tr>
-                      <td>软件列表<sup class="start-color-red">*</sup></td>
+                      <td><sup class="start-color-red">*</sup>软件列表</td>
                       <td>
                            <select class="selectpicker show-tick form-control" 
                            multiple="multiple" id="selectSoftware" name="subservIds[]" data-live-search="true"
@@ -56,31 +61,31 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
                            </select>
                       </td>
                       </tr>
-                    
                        <tr>
-                      <td>备份储存<sup class="start-color-red">*</sup></td>
-                      <td><select class="selectpicker  form-control" multiple data-max-options="1"  id="selectNfs" name="nfsBackupId"  title="请选择NFS">
+                      <td><sup class="start-color-red">*</sup>备份储存</td>
+                      <td><select class="selectpicker  form-control" multiple data-max-options="1"  id="selectNfs" name="nfsBackupId"  title="请选择备份存储">
                             
                           </select> 
 					            </td>
                       </tr>
                       
                       <tr>
-                      <td>最大使用率<sup class="start-color-red">*</sup></td>
-                      <td><input name="maxUsage" type="text"  placeholder="请输入最大使用率" /></td>
+                      <td><sup class="start-color-red">*</sup>最大使用率</td>
+                      <td><input name="maxUsage" type="text"  placeholder="   请输入最大使用率" /></td>
                       </tr>
                        <tr>
-                      <td>最大主机数量<sup class="start-color-red">*</sup></td>
-                      <td><input name="maxHostCount" type="text" placeholder="请输入最大主机数量"/></td>
+                      <td><sup class="start-color-red">*</sup>最大主机数量</td>
+                      <td><input name="maxHostCount" type="text" placeholder="   请输入最大主机数量"/></td>
                       </tr>
                     </table>
+                    <div class="modal-footer">
+                     <button type="submit" id="ajax-btn" class="btn btn-primary">保存</button>
+                       <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
             </form>
                 </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" id="ajax-btn" class="btn btn-primary">确认</button>
-      </div>
+     
     
       <script>
       $(function (){
@@ -98,7 +103,7 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
        */
       function getAreaFunction(){
         $.ajax({
-                  url:host+ "/upm_api/v1.0/selections/areas?siteId="+siteId,
+                  url:host+ "/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1",
                   method: "get",
                   async: true,
                   dataType: "json",
@@ -153,7 +158,7 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
        */
       function getNfsFunction(){
          $.ajax({
-                  url:host+ "/upm_api/v1.0/selections/nfs-backups?siteId="+siteId,
+                  url:host+ "/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1",
                   method: "get",
                   async: true,
                   dataType: "json",
@@ -178,16 +183,20 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
       function changeData(obj_data){
                 switch (obj_data.result){
                   case 1:
-                    console.info("成功信息"+obj_data.msg);
+                    alert("提示信息："+obj_data.msg);
+                    console.info("成功信息:"+obj_data.msg);
+                     $('#myModal').modal('hide');
                     break;
                   case 0:
-                    console.warn("警告信息"+obj_data.msg);
+                    alert("提示信息："+obj_data.msg);
+                    console.warn("警告信息:"+obj_data.msg);
                     break;
                   case -1:
-                    console.error("错误信息"+obj_data.msg);
+                    alert("提示信息："+obj_data.msg);
+                    console.error("错误信息:"+obj_data.msg);
                     break;
                   case -9:
-                    console.error("错误信息"+obj_data.msg);
+                    console.error("错误信息:"+obj_data.msg);
                     window.location="login.html";
                     break;
                   default:
@@ -195,17 +204,15 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
                 }
       }
 
-  		$("#ajax-btn").click(function() {
-             //将表单序列化为JSON对象    
-            $("#siteId").attr("value",siteId);// 填充内容
-  				  var params = $("#add-site-form").serializeObject();
-            //将字符串转成数字
-             params.maxUsage= Number(params.maxUsage);
-             params.maxHostCount = Number(params.maxHostCount);
-            console.log(params);
-    			/**
-    			 * ajax 函数
-    			 */
+      function ajaxMain() {
+        debugger;
+          $("#siteId").attr("value",siteId);// 填充内容
+          var params = $("#add-cluster-form").serializeObject();
+          //将字符串转成数字
+           params.maxUsage= Number(params.maxUsage);
+           params.maxHostCount = Number(params.maxHostCount);
+           console.log(params);
+        
           $.ajax({
                   headers:{
                       'Accept': 'application/json',
@@ -222,12 +229,72 @@ input:-moz-placeholder { font-size:100% ;font-weight:200}
                     alert("未连接服务器");
                     console.error("未连接服务器 =" + status);
                   }
-      });
-			$(this).attr("data-dismiss","modal");
-			});
+          });
+          // $(this).attr("data-dismiss","modal");
+      }
+
+       //校验数据
+        $.validator.setDefaults({
+               submitHandler: function() {
+                 ajaxMain();
+               }
+        });
+
+        $().ready(function() {
+           // 在键盘按下并释放及提交后验证提交表单
+             $("#add-cluster-form").validate({
+                 rules: {
+                   areaId:{
+                      required: true
+                   },
+                   name:{
+                      required:true
+                   },
+                   selectSoftware:{
+                      required:true
+                   },
+                   nfsBackupId:{
+                      required:true
+                   },
+                   maxUsage:{
+                      required:true,
+                      number:true
+                   },
+                   maxHostCount:{
+                      required:true,
+                      number:true
+                   }
+
+                 },
+                 messages: {
+                  areaId:{
+                    required: "请选择所属区域"
+                  },
+                  name:{
+                      required:"请输入集群名称"
+                  },
+                  selectSoftware:{
+                      required:"请选择软件列表"
+                  },
+                  nfsBackupId:{
+                      required:"请选择备份存储"
+                  },
+                  maxUsage:{
+                      required:"请输入最大使用率",
+                        number:"请输入数字"
+                  },
+                  maxHostCount:{
+                      required:"请输入最大主机数量",
+                         number:"请输入数字"
+                  }
+                }
+             });
+           });
+
+  	
   	
 	
-		  })
+		  });
       </script>
 </body>
 </html>

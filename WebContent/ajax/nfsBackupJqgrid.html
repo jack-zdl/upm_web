@@ -104,9 +104,8 @@
 				
 				<div class="" >
 					<button class="btn btn-default btn-success" id="jqgrid-nfs-add" type="submit">新增</button>
-					<button class="btn btn-default  btn-primary" id="jqgrid-nfs-start" type="submit">启动</button>
-					<!-- <button class="btn btn-default btn-info" disabled id="jqgrid-nfs-bedata" type="submit">编辑</button> -->
-					<button class="btn btn-default btn-warning" id="jqgrid-nfs-stop" type="submit">停止</button>
+					<button class="btn btn-default  btn-primary" id="jqgrid-nfs-start" type="submit">启用</button>
+					<button class="btn btn-default btn-warning" id="jqgrid-nfs-stop" type="submit">停用</button>
 					<button class="btn btn-default  btn-danger" id="dialog_link" >删除</button>
 				</div>
 				<br>
@@ -234,6 +233,14 @@ function pagefunction(url) {
 				}
 			}]
 		});
+
+		function imageLink(cellvalue, options, rowObject){
+	        	if(cellvalue === true){
+	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        	}else{
+	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        	}
+	    }
 		//建立表格
 		function setJqgrid(obj_after_data){
 
@@ -256,7 +263,7 @@ function pagefunction(url) {
 					{ name : 'totalSpace', index : 'totalSpace',  editable : true, formatter : function(value, options, rData){
 						return value + ""+rData['spaceUnit'];
 					} }, 
-					{ name : 'enabledText', index : 'enabledText', editable : true }
+					{ name : 'enabledText', index : 'enabledText', editable : true,formatter:imageLink }
 					],
 					rowNum : 10,
 					toolbarfilter: true,

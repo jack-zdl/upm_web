@@ -9,9 +9,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -22,14 +20,11 @@ function getXMLRequester( ){
 		switch (obj_data.result){
 		case 1:
 		 	console.log("成功信息"+obj_data.msg);
-		 	showPie(obj_data.data);
 			break;
 		case 0:
-			alert("警告信息"+obj_data.msg);
 			console.warn("警告信息"+obj_data.msg);
             break;
         case -1:
-        	alert("错误信息"+obj_data.msg);
         	console.error("错误信息"+obj_data.msg);
         	break;
         case -9:
@@ -115,10 +110,10 @@ getXMLRequester();
 				
 				<div class="" >
 					<button class="btn btn-default btn-success" id="jqgrid-network-add" type="submit">新增</button>
-					
-					<!--  <button class="btn btn-default btn-info" id="jqgrid-network-bedata" type="submit">编辑</button>
-					-->
-					<button class="btn btn-default  btn-danger" id="dialog_link">删除</button>
+					<button class="btn btn-default  btn-primary" id="jqgrid-network-start" type="submit">启用</button>
+					<button class="btn btn-default btn-warning" id="jqgrid-network-stop" type="submit">停用</button>
+					<button class="btn btn-default btn-info"  id="jqgrid-network-bedata" type="submit">编辑</button>
+					<button class="btn btn-default  btn-danger" id="jqgrid-network-delete">删除</button>
 					
 				</div>
 				<br>
@@ -141,62 +136,232 @@ getXMLRequester();
 </div>
 </div>
 </div>
+
 <div id="dialog_simple" title="Dialog Simple Title">
 	<p>
 		确认删除
 	</p>
 </div>
-<script src="host.js"></script>
+<div id="dialog_simple_start" title="Dialog Simple Title">
+	<p>
+		确认启用
+	</p>
+</div>
+<div id="dialog_simple_stop" title="Dialog Simple Title">
+	<p>
+		确认停用
+	</p>
+</div>
+
 <script type="text/javascript">
 
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
 
 	pageSetUp();
 
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 *
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 *
-	 */
+	
 	 $(function(){ 
 		 pagefunction(); 
 	 });
 	 function pagefunction() {
 		loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
+
+		//删除弹出框
 		function run_jqgrid_function() {
+
+			$('#dialog_simple').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "删除提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;删除",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						deleteNetwork(id);					
+						$(this).dialog("close");
+						
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+							
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+			$('#dialog_simple_start').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "启用提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;启用",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						startNetwork(id);					
+						$(this).dialog("close");
+						
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+			$('#dialog_simple_stop').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "停用提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;停用",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						stopNetwork(id);					
+						$(this).dialog("close");
+						
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+	     	function deleteNetwork(obj_id){
+	     		$.ajax({
+             		url:host+"/upm_api/v1.0/networkings/"+obj_id,
+	                method: "delete",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+						if(result.result==-1){
+							alert("提示信息："+result.msg)
+						}else if(result.result==0){
+							alert("提示信息："+result.msg)
+						}else if(result.result==1){
+							alert("提示信息："+result.msg);
+							$("#jqgridTable").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#jqgridTable").append(html);
+							
+							pagefunction();
+						}else if(result.result==-9){
+							window.location="login.html";
+						}
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+         	});
+	     	}
+
+     		function startNetwork(obj_id){
+	     		$.ajax({
+	         		url:host+"/upm_api/v1.0/networkings/"+obj_id+"/enable",
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+						if(result.result==-1){
+							alert("提示信息："+result.msg)
+						}else if(result.result==0){
+							alert("提示信息："+result.msg)
+						}else if(result.result==1){
+							alert("提示信息："+result.msg);
+							$("#jqgridTable").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#jqgridTable").append(html);
+							
+							pagefunction();
+						}else if(result.result==-9){
+							window.location="login.html";
+						}
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+	     		});
+     		}
+
+     		function stopNetwork(obj_id){
+	     		$.ajax({
+	         		url:host+"/upm_api/v1.0/networkings/"+obj_id+"/disable",
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+						if(result.result==-1){
+							alert("提示信息："+result.msg)
+						}else if(result.result==0){
+							alert("提示信息："+result.msg)
+						}else if(result.result==1){
+							alert("提示信息："+result.msg);
+							$("#jqgridTable").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#jqgridTable").append(html);
+							
+							pagefunction();
+						}else if(result.result==-9){
+							window.location="login.html";
+						}
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+	     		});
+     		}
+
+	     	function imageLink(cellvalue, options, rowObject){
+	        	if(cellvalue === true){
+	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        	}else{
+	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        	}
+	    	}
 		
 			function setJqgrid(obj_after_data){
 				
@@ -205,20 +370,18 @@ getXMLRequester();
 						data : obj_after_data,
 						datatype : "local",
 					height : 'auto',
-					colNames : [ '所属区域', '网段名称', '起始IP', '结束IP', '掩码',"网关","标记vlanID","可用"],
+					colNames : [ '所属区域', '网段名称', 'IP类型','起始IP', '结束IP', '掩码',"网关","标记vlanID","启用/停用"],
 					colModel : [
 						{ name : 'areaName', index : 'areaName', editable : true }, 
 						{ name : 'name', index : 'networkIp', editable : true }, 
+						{name:'ipTypeText',index:'ipTypeText'},
 						{ name : 'startIp', index : 'startIp', editable : true }, 
 						{ name : 'endIp', index : 'endIp',  editable : true }, 
 						{ name : 'prefix', index : 'prefix', editable : true },
 						{ name : 'gateway', index : 'gateway', editable : true },
 						{ name : 'vlanId', index : 'vlanId', editable : true },
-						{ name : 'enabled', index : 'enabled', editable : true }],
+						{ name : 'enabled', index : 'enabled', formatter:imageLink}],
 						rowNum : 10,
-						//rowList : [10, 20, 30],
-						//pager : "#pjqgrid",
-						//sortname : "id",
 						toolbarfilter: true,
 						viewrecords : true,
 						sortorder : "asc",
@@ -229,18 +392,14 @@ getXMLRequester();
 								be = "<button class='btn btn-xs btn-default' data-original-title='Edit Row' onclick=\"jQuery('#jqgrid').editRow('"+cl+"');\"><i class='fa fa-pencil'></i></button>";
 								se = "<button class='btn btn-xs btn-default' data-original-title='Save Row' onclick=\"jQuery('#jqgrid').saveRow('"+cl+"');\"><i class='fa fa-save'></i></button>";
 								ca = "<button class='btn btn-xs btn-default' data-original-title='Cancel' onclick=\"jQuery('#jqgrid').restoreRow('"+cl+"');\"><i class='fa fa-times'></i></button>";
-								//ce = "<button class='btn btn-xs btn-default' onclick=\"jQuery('#jqgrid').restoreRow('"+cl+"');\"><i class='fa fa-times'></i></button>";
-								//jQuery("#jqgrid").jqGrid('setRowData',ids[i],{act:be+se+ce});
 								jQuery("#jqgrid").jqGrid('setRowData',ids[i],{act:be+se+ca});
 							}
 						},
 						editurl : "dummy.html",
 						caption : "网段列表",
-					//	multiselect : true,
 						rownumbers : true,
 						onSelectRow: function(id,status){   
 							if(status==false){  
-				                //      $("#jqgrid").resetSelection();
 				        			 jQuery("#jqgrid").jqGrid('resetSelection');
 				                  }  
 							    return(true);
@@ -290,7 +449,57 @@ getXMLRequester();
 									handle: '.modal-header',
 									refreshPositions: false  
 						});
-				})
+				});
+
+				$('#jqgrid-network-delete').click(function() {
+		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id === null){
+						 alert("请选择一条数据");
+					}else{
+						 $('#dialog_simple').dialog('open');
+						return false;
+					}
+				});
+
+				$('#jqgrid-network-start').click(function() {
+		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id === null){
+						 alert("请选择一条数据");
+					}else{
+						 $('#dialog_simple_start').dialog('open');
+						return false;
+					}
+				});
+
+				$('#jqgrid-network-stop').click(function() {
+		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id === null){
+						 alert("请选择一条数据");
+					}else{
+						 $('#dialog_simple_stop').dialog('open');
+						return false;
+					}
+				});
+
+				$('#jqgrid-network-bedata').click(function() {
+		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id === null){
+						 alert("请选择一条数据");
+					}else{
+						$('#myModal').modal({
+				      	remote:'ajax/networkJqgridedit.html',
+				      	show	:true
+				      	}).on("hidden.bs.modal", function() {  
+				    	$(this).removeData("bs.modal");  
+				    	run_jqgrid_function();
+						}).draggable({
+									cursor: "move",
+									handle: '.modal-header',
+									refreshPositions: false  
+						});
+					}
+				});
+
 				// remove classes
 				$(".ui-jqgrid").removeClass("ui-widget ui-widget-content");
 			    $(".ui-jqgrid-view").children().removeClass("ui-widget-header ui-state-default");
@@ -324,14 +533,9 @@ getXMLRequester();
 			  	$( ".ui-icon.ui-icon-seek-end" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 			  	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward");
 
-
-
-
-			    // update buttons
-
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#jqgrid").jqGrid( 'setGridWidth', $("#content").width() );
-				})
+				});
 			
 			}
 
@@ -358,7 +562,7 @@ getXMLRequester();
 
 	        function getnetworkData(){
 	        	$.ajax({
-                	url:host+"/upm_api/v1.0/networkings?siteId="+siteId,
+                	url:host+"/upm_api/v1.0/networkings?site_id="+siteId,
 	                method: "get",
 	                async: true,
 	                dataType: "json",
@@ -386,80 +590,9 @@ getXMLRequester();
 		
 	 }
 	
-	 $('#dialog_link').click(function() {
-		 var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-		 if(id == null){
-			 alert("请选择网段，再点击删除");
-		 }else{
-			 $('#dialog_simple').dialog('open');
-			return false;
-		 }
-			
-		});
+	
 
-		$('#dialog_simple').dialog({
-			autoOpen : false,
-			width : 300,
-			resizable : false,
-			modal : true,
-			title : "删除提示",
-			buttons : [{
-				html : "<i class='fa fa-trash-o'></i>&nbsp;删除",
-				"class" : "btn btn-danger",
-				click : function() {
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					var rowData = $("#jqgrid").jqGrid("getRowData",id);
-					var val= rowData.id;
-					deletenetwork(id);					
-					$(this).dialog("close");
-					
-				}
-			}, {
-				html : "<i class='fa fa-times'></i>&nbsp;取消",
-				"class" : "btn btn-default",
-				click : function() {
-						
-					$(this).dialog("close");
-				}
-			}]
-		});
-
-			
-	     	function deletenetwork(obj_id){
-	     		$.ajax({
-             		url:host+"/upm_api/v1.0/networkings/"+obj_id,
-	                method: "delete",
-	                async: true,
-	                dataType: "json",
-	                timeout:30000,
-	                beforeSend:function(){
-	                	$('#loading').showLoading();
-	                },
-	                success: function(result, status, xhr) {
-						if(result.result==-1){
-							alert("提示信息："+result.msg)
-						}else if(result.result==0){
-							alert("提示信息："+result.msg)
-						}else if(result.result==1){
-							alert("提示信息："+result.msg);
-							$("#jqgridTable").html("");
-							var html="<table id='jqgrid'></table>"
-								$("#jqgridTable").append(html);
-							
-							pagefunction();
-						}else if(result.result==-9){
-							window.location="login.html";
-						}
-	                },
-	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-	                	alert("未连接服务器");
-	                    console.error("未连接服务器 =" + status);
-	                },
-	                complete:function(){
-	                	$('#loading').hideLoading();
-	                }
-         	});
-	     	}
+	
 	     	$("#submitButton").click(function (){
 	     		alert("提示信息:查询成功");
 				$("#jqgridTable").html("");
