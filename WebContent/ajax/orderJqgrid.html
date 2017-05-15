@@ -11,7 +11,7 @@
 			<i class="fa-fw fa fa-table"></i>
 				工单管理
 			<span>>
-				工单管理
+				工单
 			</span>
 		</h1>
 	</div>
@@ -48,12 +48,6 @@
 </div>
 <!-- end row -->
 
-<!--
-	The ID "widget-grid" will start to initialize all widgets below
-	You do not need to use widgets if you dont want to. Simply remove
-	the <section></section> and you can use wells or panels instead
-	-->
-
 <!-- widget grid -->
 <section id="widget-grid" class="">
 
@@ -68,8 +62,7 @@
                               <button  id="submitButton"
                                >查询</button><!--  style="margin-left: 30px;"  -->
                             </div>
-				<div class="">
-				
+					<br>
 				<div class="" >
 				<!-- 
 					<button class="btn btn-default btn-success" id="jqgrid-order-add" type="submit">新增</button>
@@ -269,7 +262,7 @@ $('#dialog_simple_task').dialog({
 						viewrecords : true,
 						sortorder : "asc",
 						editurl : "dummy.html",
-						caption : "网段列表",
+						caption : "工单列表",
 						//multiselect : true,
 						rownumbers : true,
 						onSelectRow: function(id,status){   
@@ -492,7 +485,7 @@ $('#dialog_simple_task').dialog({
 	     	 $('#dialog_audit').click(function() {
 	     		  var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 	     		  if(id == null){
-	     			  alert("请选择工单，再点击审批");
+	     			  alert("请选择一条数据");
 	     		  }else{
 	     				$('#dialog_simple_audit').dialog('open');
 	    	 			return false;  
@@ -568,10 +561,9 @@ $('#dialog_simple_task').dialog({
 	 		 $('#dialog_execution').click(function() {
 	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 	 			if(id == null){
-	 				alert("请选择工单，再点击执行");
+	 				alert("请选择一条数据");
 	 			}else{
 	 				$('#dialog_simple_execution').dialog('open');
-		 			return false;		
 	 			}
 	 		});
 

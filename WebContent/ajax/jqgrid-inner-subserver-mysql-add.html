@@ -110,7 +110,6 @@
 
 		$("#ajax-btn").click(function() {
           //将表单序列化为JSON对象    
-          debugger;
         var servId =window.location.href.split("=")[1];// 填充内容
 		var params = $("#add-site-form").serializeObject();
         
@@ -127,7 +126,6 @@
                data:JSON.stringify(params),
                dataType: "json",
                success: function(result, status, xhr) {
-            	   debugger;
                   changeData(result);
                },
                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

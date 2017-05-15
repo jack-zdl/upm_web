@@ -10,9 +10,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -25,11 +23,9 @@ function getXMLRequester( ){
 		 	console.log("成功信息"+obj_data.msg);
 			break;
 		case 0:
-			alert("警告信息"+obj_data.msg);
 			console.warn("警告信息"+obj_data.msg);
             break;
         case -1:
-        	alert("错误信息"+obj_data.msg);
         	console.error("错误信息"+obj_data.msg);
         	break;
         case -9:
@@ -182,7 +178,6 @@ getXMLRequester();
 
 <script type="text/javascript">
 function linkTask(obj_id){
-	debugger;
 	$.ajax({
     	url:host+"/upm_api/v1.0/tasks?objName="+obj_id.value,
         method: "get",
@@ -193,7 +188,6 @@ function linkTask(obj_id){
         	$('#loading').showLoading();
         },
         success: function(result, status, xhr) {
-        	debugger;
            changeDeleteAreaData(result);
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -209,8 +203,7 @@ function linkTask(obj_id){
     	switch (obj_data.result){
     		case 1:
     		 	console.log("成功信息"+obj_data.msg);
-    		 	debugger;
-    		 	if(obj_data.data[0] != null){
+    		 	if(obj_data.data[0] !== null){
     		 		setTaskDialogText(obj_data.data);
         		 	$('#dialog_simple_task').dialog('open');	
     		 	}else{
@@ -235,7 +228,7 @@ function linkTask(obj_id){
     }
 	
 	function setTaskDialogText(obj_after_data){
-		if($("#jqgrid-task tr:visible").length==0){
+		if($("#jqgrid-task tr:visible").length===0){
 			jQuery("#jqgrid-task").jqGrid({
 				data : obj_after_data,
 				datatype : "local",
@@ -281,50 +274,11 @@ $('#dialog_simple_task').dialog({
 </script>
 <script type="text/javascript">
 
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
-
 	pageSetUp();
 	$(function(){
 		pagefunction();
 	});
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 *
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 *
-	 */
+	
 
 	   function pagefunction() {
 		loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
@@ -372,9 +326,9 @@ $('#dialog_simple_task').dialog({
 				width : 300,
 				resizable : false,
 				modal : true,
-				title : "启动提示",
+				title : "启用提示",
 				buttons : [{
-					html : "<i class='fa fa-trash-o'></i>&nbsp;确定",
+					html : "<i class='fa fa-trash-o'></i>&nbsp;启用",
 					"class" : "btn btn-danger",
 					click : function() {
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
@@ -399,9 +353,9 @@ $('#dialog_simple_task').dialog({
 				width : 300,
 				resizable : false,
 				modal : true,
-				title : "停止提示",
+				title : "停用提示",
 				buttons : [{
-					html : "<i class='fa fa-trash-o'></i>&nbsp;停止",
+					html : "<i class='fa fa-trash-o'></i>&nbsp;停用",
 					"class" : "btn btn-danger",
 					click : function() {
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
@@ -457,7 +411,6 @@ $('#dialog_simple_task').dialog({
 					html : "<i class='fa fa-trash-o'></i>&nbsp;管理",
 					"class" : "btn btn-danger",
 					click : function() {
-						debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						var url = "index.html#ajax/jqgrid-inner-subserver-mysql.html?id="+id;
 						 window.location.href = url;
@@ -534,7 +487,6 @@ $('#dialog_simple_task').dialog({
 			}
 			
 			function cLink(cellvalue, options, rowObject){
-				debugger;
 				if(rowObject.taskStatusText.indexOf("成功")>0){
 					return "<button class='btn btn-xs btn-default'   disabled='disabled' onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";	
 				}else{
@@ -564,7 +516,7 @@ $('#dialog_simple_task').dialog({
 						toolbarfilter: true,
 						viewrecords : true,
 						editurl : "dummy.html",
-						caption : "服务列表",
+						caption : "MYSQL服务列表",
 					//	multiselect : true,
 						rownumbers : true,
 						onSelectRow: function(id,status){   
@@ -645,7 +597,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgrid-area-start").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择mysql服务，再点击启动");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_start').dialog('open');	
 					}
@@ -654,7 +606,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgrid-area-stop").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择mysql服务，再点击停止");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_stop').dialog('open');	
 					}
@@ -667,7 +619,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgrid-area-info").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择mysql服务，再点击管理");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_manage').dialog('open');
 					}

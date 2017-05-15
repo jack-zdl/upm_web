@@ -10,9 +10,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -25,11 +23,9 @@ function getXMLRequester( ){
 		 	console.log("成功信息"+obj_data.msg);
 			break;
 		case 0:
-			alert("警告信息"+obj_data.msg);
 			console.warn("警告信息"+obj_data.msg);
             break;
         case -1:
-        	alert("错误信息"+obj_data.msg);
         	console.error("错误信息"+obj_data.msg);
         	break;
         case -9:
@@ -96,11 +92,6 @@ getXMLRequester();
 </div>
 <!-- end row -->
 
-<!--
-	The ID "widget-grid" will start to initialize all widgets below
-	You do not need to use widgets if you dont want to. Simply remove
-	the <section></section> and you can use wells or panels instead
-	-->
 
 <!-- widget grid -->
 <section id="widget-grid" class="">
@@ -517,7 +508,6 @@ function addForm(name){
 						var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
 						var gridData= $("#proxy-jqgrid").jqGrid("getRowData",id);
 						stopProxyFun(gridData.username);
-						debugger
 						pagefunction();
 						$(this).dialog("close");
 						
@@ -707,7 +697,7 @@ function addForm(name){
 				$("#jqgrid-proxy-stop").click(function(){
 					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择用户，再点击删除");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_delete').dialog('open');	
 					}
@@ -842,12 +832,10 @@ function addForm(name){
 						sortorder : "asc",
 						editurl : "dummy.html",
 						caption : "子服务mysql详情表",
-						//multiselect : true,
 						rownumbers : true,
 						autowidth : true,
 						onSelectRow: function(id,status){   
 							if(status==false){  
-				                //      $("#jqgrid").resetSelection();
 				        			 jQuery("#mysql-jqgrid").jqGrid('resetSelection');
 				                  }  
 							    
@@ -949,7 +937,6 @@ function addForm(name){
 	                	$('#loading').showLoading();
 	                },
 	                success: function(result, status, xhr) {
-	                	//debugger;
 	                  changeData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -995,7 +982,6 @@ function addForm(name){
 	                	$('#loading').showLoading();
 	                },
 	                success: function(result, status, xhr) {
-	                	//debugger;
 	                  changeData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

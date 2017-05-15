@@ -91,11 +91,6 @@
 	</div>
 	<!-- end row -->
 
-<!--
-	The ID "widget-grid" will start to initialize all widgets below
-	You do not need to use widgets if you dont want to. Simply remove
-	the <section></section> and you can use wells or panels instead
--->
 <div>
 	
 	
@@ -151,11 +146,10 @@
 				<div class="row">
 					<!-- NEW WIDGET START -->
 					<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<br>
 						<div>
 							<strong>软件名称</strong>
 							<input type="text" id="software-search-text" name="search">
-							<button id="search-software">确定</button>
+							<button id="search-software">查询</button>
 						</div>
 						<br>
 						<div id="pjqgridSoftware" class="tab-pane">
@@ -212,7 +206,6 @@
 				$('#loading').showLoading();
 			},
 			success: function(result, status, xhr) {
-				debugger;
 				changeDeleteAreaData(result);
 			},
 			error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -228,7 +221,6 @@
 			switch (obj_data.result){
 				case 1:
 				console.log("成功信息"+obj_data.msg);
-				debugger;
 				if(obj_data.data[0] != null){
 					setTaskDialogText(obj_data.data);
 					$('#dialog_simple_task').dialog('open');	
@@ -433,7 +425,6 @@
 
 	      	//删除软件镜像
 	        function deleteSoftwareImages(obj_id){
-		         	debugger;	
 		         	$.ajax({
 		         		url:host+"/upm_api/v1.0/softwares/images/"+obj_id,
 		         		method: "delete",
@@ -441,7 +432,6 @@
 		         		dataType: "json",
 		         		timeout:30000,
 		         		success: function(result, status, xhr) {
-		         			debugger;
 		         			changeDeleteAreaData(result);
 		         		},
 		         		error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -453,7 +443,6 @@
 
 	        //启动软件镜像
 	        function startSoftwareImages(obj_id){
-	        	debugger;
 		         	$.ajax({
 		         		url:host+"/upm_api/v1.0/softwares/images/"+obj_id+"/enable",
 		         		method: "put",
@@ -461,7 +450,6 @@
 		         		dataType: "json",
 		         		timeout:30000,
 		         		success: function(result, status, xhr) {
-		         			debugger;
 		         			changeDeleteAreaData(result);
 		         		},
 		         		error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -473,7 +461,6 @@
 
 	        //停止软件镜像
 	        function stopSoftwareImages(obj_id){
-	        	debugger;
 		         	$.ajax({
 		         		url:host+"/upm_api/v1.0/softwares/images/"+obj_id+"/disable",
 		         		method: "put",
@@ -481,7 +468,6 @@
 		         		dataType: "json",
 		         		timeout:30000,
 		         		success: function(result, status, xhr) {
-		         			debugger;
 		         			changeDeleteAreaData(result);
 		         		},
 		         		error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

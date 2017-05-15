@@ -359,13 +359,21 @@ getXMLRequester();
 				return data;	
 			}
 
+			function imageLink(cellvalue, options, rowObject){
+	        		if(cellvalue === true){
+	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        		}else{
+	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        		}
+	    	}
+
 			function setJqgrid(obj_after_data){
 				if($("#jqgrid tr:visible").length==0){
 					jQuery("#jqgrid").jqGrid({
 						data : obj_after_data,
 						datatype : "local",
 						height : 'auto',
-						colNames : ["所属区域","集群名称","备份","最大使用率","最大主机数量","软件","可用"],
+						colNames : ["所属区域","集群名称","备份","最大使用率","最大主机数量","软件","启用/停用"],
 						colModel : [
 							{ name : "areaName", index : "areaName", editable : true },
 							{ name : "name", index : "name", editable : true },
@@ -373,14 +381,14 @@ getXMLRequester();
 							{ name : "maxUsage", index : "maxUsage", editable : true },
 							{ name : "maxHostCount", index : "maxHostCount", editable : true },
 							{ name : "definitionSubServList", index : "definitionSubServList", editable : true, formatter: setDefintionList },
-							{ name : "enabledText", index : "enabledText", editable : true }
+							{ name : "enabled", index : "enabled", editable : true ,formatter:imageLink }
 							],
 						rowNum : 10000,
 						toolbarfilter: true,
 						viewrecords : true,
 						sortorder : "asc",
 						editurl : "dummy.html",
-						caption : "cluster",
+						caption : "集群列表",
 						rownumbers : true,
 						autowidth : true,
 						onSelectRow: function(id,status){   

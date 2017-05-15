@@ -11,9 +11,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -921,6 +919,7 @@ getXMLRequester();
 	                async: true,
 	                dataType: "json",
 	                success: function(result, status, xhr) {
+	                	debugger;
 	                	changeData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -964,16 +963,14 @@ getXMLRequester();
 </script>
 <script type="text/javascript">
 		function clusterOnclick(obj_this){
-			debugger;
 			$("#cluster-text").html(obj_this.text);
-			// alert(obj_this.id);
 			 $.ajax({
 	        	url:host+ "/upm_api/v1.0/dashboards/cluster_resources_allocation?clusterId="+obj_this.id,
 	            method: "get",
 	            async: true,
 	            dataType: "json",
 	            success: function(result, status, xhr) {
-	            //	debugger;
+	            	debugger;
 	            	changeData(result);
 	            },
 	            error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -982,7 +979,6 @@ getXMLRequester();
 	            }
 		    });	
 			 function changeData(obj_data){
-					//debugger;
 					switch (obj_data.result){
 	        		case 1:
 	        		 	console.log("成功信息"+obj_data.msg);
@@ -1016,35 +1012,7 @@ getXMLRequester();
 
 </script>
 <script type="text/javascript">
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
+
 
 	 var flot_updating_chart, flot_statsChart, flot_multigraph, calendar;
 

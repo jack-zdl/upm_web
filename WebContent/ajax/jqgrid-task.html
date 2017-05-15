@@ -10,9 +10,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -25,11 +23,9 @@ function getXMLRequester( ){
 		 	console.log("成功信息"+obj_data.msg);
 			break;
 		case 0:
-			alert("警告信息"+obj_data.msg);
 			console.warn("警告信息"+obj_data.msg);
             break;
         case -1:
-        	alert("错误信息"+obj_data.msg);
         	console.error("错误信息"+obj_data.msg);
         	break;
         case -9:
@@ -56,7 +52,7 @@ getXMLRequester();
 			<i class="fa-fw fa fa-table"></i>
 				任务管理
 			<span>>
-				任务管理
+				任务
 			</span>
 		</h1>
 	</div>
@@ -224,7 +220,7 @@ getXMLRequester();
 						toolbarfilter: true,
 						viewrecords : true,
 						editurl : "dummy.html",
-						caption : "服务列表",
+						caption : "任务列表",
 				//		multiselect : true,
 						rownumbers : true,
 						onSelectRow: function(id,status){   

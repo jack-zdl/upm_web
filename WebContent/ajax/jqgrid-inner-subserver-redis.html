@@ -10,9 +10,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -25,11 +23,9 @@ function getXMLRequester( ){
 		 	console.log("成功信息"+obj_data.msg);
 			break;
 		case 0:
-			alert("警告信息"+obj_data.msg);
 			console.warn("警告信息"+obj_data.msg);
             break;
         case -1:
-        	alert("错误信息"+obj_data.msg);
         	console.error("错误信息"+obj_data.msg);
         	break;
         case -9:
@@ -95,12 +91,6 @@ getXMLRequester();
 
 </div>
 <!-- end row -->
-
-<!--
-	The ID "widget-grid" will start to initialize all widgets below
-	You do not need to use widgets if you dont want to. Simply remove
-	the <section></section> and you can use wells or panels instead
-	-->
 
 <!-- widget grid -->
 <section id="widget-grid" class="">
@@ -211,9 +201,9 @@ getXMLRequester();
 								<section id="widget-grid" class="">
 									<div class="row">
 									 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
-										<button class="btn btn-default btn-success" id="jqgrid-proxy-start" type="submit">启动</button>
+										<button class="btn btn-default btn-success" id="jqgrid-proxy-start" type="submit">启用</button>
 
-										<button class="btn btn-default btn-danger" id="jqgrid-proxy-stop" type="submit">停止</button>
+										<button class="btn btn-default btn-danger" id="jqgrid-proxy-stop" type="submit">停用</button>
 
 									</div>
 									<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -250,12 +240,12 @@ getXMLRequester();
 
 <div id="dialog_simple" title="Dialog Simple Title">
 	<p>
-		确认启动
+		确认启用
 	</p>
 </div>
 <div id="dialog_simple_stop" title="Dialog Simple Title">
 	<p>
-		确认停止
+		确认停用
 	</p>
 </div>
 <div id="dialog_simple_task" title="Dialog Simple Title">
@@ -266,7 +256,6 @@ getXMLRequester();
 <script type="text/javascript" src="js/plugin/jqgrid/grid.locale-en.min.js"></script>
 <script type="text/javascript">
 function linkTask(obj_id){
-	debugger;
 	$.ajax({
     	url:host+"/upm_api/v1.0/tasks?objId="+obj_id.value,
         method: "get",
@@ -277,7 +266,6 @@ function linkTask(obj_id){
         	$('#loading').showLoading();
         },
         success: function(result, status, xhr) {
-        	debugger;
            changeDeleteAreaData(result);
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -293,7 +281,6 @@ function linkTask(obj_id){
     	switch (obj_data.result){
     		case 1:
     		 	console.log("成功信息"+obj_data.msg);
-    		 	debugger;
     		 	if(obj_data.data[0] != null){
     		 		setTaskDialogText(obj_data.data);
         		 	$('#dialog_simple_task').dialog('open');	
@@ -448,12 +435,11 @@ $('#dialog_simple_task').dialog({
 					width : 300,
 					resizable : false,
 					modal : true,
-					title : "启动提示",
+					title : "启用提示",
 					buttons : [{
-						html : "<i class='fa fa-trash-o'></i>&nbsp;确定",
+						html : "<i class='fa fa-trash-o'></i>&nbsp;启用",
 						"class" : "btn btn-danger",
 						click : function() {
-							debugger;
 							var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 							startMysqlFun(id);
 							$(this).dialog("close");
@@ -474,12 +460,11 @@ $('#dialog_simple_task').dialog({
 				width : 300,
 				resizable : false,
 				modal : true,
-				title : "停止提示",
+				title : "停用提示",
 				buttons : [{
-					html : "<i class='fa fa-trash-o'></i>&nbsp;确定",
+					html : "<i class='fa fa-trash-o'></i>&nbsp;停用",
 					"class" : "btn btn-danger",
 					click : function() {
-						debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						stopMysqlFun(id);
 						$(this).dialog("close");
@@ -513,9 +498,11 @@ $('#dialog_simple_task').dialog({
 				            break;
 				        case -1:
 				        	console.error("错误信息"+obj_data.msg);
+				        	break;
 				        case -9:
 				        	console.error("错误信息"+obj_data.msg);
 				        	window.location="login.html";
+				        	break;
 		        		default:
 		        			console.log("测试代码");
 		        	}
@@ -585,12 +572,10 @@ $('#dialog_simple_task').dialog({
 						sortorder : "asc",
 						editurl : "dummy.html",
 						caption : "子服务mysql详情表",
-					//	multiselect : true,
 						rownumbers : true,
 						autowidth : true,
 						onSelectRow: function(id,status){   
 							if(status==false){  
-				                //      $("#jqgrid").resetSelection();
 				        			 jQuery("#proxy-jqgrid").jqGrid('resetSelection');
 				                  }  
 							    return(true);
@@ -675,14 +660,12 @@ $('#dialog_simple_task').dialog({
 				
 
 	        	$("#jqgrid-proxy-start").click(function(){
-	        		debugger;
 					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
 					alert(id);
 					startProxyFun(id);
 				});
 
 				$("#jqgrid-proxy-stop").click(function(){
-					debugger;
 					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
 					alert(id);
 					stopProxyFun(id);
@@ -690,7 +673,6 @@ $('#dialog_simple_task').dialog({
 	        }
 	        //启动redis
 	        function startProxyFun(obj_id){
-	        	debugger;
 	        	var resultData = {
 					  "result": 1,
 					  "code": null,
@@ -729,9 +711,11 @@ $('#dialog_simple_task').dialog({
 				            break;
 				        case -1:
 				        	console.error("错误信息"+obj_data.msg);
+				        	break;
 				        case -9:
 				    		window.location="login.html";
 				        	console.error("错误信息"+obj_data.msg);
+				        	break;
 		        		default:
 		        			console.log("测试代码");
 		        	}
@@ -777,9 +761,11 @@ $('#dialog_simple_task').dialog({
 				            break;
 				        case -1:
 				        	console.error("错误信息"+obj_data.msg);
+				        	break;
 				        case -9:
 				    		window.location="login.html";
 				        	console.error("错误信息"+obj_data.msg);
+				        	break;
 		        		default:
 		        			console.log("测试代码");
 		        	}
@@ -790,7 +776,6 @@ $('#dialog_simple_task').dialog({
 	         * [setSubMysqlJqgrid description] 建立子服务mysql详情表
 	         */
 	    	function cLink(cellvalue, options, rowObject){
-	        	debugger;
 	        	return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
 				//if(rowObject.taskStatus.indexOf("成功")>0){
 				//	return "<button class='btn btn-xs btn-default'   disabled='disabled' onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";	
@@ -931,7 +916,6 @@ $('#dialog_simple_task').dialog({
 	                	$('#loading').showLoading();
 	                },
 	                success: function(result, status, xhr) {
-	                	debugger;
 	                  changeData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -977,7 +961,6 @@ $('#dialog_simple_task').dialog({
 	                	$('#loading').showLoading();
 	                },
 	                success: function(result, status, xhr) {
-	                	debugger;
 	                  changeData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

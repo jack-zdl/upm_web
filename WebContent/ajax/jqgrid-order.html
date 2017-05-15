@@ -14,7 +14,7 @@
 			<i class="fa-fw fa fa-table"></i>
 				工单管理
 			<span>>
-				工单管理
+				工单
 			</span>
 		</h1>
 	</div>
@@ -118,48 +118,10 @@
 </div>
 <script type="text/javascript">
 
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
 
 	pageSetUp();
 
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 *
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 *
-	 */
+	
 	 $(function(){ 
 		 pagefunction(); 
 	 });
@@ -187,9 +149,6 @@
 						{ name : 'scaleName', index : 'scaleName', editable : true },
 						{ name : 'statusText', index : 'statusText', editable : true }],
 						rowNum : 10,
-						//rowList : [10, 20, 30],
-						//pager : "#pjqgrid",
-						//sortname : "id",
 						toolbarfilter: true,
 						viewrecords : true,
 						sortorder : "asc",
@@ -200,14 +159,11 @@
 								be = "<button class='btn btn-xs btn-default' data-original-title='Edit Row' onclick=\"jQuery('#jqgrid').editRow('"+cl+"');\"><i class='fa fa-pencil'></i></button>";
 								se = "<button class='btn btn-xs btn-default' data-original-title='Save Row' onclick=\"jQuery('#jqgrid').saveRow('"+cl+"');\"><i class='fa fa-save'></i></button>";
 								ca = "<button class='btn btn-xs btn-default' data-original-title='Cancel' onclick=\"jQuery('#jqgrid').restoreRow('"+cl+"');\"><i class='fa fa-times'></i></button>";
-								//ce = "<button class='btn btn-xs btn-default' onclick=\"jQuery('#jqgrid').restoreRow('"+cl+"');\"><i class='fa fa-times'></i></button>";
-								//jQuery("#jqgrid").jqGrid('setRowData',ids[i],{act:be+se+ce});
 								jQuery("#jqgrid").jqGrid('setRowData',ids[i],{act:be+se+ca});
 							}
 						},
 						editurl : "dummy.html",
 						caption : "工单列表",
-					//	multiselect : true,
 						rownumbers : true,
 						beforeSelectRow: function(rowid, e,status)
 						{
@@ -294,11 +250,6 @@
 
 			  	$( ".ui-icon.ui-icon-seek-end" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 			  	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward");
-
-
-
-
-			    // update buttons
 
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#jqgrid").jqGrid( 'setGridWidth', $("#content").width() );

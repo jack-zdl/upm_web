@@ -113,7 +113,6 @@ form table td input {width:160px;height:25px}
     </script>
      <script type="text/javascript">
      $("#ajax-btn").click(function (){
-         debugger;
          var serviceid=$("#serviceNameId").val();
          var params = $("#order-form").serializeObject();
         
@@ -131,7 +130,6 @@ form table td input {width:160px;height:25px}
                data:JSON.stringify(params),
                dataType: "json",
                success: function(result, status, xhr) {
-                   debugger;
                   changenfsData(result);
                },
                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -139,9 +137,9 @@ form table td input {width:160px;height:25px}
                  console.error("未连接服务器 =" + status);
                }
            });
-       })
+       });
        function changenfsData(obj_data){
-    	 if(obj_data.result!=""||obj_data.result!=null){}
+    	 if(obj_data.result!=""||obj_data.result!==null){}
            switch (obj_data.result){
              case 1:
                alert("成功信息:"+obj_data.msg);

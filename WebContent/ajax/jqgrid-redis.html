@@ -10,9 +10,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -92,12 +90,6 @@ getXMLRequester();
 
 </div>
 <!-- end row -->
-
-<!--
-	The ID "widget-grid" will start to initialize all widgets below
-	You do not need to use widgets if you dont want to. Simply remove
-	the <section></section> and you can use wells or panels instead
-	-->
 
 <!-- widget grid -->
 <section id="widget-grid" class="">
@@ -182,7 +174,6 @@ getXMLRequester();
 
 <script type="text/javascript">
 function linkTask(obj_id){
-	debugger;
 	$.ajax({
     	url:host+"/upm_api/v1.0/tasks?objName="+obj_id.value,
         method: "get",
@@ -193,7 +184,6 @@ function linkTask(obj_id){
         	$('#loading').showLoading();
         },
         success: function(result, status, xhr) {
-        	debugger;
            changeDeleteAreaData(result);
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -209,7 +199,6 @@ function linkTask(obj_id){
     	switch (obj_data.result){
     		case 1:
     		 	console.log("成功信息"+obj_data.msg);
-    		 	debugger;
     		 	if(obj_data.data[0] != null){
     		 		setTaskDialogText(obj_data.data);
         		 	$('#dialog_simple_task').dialog('open');	
@@ -422,7 +411,6 @@ $('#dialog_simple_task').dialog({
 					html : "<i class='fa fa-trash-o'></i>&nbsp;管理",
 					"class" : "btn btn-danger",
 					click : function() {
-						debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						var url = "index.html#ajax/jqgrid-inner-subserver-redis.html?id="+id;
 						 window.location.href = url;
@@ -528,13 +516,11 @@ $('#dialog_simple_task').dialog({
 						toolbarfilter: true,
 						viewrecords : true,
 						editurl : "dummy.html",
-						caption : "服务列表",
-					//	multiselect : true,
+						caption : "REDIS服务列表",
 						rownumbers : true,
 						autowidth : true,
 						onSelectRow: function(id,status){   
 							if(status==false){  
-				                //      $("#jqgrid").resetSelection();
 				        			 jQuery("#jqgrid").jqGrid('resetSelection');
 				                  }  
 							    return(true);
@@ -608,7 +594,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgrid-area-start").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择redis服务，再点击启动");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_start').dialog('open');	
 					}
@@ -617,7 +603,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgrid-area-stop").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择redis服务，再点击停止");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_stop').dialog('open');	
 					}
@@ -631,7 +617,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgrid-area-info").click(function(){
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					if(id == null){
-						alert("请选择redis服务，再点击管理");
+						alert("请选择一条数据");
 					}else{
 						$('#dialog_simple_manage').dialog('open');
 					}
@@ -804,7 +790,6 @@ $('#dialog_simple_task').dialog({
 	                	$('#loading').showLoading();
 	                },
 	                success: function(result, status, xhr) {
-	                	debugger;
 	                   changeAreaData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -834,7 +819,7 @@ $('#dialog_simple_task').dialog({
 	  $("#search").click(function(){
 				alert("提示信息:查询成功");
 				$("#pjqgrid").html("");
-				var html="<table id='jqgrid'></table>"
+				var html="<table id='jqgrid'></table>";
 				$("#pjqgrid").append(html);
 				pagefunction();
 	        });
