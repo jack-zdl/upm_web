@@ -8,9 +8,7 @@ function getXMLRequester( ){
         async: true,
         dataType: "json",
         success: function(result, status, xhr) {
-        	debugger;
         	changeData(result);
-        //  $('#updating-chart').highcharts(changeData(DygraphData,option));
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
         	alert("未连接服务器");
@@ -151,12 +149,12 @@ getXMLRequester();
 		确认注销
 	</p>
 </div>
-<div id="dialog_simple" title="Dialog Simple Title">
+<div id="dialog_simple_start" title="Dialog Simple Title">
 	<p >
 		确认启用
 	</p>
 </div>
-<div id="dialog_simple" title="Dialog Simple Title">
+<div id="dialog_simple_stop" title="Dialog Simple Title">
 	<p >
 		确认停用
 	</p>
@@ -264,55 +262,219 @@ $('#dialog_simple_task').dialog({
 </script>
 <script type="text/javascript">
 
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
+	
 
 	pageSetUp();
 
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 *
-	 * var pagefunction = function() {
-	 *   ...
-	 * }
-	 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
-	 *
-	 */
+	
 	 $(function(){ 
 		 pagefunction(); 
 	 });
 	 function pagefunction() {
 		loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
 		function run_jqgrid_function() {
+
+			//注销的弹出框
+			$('#dialog_simple').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "注销提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;注销",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						deletemachine(id);					
+						$(this).dialog("close");
+						
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+							
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+			$('#dialog_simple_start').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "启用提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;启用",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						startmachine(id);					
+						$(this).dialog("close");
+						
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+							
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+			$('#dialog_simple_stop').dialog({
+				autoOpen : false,
+				width : 300,
+				resizable : false,
+				modal : true,
+				title : "停用提示",
+				buttons : [{
+					html : "<i class='fa fa-trash-o'></i>&nbsp;停用",
+					"class" : "btn btn-danger",
+					click : function() {
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						stopmachine(id);					
+						$(this).dialog("close");
+						
+					}
+				}, {
+					html : "<i class='fa fa-times'></i>&nbsp;取消",
+					"class" : "btn btn-default",
+					click : function() {
+							
+						$(this).dialog("close");
+					}
+				}]
+			});
+
+			//删除主机函数
+			function deletemachine(obj_id){
+	     		$.ajax({
+             		url:host+ "/upm_api/v1.0/hosts/"+obj_id,
+	                method: "delete",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+						if(result.result==-1){
+							alert("提示信息："+result.msg)
+						}else if(result.result==0){
+							alert("提示信息："+result.msg)
+						}else if(result.result==1){
+							alert("提示信息："+result.msg);
+							$("#jqgridTable").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#jqgridTable").append(html);
+							
+							pagefunction();
+						}else if(result.result==-9){
+							window.location="login.html";
+						}
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+         		});
+	     	}
+
+	     	//启动主机函数
+	     	function startmachine(obj_id){
+	     		$.ajax({
+             		url:host+ "/upm_api/v1.0/hosts/"+obj_id,
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+						if(result.result==-1){
+							alert("提示信息："+result.msg)
+						}else if(result.result==0){
+							alert("提示信息："+result.msg)
+						}else if(result.result==1){
+							alert("提示信息："+result.msg);
+							$("#jqgridTable").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#jqgridTable").append(html);
+							
+							pagefunction();
+						}else if(result.result==-9){
+							window.location="login.html";
+						}
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+         		});
+	     	}
+
+	     	//停用主机函数
+	     	function stopmachine(obj_id){
+	     		$.ajax({
+             		url:host+ "/upm_api/v1.0/hosts/"+obj_id,
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+						if(result.result==-1){
+							alert("提示信息："+result.msg)
+						}else if(result.result==0){
+							alert("提示信息："+result.msg)
+						}else if(result.result==1){
+							alert("提示信息："+result.msg);
+							$("#jqgridTable").html("");
+							var html="<table id='jqgrid'></table>"
+								$("#jqgridTable").append(html);
+							
+							pagefunction();
+						}else if(result.result==-9){
+							window.location="login.html";
+						}
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+         		});
+	     	}
 			
+			function imagesCLink(cellvalue, options, rowObject){
+				if(cellvalue === true){
+	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        	}else{
+	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        	}
+			}
+
 			function cLink(cellvalue, options, rowObject){
 				return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
 			}
@@ -332,7 +494,7 @@ $('#dialog_simple_task').dialog({
 						{ name : 'room', index : 'room', editable : true },
 						{ name : 'seat', index : 'seat', editable : true },
 						{ name : 'enabled', index : 'enabled', editable : true },
-						{ name : 'statusText', index : 'statusText', editable : true },
+						{ name : 'status', index : 'status', editable : true ,formatter : imagesCLink},
 						{ name : 'actiion',index : 'action' , formatter : cLink}],
 						rowNum : 10,
 						toolbarfilter: true,
@@ -340,16 +502,12 @@ $('#dialog_simple_task').dialog({
 						sortorder : "asc",
 						editurl : "dummy.html",
 						caption : "网段列表",
-				//		multiselect : true,
 						rownumbers : true,
-				//		rownumWidth: 60,
 						autowidth : true,
 						onSelectRow: function(id,status){   
 							if(status==false){  
-				                //      $("#jqgrid").resetSelection();
 				        			 jQuery("#jqgrid").jqGrid('resetSelection');
 				                  }  
-							    
 							    return(true);
 			        	},
 			        	
@@ -374,17 +532,17 @@ $('#dialog_simple_task').dialog({
 				$('.navtable .ui-pg-button').tooltip({
 					container : 'body'
 				});
-
-				
 				 
 				jQuery("#m1").click(function() {
 					var s;
 					s = jQuery("#jqgrid").jqGrid('getGridParam', 'selarrrow');
 					alert(s);
 				});
+
 				jQuery("#m1s").click(function() {
 					jQuery("#jqgrid").jqGrid('setSelection', "13");
 				});
+
 				//模态框
 				$("#jqgrid-machine-add").click(function() {
 					$('#myModal').modal({
@@ -399,11 +557,21 @@ $('#dialog_simple_task').dialog({
 									refreshPositions: false  
 						});
 				});
+				//入库
+ 				$('#dialog_add').click(function() {
+			  		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+			 		if(id === null){
+				 		alert("请选择一条数据");
+			 		}else{
+						$('#dialog_simple_add').dialog('open');
+						return false;
+					 }
+				});
 				//主机出库
 				$("#jqgrid-machine-delete").click(function() {
 					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择主机，再单击出库");
+					if(id === null){
+						 alert("请选择一条数据");
 					}else{
 						$('#myModal').modal({
 					      	remote:'ajax/machineJqgriddelete.html',
@@ -418,7 +586,56 @@ $('#dialog_simple_task').dialog({
 										refreshPositions: false  
 							});	
 					}
-				})
+				});
+				//注销按钮
+				$('#dialog_link').click(function() {
+		 			 var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					 if(id === null){
+						 alert("请选择一条数据");
+		 			}else{
+			 			$('#dialog_simple').dialog('open');
+		 			}
+				});
+				//启用
+				$('#jqgrid-machine-start').click(function() {
+		 			 var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					 if(id === null){
+						 alert("请选择一条数据");
+		 			}else{
+			 			$('#dialog_simple_start').dialog('open');
+		 			}
+				});
+
+				//停用
+				$('#jqgrid-machine-stop').click(function() {
+		 			 var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					 if(id === null){
+						 alert("请选择一条数据");
+		 			}else{
+			 			$('#dialog_simple_stop').dialog('open');
+		 			}
+				});
+
+				//编辑
+				$('#jqgrid-machine-edit').click(function() {
+		 			 var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					 if(id === null){
+						 alert("请选择一条数据");
+		 			}else{
+			 			$('#myModal').modal({
+					      	remote:'ajax/machine-edit.html',
+					      	show	:true
+					      	}).on("hidden.bs.modal", function() {  
+					    	$(this).removeData("bs.modal");  
+					    	run_jqgrid_function();
+							}).draggable({
+										cursor: "move",
+										handle: '.modal-header',
+										refreshPositions: false  
+							});
+		 			}
+				});
+
 				//主机注册
 				$("#jqgrid-machine-register").click(function() {
 					
@@ -434,7 +651,7 @@ $('#dialog_simple_task').dialog({
 									handle: '.modal-header',
 									refreshPositions: false  
 						});
-				})
+				});
 				// remove classes
 				$(".ui-jqgrid").removeClass("ui-widget ui-widget-content");
 			    $(".ui-jqgrid-view").children().removeClass("ui-widget-header ui-state-default");
@@ -468,14 +685,9 @@ $('#dialog_simple_task').dialog({
 			  	$( ".ui-icon.ui-icon-seek-end" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 			  	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward");
 
-
-
-
-			    // update buttons
-
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#jqgrid").jqGrid( 'setGridWidth', $("#content").width() );
-				})
+				});
 			
 			}
 
@@ -531,79 +743,13 @@ $('#dialog_simple_task').dialog({
 		
 	 }
 	
-	 $('#dialog_link').click(function() {
-		  var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-		 if(id == null){
-			 alert("请选择主机，再点击注销");
-		 }else{
-			 $('#dialog_simple').dialog('open');
-				return false;
-		 }
-			});
+	
 
-		$('#dialog_simple').dialog({
-			autoOpen : false,
-			width : 300,
-			resizable : false,
-			modal : true,
-			title : "注销提示",
-			buttons : [{
-				html : "<i class='fa fa-trash-o'></i>&nbsp;确认",
-				"class" : "btn btn-danger",
-				click : function() {
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					var rowData = $("#jqgrid").jqGrid("getRowData",id);
-					var val= rowData.id;
-					deletemachine(id);					
-					$(this).dialog("close");
-					
-				}
-			}, {
-				html : "<i class='fa fa-times'></i>&nbsp;取消",
-				"class" : "btn btn-default",
-				click : function() {
-						
-					$(this).dialog("close");
-				}
-			}]
-		});
+		
 
 			
-	     	function deletemachine(obj_id){
-	     		$.ajax({
-             	url:host+ "/upm_api/v1.0/hosts/"+obj_id,
-	                method: "delete",
-	                async: true,
-	                dataType: "json",
-	                timeout:30000,
-	                beforeSend:function(){
-	                	$('#loading').showLoading();
-	                },
-	                success: function(result, status, xhr) {
-						if(result.result==-1){
-							alert("提示信息："+result.msg)
-						}else if(result.result==0){
-							alert("提示信息："+result.msg)
-						}else if(result.result==1){
-							alert("提示信息："+result.msg);
-							$("#jqgridTable").html("");
-							var html="<table id='jqgrid'></table>"
-								$("#jqgridTable").append(html);
-							
-							pagefunction();
-						}else if(result.result==-9){
-							window.location="login.html";
-						}
-	                },
-	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-	                	alert("未连接服务器");
-	                    console.error("未连接服务器 =" + status);
-	                },
-	                complete:function(){
-	                	$('#loading').hideLoading();
-	                }
-         	});
-	     	}
+	   
+
 	     	$("#submitButton").click(function (){
 	     		alert("提示信息:查询成功");
 				$("#jqgridTable").html("");
@@ -611,16 +757,7 @@ $('#dialog_simple_task').dialog({
 				$("#jqgridTable").append(html);
 				pagefunction();
 	     	})
-		//入库
- 		$('#dialog_add').click(function() {
-			  var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-			 if(id == null){
-				 alert("请选择主机，再点击入库");
-			 }else{
-					$('#dialog_simple_add').dialog('open');
-					return false;
-			 }
-		});
+		
 
 		$('#dialog_simple_add').dialog({
 			autoOpen : false,
