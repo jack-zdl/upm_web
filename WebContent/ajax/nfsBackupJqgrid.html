@@ -40,6 +40,8 @@
 		}
 	}
 	getXMLRequester();
+
+	
 </script>
 <div class="row">
 
@@ -158,7 +160,18 @@ $(function(){
 function pagefunction(url) {
 	loadScript("js/plugin/jqgrid/jquery.jqGrid.min.js", run_jqgrid_function);
 	function run_jqgrid_function() {
-		//删除的弹出框，确定删除
+	
+		function addForm(name){
+			$('#myModal').modal({
+				remote:name+'.html',
+				show	:true
+			}).on("hidden.bs.modal", function() {  
+				$(this).removeData("bs.modal"); 
+				 nfsMainFun();
+			});
+		}
+
+			//删除的弹出框，确定删除
 		$('#dialog_simple').dialog({
 			autoOpen : false,
 			width : 300,
@@ -236,10 +249,138 @@ function pagefunction(url) {
 			}]
 		});
 
+		function stopNfsFun(id){
+			$.ajax({
+				url:host+ "/upm_api/v1.0/backup-storages/"+id+"/disable",
+				method: "put",
+				async: false,
+				dataType: "json",
+				timeout:30000,
+				beforeSend:function(){
+					$('#loading').showLoading();
+				},
+				success: function(result, status, xhr) {
+					if(result.result==-1){
+						alert("提示信息："+result.msg)
+						setJqgrid();
+					}else if(result.result==0){
+						alert("提示信息："+result.msg)
+						setJqgrid();
+					}else if(result.result==1){
+						alert("提示信息："+result.msg);
+						$("#jqgridTable").html("");
+						var html="<table id='jqgrid'></table>"
+						$("#jqgridTable").append(html);
+						pagefunction();
+					}else if(result.result==-9){
+						window.location="login.html";
+					}
+				},
+				error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+					alert("未连接服务器");
+					console.error("未连接服务器 =" + status);
+				},
+				complete:function(){
+					$('#loading').hideLoading();
+				}
+			});
+		}
+		// end stopNfsFun 
+		function startNfsFun(id){
+			$.ajax({
+				url:host+ "/upm_api/v1.0/backup-storages/"+id+"/enable",
+				method: "put",
+				async: true,
+				dataType: "json",
+				timeout:30000,
+				success: function(result, status, xhr) {
+					if(result.result==-1){
+						alert("提示信息："+result.msg)
+						setJqgrid();
+					}else if(result.result==0){
+						alert("提示信息："+result.msg)
+						setJqgrid();
+					}else if(result.result==1){
+						alert("提示信息："+result.msg);
+						$("#jqgridTable").html("");
+						var html="<table id='jqgrid'></table>"
+						$("#jqgridTable").append(html);
+
+						pagefunction();
+					}else if(result.result==-9){
+						window.location="login.html";
+					}
+				},
+				error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+					alert("未连接服务器");
+					console.error("未连接服务器 =" + status);
+				}
+			});
+		}
+		// end startNfsFun
+		function deletenfs(obj_id){
+			$.ajax({
+				url:host+ "/upm_api/v1.0/backup-storages/"+obj_id,
+				method: "delete",
+				async: true,
+				dataType: "json",
+				timeout:30000,
+				success: function(result, status, xhr) {
+					if(result.result==-1){
+						alert("提示信息："+result.msg)
+						setJqgrid();
+					}else if(result.result==0){
+						alert("提示信息："+result.msg)
+						setJqgrid();
+					}else if(result.result==1){
+						alert("提示信息："+result.msg);
+						$("#jqgridTable").html("");
+						var html="<table id='jqgrid'></table>"
+						$("#jqgridTable").append(html);
+
+						pagefunction();
+					}else if(result.result==-9){
+						window.location="login.html";
+					}
+				},
+				error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+					alert("未连接服务器");
+					console.error("未连接服务器 =" + status);
+				}
+			});
+		}
+
+		$('#dialog_link').click(function() {
+				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					alert("请选择一条数据");
+				}else{
+					$('#dialog_simple').dialog('open');
+				}
+		});
+
+		$('#jqgrid-nfs-start').click(function() {
+				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					alert("请选择一条数据");
+				}else{
+					$('#dialog_simple_start').dialog('open');
+				}
+		});
+
+		$('#jqgrid-nfs-stop').click(function() {
+				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					alert("请选择一条数据");
+				}else{
+					$('#dialog_simple_stop').dialog('open');
+				}
+		});
+
 		function imageLink(cellvalue, options, rowObject){
-	        	if(cellvalue === true){
+	        	if(cellvalue === "是"){
 	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
-	        	}else{
+	        	}else if(cellvalue === "否"){
 	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
 	        	}
 	    }
@@ -251,7 +392,7 @@ function pagefunction(url) {
 					data : obj_after_data,
 					datatype : "local",
 					height : 'auto',
-					colNames : [ '备份存储名称', '类型','IP地址', '源目录', '挂载目录', '挂载参数','空闲容量','总容量','启用/停用'],
+					colNames : [ '备份存储名称', '类型','IP地址', '源目录', '挂载目录', '挂载参数','空闲容量','总容量','启用/停用',""],
 					colModel : [
 					{ name : 'name', index : 'name', editable : true }, 
 					{ name : 'type', index : 'type', editable : true},
@@ -265,7 +406,8 @@ function pagefunction(url) {
 					{ name : 'totalSpace', index : 'totalSpace',  editable : true, formatter : function(value, options, rData){
 						return value + ""+rData['spaceUnit'];
 					} }, 
-					{ name : 'enabledText', index : 'enabledText', editable : true,formatter:imageLink }
+					{ name : 'enabledText', index : 'enabledText', editable : true,formatter:imageLink },
+					{ name : 'enabled', index : 'enabled', editable : true,width:0,hidden:true }
 					],
 					rowNum : 10,
 					toolbarfilter: true,
@@ -314,47 +456,21 @@ function pagefunction(url) {
 
 			//模态框
 			$("#jqgrid-nfs-add").click(function() {
-				$('#myModal').modal({
-					remote:'ajax/nfsBackup-add.html',
-					show	:true
-				}).on("hidden.bs.modal", function() {  
-					$(this).removeData("bs.modal");  
-					
-					run_jqgrid_function();
-				}).draggable({
-					cursor: "move",
-					handle: '.modal-header',
-					refreshPositions: false  
-				});
+				addForm("ajax/nfsBackup-add");
+				// $('#myModal').modal({
+				// 	remote:'ajax/nfsBackup-add.html',
+				// 	show	:true
+				// }).on("hidden.bs.modal", function() {  
+				// 	$(this).removeData("bs.modal");  
+				// 	 run_jqgrid_function();
+				// }).draggable({
+				// 	cursor: "move",
+				// 	handle: '.modal-header',
+				// 	refreshPositions: false  
+				// });
 			});
 
-			$('#dialog_link').click(function() {
-				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-				if(id == null){
-					alert("请选择一条数据");
-				}else{
-					$('#dialog_simple').dialog('open');
-				}
-			});
-
-			$('#jqgrid-nfs-start').click(function() {
-				debugger;
-				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-				if(id == null){
-					alert("请选择一条数据");
-				}else{
-					$('#dialog_simple_start').dialog('open');
-				}
-			});
-
-			$('#jqgrid-nfs-stop').click(function() {
-				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-				if(id == null){
-					alert("请选择一条数据");
-				}else{
-					$('#dialog_simple_stop').dialog('open');
-				}
-			});
+			
 			// remove classes
 			$(".ui-jqgrid").removeClass("ui-widget ui-widget-content");
 			$(".ui-jqgrid-view").children().removeClass("ui-widget-header ui-state-default");
@@ -401,12 +517,12 @@ function pagefunction(url) {
     			case 0:
     			alert("警告信息"+obj_data.msg);
     			console.warn("警告信息"+obj_data.msg);
-    			setJqgrid([]);
+    			data = [];
     			break;
     			case -1:
     			alert("错误信息"+obj_data.msg);
     			console.error("错误信息"+obj_data.msg);
-    			setJqgrid([]);
+    			data = [];
     			break;
     			case -9:
     			console.error("错误信息"+obj_data.msg);
@@ -467,106 +583,7 @@ function pagefunction(url) {
 		
 }
 	
-function stopNfsFun(id){
-	$.ajax({
-		url:host+ "/upm_api/v1.0/backup-storages/"+id+"/disable",
-		method: "put",
-		async: false,
-		dataType: "json",
-		timeout:30000,
-		beforeSend:function(){
-			$('#loading').showLoading();
-		},
-		success: function(result, status, xhr) {
-			if(result.result==-1){
-				alert("提示信息："+result.msg)
-				setJqgrid();
-			}else if(result.result==0){
-				alert("提示信息："+result.msg)
-				setJqgrid();
-			}else if(result.result==1){
-				alert("提示信息："+result.msg);
-				$("#jqgridTable").html("");
-				var html="<table id='jqgrid'></table>"
-				$("#jqgridTable").append(html);
-				pagefunction();
-			}else if(result.result==-9){
-				window.location="login.html";
-			}
-		},
-		error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-			alert("未连接服务器");
-			console.error("未连接服务器 =" + status);
-		},
-		complete:function(){
-			$('#loading').hideLoading();
-		}
-	});
-}
-// end stopNfsFun 
-function startNfsFun(id){
-	$.ajax({
-		url:host+ "/upm_api/v1.0/backup-storages/"+id+"/enable",
-		method: "put",
-		async: true,
-		dataType: "json",
-		timeout:30000,
-		success: function(result, status, xhr) {
-			if(result.result==-1){
-				alert("提示信息："+result.msg)
-				setJqgrid();
-			}else if(result.result==0){
-				alert("提示信息："+result.msg)
-				setJqgrid();
-			}else if(result.result==1){
-				alert("提示信息："+result.msg);
-				$("#jqgridTable").html("");
-				var html="<table id='jqgrid'></table>"
-				$("#jqgridTable").append(html);
 
-				pagefunction();
-			}else if(result.result==-9){
-				window.location="login.html";
-			}
-		},
-		error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-			alert("未连接服务器");
-			console.error("未连接服务器 =" + status);
-		}
-	});
-}
-// end startNfsFun
-function deletenfs(obj_id){
-	$.ajax({
-		url:host+ "/upm_api/v1.0/backup-storages/"+obj_id,
-		method: "delete",
-		async: true,
-		dataType: "json",
-		timeout:30000,
-		success: function(result, status, xhr) {
-			if(result.result==-1){
-				alert("提示信息："+result.msg)
-				setJqgrid();
-			}else if(result.result==0){
-				alert("提示信息："+result.msg)
-				setJqgrid();
-			}else if(result.result==1){
-				alert("提示信息："+result.msg);
-				$("#jqgridTable").html("");
-				var html="<table id='jqgrid'></table>"
-				$("#jqgridTable").append(html);
-
-				pagefunction();
-			}else if(result.result==-9){
-				window.location="login.html";
-			}
-		},
-		error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-			alert("未连接服务器");
-			console.error("未连接服务器 =" + status);
-		}
-	});
-}
 
 		
 //查询函数

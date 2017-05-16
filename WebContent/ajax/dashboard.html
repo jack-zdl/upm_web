@@ -24,11 +24,9 @@ function getXMLRequester( ){
 		 	console.log("成功信息"+obj_data.msg);
 			break;
 		case 0:
-			alert("警告信息"+obj_data.msg);
 			console.warn("警告信息"+obj_data.msg);
             break;
         case -1:
-        	alert("错误信息"+obj_data.msg);
         	console.error("错误信息"+obj_data.msg);
         	break;
         case -9:
@@ -951,10 +949,25 @@ getXMLRequester();
 				
 			}
 				function showPie(obj_data){
-					$('#cpu-percent').data('easyPieChart').update((obj_data.cpu.cpuUsed / obj_data.cpu.cpuSum)*100);
-					$('#mem-percent').data('easyPieChart').update((obj_data.mem.memUsedSize / obj_data.mem.memSumSize)*100);
-					$('#disk-percent').data('easyPieChart').update((obj_data.disk.diskUsedSize / obj_data.disk.diskSumSize)*100);
-					$('#container-percent').data('easyPieChart').update(obj_data.container.containerSum);		
+					if(obj_data.cpu.cpuUsed == 0){
+						$('#cpu-percent').data('easyPieChart').update(obj_data.cpu.cpuUsed);
+					}else {
+						$('#cpu-percent').data('easyPieChart').update((obj_data.cpu.cpuUsed / obj_data.cpu.cpuSum)*100);
+					}
+
+					if(obj_data.mem.memUsedSize == 0){
+						$('#mem-percent').data('easyPieChart').update(obj_data.mem.memUsedSize);
+					}else{
+						$('#mem-percent').data('easyPieChart').update((obj_data.mem.memUsedSize / obj_data.mem.memSumSize)*100);
+					} 
+
+					if(obj_data.disk.diskUsedSize == 0){
+						$('#disk-percent').data('easyPieChart').update(obj_data.disk.diskUsedSize);
+					} else{
+						$('#disk-percent').data('easyPieChart').update((obj_data.disk.diskUsedSize / obj_data.disk.diskSumSize)*100);
+					} 
+					$('#container-percent').data('easyPieChart').update(obj_data.container.containerSum);	
+						
 				}
 		}
 			
@@ -1002,10 +1015,24 @@ getXMLRequester();
 				
 			}
 				function showPie(obj_data){
-					$('#cpu-percent').data('easyPieChart').update((obj_data.cpu.cpuUsed / obj_data.cpu.cpuSum)*100);
-					$('#mem-percent').data('easyPieChart').update((obj_data.mem.memUsedSize / obj_data.mem.memSumSize)*100);
-					$('#disk-percent').data('easyPieChart').update((obj_data.disk.diskUsedSize / obj_data.disk.diskSumSize)*100);
-					$('#container-percent').data('easyPieChart').update(obj_data.container.containerSum);		
+					if(obj_data.cpu.cpuUsed == 0){
+						$('#cpu-percent').data('easyPieChart').update(obj_data.cpu.cpuUsed);
+					}else {
+						$('#cpu-percent').data('easyPieChart').update((obj_data.cpu.cpuUsed / obj_data.cpu.cpuSum)*100);
+					}
+
+					if(obj_data.mem.memUsedSize == 0){
+						$('#mem-percent').data('easyPieChart').update(obj_data.mem.memUsedSize);
+					}else{
+						$('#mem-percent').data('easyPieChart').update((obj_data.mem.memUsedSize / obj_data.mem.memSumSize)*100);
+					} 
+
+					if(obj_data.disk.diskUsedSize == 0){
+						$('#disk-percent').data('easyPieChart').update(obj_data.disk.diskUsedSize);
+					} else{
+						$('#disk-percent').data('easyPieChart').update((obj_data.disk.diskUsedSize / obj_data.disk.diskSumSize)*100);
+					} 
+					$('#container-percent').data('easyPieChart').update(obj_data.container.containerSum);
 				}
 		   
 		}

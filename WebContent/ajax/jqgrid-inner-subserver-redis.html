@@ -410,7 +410,6 @@ $('#dialog_simple_task').dialog({
             	$("#archName").html(obj_data.archName);
             	$("#scaleName").html(obj_data.scaleName);
             	$("#softwareName").html(obj_data.softwareName);
-            
             	$("#taskStatusText").html(obj_data.statusText);
             }
 	   	}
@@ -454,7 +453,8 @@ $('#dialog_simple_task').dialog({
 					close: function() {
 						run_jqgrid_function();
 					}
-				});
+			});
+
 	     	$('#dialog_simple_stop').dialog({
 				autoOpen : false,
 				width : 300,
@@ -530,7 +530,17 @@ $('#dialog_simple_task').dialog({
             	});
 	     	}
 
+	     	$("#jqgrid-proxy-start").click(function(){
+					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
+					alert(id);
+					startProxyFun(id);
+			});
 
+			$("#jqgrid-proxy-stop").click(function(){
+				var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
+				alert(id);
+				stopProxyFun(id);
+			});
 	       
 	        /**
 	         * [setSubRedisJqgrid description]
@@ -655,20 +665,6 @@ $('#dialog_simple_task').dialog({
 
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#proxy-jqgrid").jqGrid('setGridWidth', $("#content").width() );
-				})
-				
-				
-
-	        	$("#jqgrid-proxy-start").click(function(){
-					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
-					alert(id);
-					startProxyFun(id);
-				});
-
-				$("#jqgrid-proxy-stop").click(function(){
-					var id = $("#proxy-jqgrid").jqGrid('getGridParam','selrow');
-					alert(id);
-					stopProxyFun(id);
 				});
 	        }
 	        //启动redis
@@ -681,7 +677,7 @@ $('#dialog_simple_task').dialog({
 				};
 
 				$.ajax({
-                	url:host+ "/upm_api/v1.0/areas?siteId="+"79affb2429ef48faa57c802a88dd8e7f",
+                	url:host+ "/upm_api/v1.0/areas?siteId="+siteId,
 	                method: "put",
 	                async: true,
 	                dataType: "json",
@@ -771,6 +767,25 @@ $('#dialog_simple_task').dialog({
 		        	}
             	}
 	        }
+
+
+			$("#jqgrid-mysql-start").click(function(){
+				var id = $("#mysql-jqgrid").jqGrid('getGridParam','selrow');
+				if(id == null){
+					alert("请选择实例单元，再点击启动");
+				}else{
+					$('#dialog_simple').dialog('open');	
+				}
+			});
+
+			$("#jqgrid-mysql-stop").click(function(){
+				var id = $("#mysql-jqgrid").jqGrid('getGridParam','selrow');
+				if(id == null){
+					alert("请选择实例单元，再点击启动");
+				}else{
+					$('#dialog_simple_stop').dialog('open');
+				}
+			});
 
 	        /**
 	         * [setSubMysqlJqgrid description] 建立子服务mysql详情表
@@ -885,24 +900,6 @@ $('#dialog_simple_task').dialog({
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#mysql-jqgrid").jqGrid('setGridWidth', $("#content").width() );
 				})
-
-				$("#jqgrid-mysql-start").click(function(){
-					var id = $("#mysql-jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择实例单元，再点击启动");
-					}else{
-						$('#dialog_simple').dialog('open');	
-					}
-				});
-
-				$("#jqgrid-mysql-stop").click(function(){
-					var id = $("#mysql-jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择实例单元，再点击启动");
-					}else{
-						$('#dialog_simple_stop').dialog('open');
-					}
-				});
 	        }
 
 	        function stopMysqlFun(obj_id){
@@ -1117,7 +1114,7 @@ $('#dialog_simple_task').dialog({
 	                },
 	                success: function(result, status, xhr) {
 	                   changeSubMysqlData(result);
-	                   changeSubRedisData(result);
+	                 //  changeSubRedisData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
 	                	alert("未连接服务器");

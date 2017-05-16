@@ -54,7 +54,7 @@ getXMLRequester();
 			<i class="fa-fw fa fa-table"></i>
 				服务管理
 			<span>>
-				REDIS管理
+				REDIS服务
 			</span>
 		</h1>
 	</div>
@@ -173,100 +173,100 @@ getXMLRequester();
 </div>
 
 <script type="text/javascript">
-function linkTask(obj_id){
-	$.ajax({
-    	url:host+"/upm_api/v1.0/tasks?objName="+obj_id.value,
-        method: "get",
-        async: true,
-        dataType: "json",
-        timeout:30000,
-        beforeSend:function(){
-        	$('#loading').showLoading();
-        },
-        success: function(result, status, xhr) {
-           changeDeleteAreaData(result);
-        },
-        error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-        	alert("未连接服务器");
-            console.error("未连接服务器 =" + status);
-        },
-        complete:function(){
-        	$('#loading').hideLoading();
-        }
-	});
-	
-	function changeDeleteAreaData(obj_data){
-    	switch (obj_data.result){
-    		case 1:
-    		 	console.log("成功信息"+obj_data.msg);
-    		 	if(obj_data.data[0] != null){
-    		 		setTaskDialogText(obj_data.data);
-        		 	$('#dialog_simple_task').dialog('open');	
-    		 	}else{
-    		 		alert("返回任务数组为空");	
-    		 	}
-    			break;
-    		case 0:
-    			alert("警告信息"+obj_data.msg);
-				console.warn("警告信息"+obj_data.msg);
-	            break;
-	        case -1:
-	        	alert("错误信息"+obj_data.msg);
-	        	console.error("错误信息"+obj_data.msg);
-	        	break;
-	        case -9:
-	        	alert("错误信息"+obj_data.msg);
-	        	console.error("错误信息"+obj_data.msg);
-	        	break;
-    		default:
-    			console.log("测试代码");
-    	}
-    }
-	
-	function setTaskDialogText(obj_after_data){
-		if($("#jqgrid-task tr:visible").length==0){
-			jQuery("#jqgrid-task").jqGrid({
-				data : obj_after_data,
-				datatype : "local",
-				width : 870,
-				height : 'auto',
-				colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
-				colModel : [
-					{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
-					{ name : "objType", index : "objType",align:"center"  },
-					{ name : "objName", index : "objName" ,align:"center" },
-					{ name : "actionType", index : "actionType",align:"center"  },
-					{ name : "statusText", index : "statusText",align:"center" },
-					{ name : "msg", index : "msg" ,align:"center" }
-					],
-				rowNum : 10000,
-				toolbarfilter: true,
-				viewrecords : true,
-				editurl : "dummy.html",
-			});
- 		}else{
- 			jQuery("#jqgrid-task").setGridParam({
-                data:obj_after_data,
-                datatype:"local"
-            }).trigger("reloadGrid");
+	function linkTask(obj_id){
+		$.ajax({
+	    	url:host+"/upm_api/v1.0/tasks?objName="+obj_id.value,
+	        method: "get",
+	        async: true,
+	        dataType: "json",
+	        timeout:30000,
+	        beforeSend:function(){
+	        	$('#loading').showLoading();
+	        },
+	        success: function(result, status, xhr) {
+	           changeDeleteAreaData(result);
+	        },
+	        error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	        	alert("未连接服务器");
+	            console.error("未连接服务器 =" + status);
+	        },
+	        complete:function(){
+	        	$('#loading').hideLoading();
+	        }
+		});
+		
+		function changeDeleteAreaData(obj_data){
+	    	switch (obj_data.result){
+	    		case 1:
+	    		 	console.log("成功信息"+obj_data.msg);
+	    		 	if(obj_data.data[0] != null){
+	    		 		setTaskDialogText(obj_data.data);
+	        		 	$('#dialog_simple_task').dialog('open');	
+	    		 	}else{
+	    		 		alert("返回任务数组为空");	
+	    		 	}
+	    			break;
+	    		case 0:
+	    			alert("警告信息"+obj_data.msg);
+					console.warn("警告信息"+obj_data.msg);
+		            break;
+		        case -1:
+		        	alert("错误信息"+obj_data.msg);
+		        	console.error("错误信息"+obj_data.msg);
+		        	break;
+		        case -9:
+		        	alert("错误信息"+obj_data.msg);
+		        	console.error("错误信息"+obj_data.msg);
+		        	break;
+	    		default:
+	    			console.log("测试代码");
+	    	}
+	    }
+		
+		function setTaskDialogText(obj_after_data){
+			if($("#jqgrid-task tr:visible").length==0){
+				jQuery("#jqgrid-task").jqGrid({
+					data : obj_after_data,
+					datatype : "local",
+					width : 870,
+					height : 'auto',
+					colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
+					colModel : [
+						{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
+						{ name : "objType", index : "objType",align:"center"  },
+						{ name : "objName", index : "objName" ,align:"center" },
+						{ name : "actionType", index : "actionType",align:"center"  },
+						{ name : "statusText", index : "statusText",align:"center" },
+						{ name : "msg", index : "msg" ,align:"center" }
+						],
+					rowNum : 10000,
+					toolbarfilter: true,
+					viewrecords : true,
+					editurl : "dummy.html",
+				});
+	 		}else{
+	 			jQuery("#jqgrid-task").setGridParam({
+	                data:obj_after_data,
+	                datatype:"local"
+	            }).trigger("reloadGrid");
 
- 		}
-	}
-}
-$('#dialog_simple_task').dialog({
-	autoOpen : false,
-	width : 900,
-	resizable : false,
-	modal : true,
-	title : "任务状态提示",
-	buttons : [{
-		html : "<i class='fa fa-check'></i>&nbsp;确定",
-		"class" : "btn btn-primary",
-		click : function() {
-			$(this).dialog("close");
+	 		}
 		}
-	}]
-});
+	}
+	$('#dialog_simple_task').dialog({
+		autoOpen : false,
+		width : 900,
+		resizable : false,
+		modal : true,
+		title : "任务状态提示",
+		buttons : [{
+			html : "<i class='fa fa-check'></i>&nbsp;确定",
+			"class" : "btn btn-primary",
+			click : function() {
+				$(this).dialog("close");
+			}
+		}]
+	});
 </script>
 <script type="text/javascript">
 
@@ -286,7 +286,7 @@ $('#dialog_simple_task').dialog({
 		      		show	:true
 		      	}).on("hidden.bs.modal", function() {  
 		    		$(this).removeData("bs.modal"); 
-		    		run_jqgrid_function();
+		    		getAreaData();
 				});
 	     	}
 			
@@ -304,7 +304,6 @@ $('#dialog_simple_task').dialog({
 							var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 							deleteArea(id);
 							$(this).dialog("close");
-							run_jqgrid_function();
 						}
 					}, {
 						html : "<i class='fa fa-times'></i>&nbsp;取消",
@@ -314,9 +313,9 @@ $('#dialog_simple_task').dialog({
 						}
 					}],
 					close: function() {
-						run_jqgrid_function();
+						getAreaData();
 					}
-				});
+			});
 	     	
 	    	$('#dialog_simple_start').dialog({
 				autoOpen : false,
@@ -332,7 +331,6 @@ $('#dialog_simple_task').dialog({
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						startMysql(id);
 						$(this).dialog("close");
-						run_jqgrid_function();
 					}
 				}, {
 					html : "<i class='fa fa-times'></i>&nbsp;取消",
@@ -342,7 +340,7 @@ $('#dialog_simple_task').dialog({
 					}
 				}],
 				close: function() {
-					run_jqgrid_function();
+					getAreaData();
 				}
 			});
 	    	
@@ -359,7 +357,6 @@ $('#dialog_simple_task').dialog({
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						stopMysql(id);
 						$(this).dialog("close");
-						run_jqgrid_function();
 					}
 				}, {
 					html : "<i class='fa fa-times'></i>&nbsp;取消",
@@ -369,10 +366,10 @@ $('#dialog_simple_task').dialog({
 					}
 				}],
 				close: function() {
-					isSetJqgrid = 1;
-					run_jqgrid_function();
+					getAreaData();
 				}
 			});
+
 	    	$('#dialog_simple_delete').dialog({
 				autoOpen : false,
 				width : 300,
@@ -387,7 +384,6 @@ $('#dialog_simple_task').dialog({
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						deleteMysql(id);
 						$(this).dialog("close");
-						run_jqgrid_function();
 					}
 				}, {
 					html : "<i class='fa fa-times'></i>&nbsp;取消",
@@ -397,10 +393,10 @@ $('#dialog_simple_task').dialog({
 					}
 				}],
 				close: function() {
-					isSetJqgrid = 1;
-					run_jqgrid_function();
+					getAreaData();
 				}
 			});
+
 	    	$('#dialog_simple_manage').dialog({
 				autoOpen : false,
 				width : 300,
@@ -414,7 +410,6 @@ $('#dialog_simple_task').dialog({
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						var url = "index.html#ajax/jqgrid-inner-subserver-redis.html?id="+id;
 						 window.location.href = url;
-						//infoMysql(id);
 						$(this).dialog("close");
 					}
 				}, {
@@ -425,11 +420,11 @@ $('#dialog_simple_task').dialog({
 					}
 				}],
 				close: function() {
-					isSetJqgrid = 1;
-					run_jqgrid_function();
+					getAreaData();
 				}
 			});
-	     	 function changeDeleteAreaData(obj_data){
+
+	     	function changeDeleteAreaData(obj_data){
 		        	switch (obj_data.result){
 		        		case 1:
 		        		 	console.log("成功信息"+obj_data.msg);
@@ -437,8 +432,7 @@ $('#dialog_simple_task').dialog({
 							$("#pjqgrid").html("");
 							var html="<table id='jqgrid'></table>"
 								$("#pjqgrid").append(html);
-							
-							pagefunction();
+							getAreaData();
 		        			break;
 		        		case 0:
 							console.warn("警告信息"+obj_data.msg);
@@ -453,6 +447,7 @@ $('#dialog_simple_task').dialog({
 		        			console.log("测试代码");
 		        	}
 	        }
+
 	     	function deleteArea(obj_id){
 	     		$.ajax({
                 	url:host+ "/upm_api/v1.0/areas/"+obj_id,
@@ -475,7 +470,92 @@ $('#dialog_simple_task').dialog({
 	                }
             	});
 	     	}
+
+	     	function deleteMysql(obj_id){
+				$.ajax({
+                	url:host+ "/upm_api/v1.0/servs/"+obj_id,
+	                method: "delete",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+	                   changeData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            	});
+			}
 			
+			function  startMysql(obj_id){
+				/**
+				 * [success description] 可能会出现bug
+				 */
+				$.ajax({
+                	url:host+ "/upm_api/v1.0/servs/"+obj_id+"/start",
+	                method: "put",
+	                async: true,
+	                dataType: "json",
+	                timeout:30000,
+	                beforeSend:function(){
+	                	$('#loading').showLoading();
+	                },
+	                success: function(result, status, xhr) {
+	                   changeData(result);
+	                },
+	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+	                	alert("未连接服务器");
+	                    console.error("未连接服务器 =" + status);
+	                },
+	                complete:function(){
+	                	$('#loading').hideLoading();
+	                }
+            	});
+			}
+			
+	     	$("#jqgrid-area-start").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple_start').dialog('open');	
+					}
+			});
+
+			$("#jqgrid-area-stop").click(function(){
+				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id == null){
+					alert("请选择一条数据");
+				}else{
+					$('#dialog_simple_stop').dialog('open');	
+				}
+				
+			});
+
+			$("#jqgrid-area-delete").click(function(){
+				$('#dialog_simple_delete').dialog('open');
+			});
+			
+			$("#jqgrid-area-info").click(function(){
+				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id == null){
+					alert("请选择一条数据");
+				}else{
+					$('#dialog_simple_manage').dialog('open');
+				}
+				
+			});
+
+			$("#jqgrid-area-add").click(function() {
+			   	addForm("ajax/jqgrid-area-add");
+			});
 
 			function accessPointListList(cellvalue, options, rowObject){
 				var data = "";
@@ -487,11 +567,6 @@ $('#dialog_simple_task').dialog({
 			
 			function cLink(cellvalue, options, rowObject){
 				return "<button class='btn btn-xs btn-default'  value='"+rowObject.servBusinessName+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
-			//	if(rowObject.taskStatusText.indexOf("成功")>0){
-			//		return "<button class='btn btn-xs btn-default'   disabled='disabled' onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";	
-			//	}else{
-			//		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
-			//	}
 			}
 			
 			function setJqgrid(obj_after_data){
@@ -590,98 +665,11 @@ $('#dialog_simple_task').dialog({
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#jqgrid").jqGrid('setGridWidth', $("#content").width() );
 				});
-			    
-				$("#jqgrid-area-start").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple_start').dialog('open');	
-					}
-				});
-
-				$("#jqgrid-area-stop").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple_stop').dialog('open');	
-					}
-					
-				});
-
-				$("#jqgrid-area-delete").click(function(){
-					$('#dialog_simple_delete').dialog('open');
-				});
-				
-				$("#jqgrid-area-info").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple_manage').dialog('open');
-					}
-					
-				});
-
-				$("#jqgrid-area-add").click(function() {
-				   	addForm("ajax/jqgrid-area-add");
-  				});
 			}
 			
-			function deleteMysql(obj_id){
-				$.ajax({
-                	url:host+ "/upm_api/v1.0/servs/"+obj_id,
-	                method: "delete",
-	                async: true,
-	                dataType: "json",
-	                timeout:30000,
-	                beforeSend:function(){
-	                	$('#loading').showLoading();
-	                },
-	                success: function(result, status, xhr) {
-	                   changeData(result);
-	                },
-	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-	                	alert("未连接服务器");
-	                    console.error("未连接服务器 =" + status);
-	                },
-	                complete:function(){
-	                	$('#loading').hideLoading();
-	                }
-            	});
-			}
 			
-			function  startMysql(obj_id){
-				/**
-				 * [success description] 可能会出现bug
-				 */
-				$.ajax({
-                	url:host+ "/upm_api/v1.0/servs/"+obj_id+"/start",
-	                method: "put",
-	                async: true,
-	                dataType: "json",
-	                timeout:30000,
-	                beforeSend:function(){
-	                	$('#loading').showLoading();
-	                },
-	                success: function(result, status, xhr) {
-	                   changeData(result);
-	                },
-	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-	                	alert("未连接服务器");
-	                    console.error("未连接服务器 =" + status);
-	                },
-	                complete:function(){
-	                	$('#loading').hideLoading();
-	                }
-            	});
-			}
 			
-			function infoMysql(obj_id){
-				subService = obj_id;
-				$("#subserviceRedis").click();
-			}
+			
 			
 			//停止mysql服务
 			function stopMysql(obj_id){

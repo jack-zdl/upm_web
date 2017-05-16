@@ -49,7 +49,7 @@ getXMLRequester();
 			<i class="fa-fw fa fa-table"></i>
 				资源管理
 			<span>>
-				网段管理
+				网段
 			</span>
 		</h1>
 	</div>
@@ -112,7 +112,7 @@ getXMLRequester();
 					<button class="btn btn-default btn-success" id="jqgrid-network-add" type="submit">新增</button>
 					<button class="btn btn-default  btn-primary" id="jqgrid-network-start" type="submit">启用</button>
 					<button class="btn btn-default btn-warning" id="jqgrid-network-stop" type="submit">停用</button>
-					<button class="btn btn-default btn-info"  id="jqgrid-network-bedata" type="submit">编辑</button>
+					<!-- <button class="btn btn-default btn-info"  id="jqgrid-network-bedata" type="submit">编辑</button> -->
 					<button class="btn btn-default  btn-danger" id="jqgrid-network-delete">删除</button>
 					
 				</div>
@@ -236,7 +236,6 @@ getXMLRequester();
 						var val= rowData.id;
 						stopNetwork(id);					
 						$(this).dialog("close");
-						
 					}
 				}, {
 					html : "<i class='fa fa-times'></i>&nbsp;取消",
@@ -245,6 +244,70 @@ getXMLRequester();
 						$(this).dialog("close");
 					}
 				}]
+			});
+
+			//模态框
+			$("#jqgrid-network-add").click(function() {
+				$('#myModal').modal({
+			      	remote:'ajax/networkJqgridadd.html',
+			      	show	:true
+			      	}).on("hidden.bs.modal", function() {  
+			    	$(this).removeData("bs.modal");  
+			    	getnetworkData();
+					}).draggable({
+								cursor: "move",
+								handle: '.modal-header',
+								refreshPositions: false  
+					});
+			});
+
+			$('#jqgrid-network-delete').click(function() {
+	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					 alert("请选择一条数据");
+				}else{
+					 $('#dialog_simple').dialog('open');
+					return false;
+				}
+			});
+
+			$('#jqgrid-network-start').click(function() {
+	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					 alert("请选择一条数据");
+				}else{
+					 $('#dialog_simple_start').dialog('open');
+					return false;
+				}
+			});
+
+			$('#jqgrid-network-stop').click(function() {
+	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					 alert("请选择一条数据");
+				}else{
+					 $('#dialog_simple_stop').dialog('open');
+					return false;
+				}
+			});
+
+			$('#jqgrid-network-bedata').click(function() {
+	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+				if(id === null){
+					 alert("请选择一条数据");
+				}else{
+					$('#myModal').modal({
+			      	remote:'ajax/networkJqgridedit.html',
+			      	show	:true
+			      	}).on("hidden.bs.modal", function() {  
+			    	$(this).removeData("bs.modal");  
+			    	getnetworkData();
+					}).draggable({
+								cursor: "move",
+								handle: '.modal-header',
+								refreshPositions: false  
+					});
+				}
 			});
 
 	     	function deleteNetwork(obj_id){
@@ -267,8 +330,7 @@ getXMLRequester();
 							$("#jqgridTable").html("");
 							var html="<table id='jqgrid'></table>"
 								$("#jqgridTable").append(html);
-							
-							pagefunction();
+							getnetworkData();
 						}else if(result.result==-9){
 							window.location="login.html";
 						}
@@ -280,7 +342,7 @@ getXMLRequester();
 	                complete:function(){
 	                	$('#loading').hideLoading();
 	                }
-         	});
+         		});
 	     	}
 
      		function startNetwork(obj_id){
@@ -303,8 +365,7 @@ getXMLRequester();
 							$("#jqgridTable").html("");
 							var html="<table id='jqgrid'></table>"
 								$("#jqgridTable").append(html);
-							
-							pagefunction();
+							getnetworkData();
 						}else if(result.result==-9){
 							window.location="login.html";
 						}
@@ -340,7 +401,7 @@ getXMLRequester();
 							var html="<table id='jqgrid'></table>"
 								$("#jqgridTable").append(html);
 							
-							pagefunction();
+							getnetworkData();
 						}else if(result.result==-9){
 							window.location="login.html";
 						}
@@ -364,7 +425,6 @@ getXMLRequester();
 	    	}
 		
 			function setJqgrid(obj_after_data){
-				
 				if($("#jqgrid tr:visible").length==0){
 					jQuery("#jqgrid").jqGrid({
 						data : obj_after_data,
@@ -426,8 +486,6 @@ getXMLRequester();
 					container : 'body'
 				});
 
-				
-				 
 				jQuery("#m1").click(function() {
 					var s;
 					s = jQuery("#jqgrid").jqGrid('getGridParam', 'selarrrow');
@@ -436,70 +494,6 @@ getXMLRequester();
 				jQuery("#m1s").click(function() {
 					jQuery("#jqgrid").jqGrid('setSelection', "13");
 				});
-				//模态框
-				$("#jqgrid-network-add").click(function() {
-					$('#myModal').modal({
-				      	remote:'ajax/networkJqgridadd.html',
-				      	show	:true
-				      	}).on("hidden.bs.modal", function() {  
-				    	$(this).removeData("bs.modal");  
-				    	run_jqgrid_function();
-						}).draggable({
-									cursor: "move",
-									handle: '.modal-header',
-									refreshPositions: false  
-						});
-				});
-
-				$('#jqgrid-network-delete').click(function() {
-		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id === null){
-						 alert("请选择一条数据");
-					}else{
-						 $('#dialog_simple').dialog('open');
-						return false;
-					}
-				});
-
-				$('#jqgrid-network-start').click(function() {
-		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id === null){
-						 alert("请选择一条数据");
-					}else{
-						 $('#dialog_simple_start').dialog('open');
-						return false;
-					}
-				});
-
-				$('#jqgrid-network-stop').click(function() {
-		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id === null){
-						 alert("请选择一条数据");
-					}else{
-						 $('#dialog_simple_stop').dialog('open');
-						return false;
-					}
-				});
-
-				$('#jqgrid-network-bedata').click(function() {
-		 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id === null){
-						 alert("请选择一条数据");
-					}else{
-						$('#myModal').modal({
-				      	remote:'ajax/networkJqgridedit.html',
-				      	show	:true
-				      	}).on("hidden.bs.modal", function() {  
-				    	$(this).removeData("bs.modal");  
-				    	run_jqgrid_function();
-						}).draggable({
-									cursor: "move",
-									handle: '.modal-header',
-									refreshPositions: false  
-						});
-					}
-				});
-
 				// remove classes
 				$(".ui-jqgrid").removeClass("ui-widget ui-widget-content");
 			    $(".ui-jqgrid-view").children().removeClass("ui-widget-header ui-state-default");
@@ -536,7 +530,6 @@ getXMLRequester();
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#jqgrid").jqGrid( 'setGridWidth', $("#content").width() );
 				});
-			
 			}
 
 	        function changenetworkData(obj_data){

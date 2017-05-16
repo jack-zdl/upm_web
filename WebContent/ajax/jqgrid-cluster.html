@@ -115,9 +115,9 @@ getXMLRequester();
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="" >
 					<button class="btn btn-default btn-success" id="jqgrid-cluster-add" type="submit">新增</button>
-					<button class="btn btn-default  btn-primary" id="jqgrid-cluster-start" type="submit">启用</button>
-					<button class="btn btn-default btn-warning" id="jqgrid-cluster-stop" type="submit">停用</button>
-					<button class="btn btn-default btn-info"  id="jqgrid-cluster-edit" type="submit">编辑</button>
+				<!-- 	<button class="btn btn-default  btn-primary" id="jqgrid-cluster-start" type="submit">启用</button>
+					<button class="btn btn-default btn-warning" id="jqgrid-cluster-stop" type="submit">停用</button> -->
+				<!-- 	<button class="btn btn-default btn-info"  id="jqgrid-cluster-edit" type="submit">编辑</button> -->
 					<button class="btn btn-default btn-danger" id="jqgrid-cluster-delete" type="submit">删除</button>
 				</div>
 				<br>
@@ -181,7 +181,7 @@ getXMLRequester();
 		      		show	:true
 		      	}).on("hidden.bs.modal", function() {  
 		    		$(this).removeData("bs.modal");
-		    		pagefunction();
+		    		getAreaData();
 				});
 	     	}
 	     	//jquery ui
@@ -262,8 +262,7 @@ getXMLRequester();
 	        		 		$("#pjqgrid").html("");
 							var html="<table id='jqgrid'></table>"
 								$("#pjqgrid").append(html);
-							
-							pagefunction();
+							getAreaData();
 	        			break;
 	        		case 0:
 	        			alert("警告信息"+obj_data.msg);
@@ -351,6 +350,42 @@ getXMLRequester();
             	});
 	     	}
 
+	     	$("#jqgrid-cluster-delete").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+			});
+
+			$("#jqgrid-cluster-start").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+			});
+
+			$("#jqgrid-cluster-stop").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+			});
+
+			$("#jqgrid-cluster-edit").click(function(){
+					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+					if(id == null){
+						alert("请选择一条数据");
+					}else{
+						$('#dialog_simple').dialog('open');	
+					}
+			});
+
 			function setDefintionList(cellvalue, options, rowObject){
 				var data = "";
 				for(var  i =0 ; i < cellvalue.length; i++){
@@ -373,11 +408,10 @@ getXMLRequester();
 						data : obj_after_data,
 						datatype : "local",
 						height : 'auto',
-						colNames : ["所属区域","集群名称","备份","最大使用率","最大主机数量","软件","启用/停用"],
+						colNames : ["所属区域","集群名称","最大使用率","最大主机数量","软件","启用/停用"],
 						colModel : [
 							{ name : "areaName", index : "areaName", editable : true },
 							{ name : "name", index : "name", editable : true },
-							{ name : "nfSBackupName", index : "nfSBackupName", editable : true },
 							{ name : "maxUsage", index : "maxUsage", editable : true },
 							{ name : "maxHostCount", index : "maxHostCount", editable : true },
 							{ name : "definitionSubServList", index : "definitionSubServList", editable : true, formatter: setDefintionList },
@@ -395,7 +429,6 @@ getXMLRequester();
 							if(status==false){  
 				        			 jQuery("#jqgrid").jqGrid('resetSelection');
 				                  }  
-							    
 							    return(true);
 			        	},
 
@@ -406,7 +439,6 @@ getXMLRequester();
 	                    datatype:"local"
 	                }).trigger("reloadGrid");
 	     		}
-				
 				
 				jQuery("#m1").click(function() {
 					var s;
@@ -424,12 +456,8 @@ getXMLRequester();
 			    $(".ui-jqgrid-labels, .ui-search-toolbar").children().removeClass("ui-state-default ui-th-column ui-th-ltr");
 			    $(".ui-jqgrid-pager").removeClass("ui-state-default");
 			    $(".ui-jqgrid").removeClass("ui-widget-content");
-
-			    // add classes
 			    $(".ui-jqgrid-htable").addClass("table table-bordered table-hover");
 			    $(".ui-jqgrid-btable").addClass("table table-bordered table-striped");
-
-
 			    $(".ui-pg-div").removeClass().addClass("btn btn-sm btn-primary");
 			    $(".ui-icon.ui-icon-plus").removeClass().addClass("fa fa-plus");
 			    $(".ui-icon.ui-icon-pencil").removeClass().addClass("fa fa-pencil");
@@ -438,16 +466,12 @@ getXMLRequester();
 			    $(".ui-icon.ui-icon-refresh").removeClass().addClass("fa fa-refresh");
 			    $(".ui-icon.ui-icon-disk").removeClass().addClass("fa fa-save").parent(".btn-primary").removeClass("btn-primary").addClass("btn-success");
 			    $(".ui-icon.ui-icon-cancel").removeClass().addClass("fa fa-times").parent(".btn-primary").removeClass("btn-primary").addClass("btn-danger");
-
 				$( ".ui-icon.ui-icon-seek-prev" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 				$(".ui-icon.ui-icon-seek-prev").removeClass().addClass("fa fa-backward");
-
 				$( ".ui-icon.ui-icon-seek-first" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 			  	$(".ui-icon.ui-icon-seek-first").removeClass().addClass("fa fa-fast-backward");
-
 			  	$( ".ui-icon.ui-icon-seek-next" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 			  	$(".ui-icon.ui-icon-seek-next").removeClass().addClass("fa fa-forward");
-
 			  	$( ".ui-icon.ui-icon-seek-end" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 			  	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward"); 
 
@@ -462,49 +486,13 @@ getXMLRequester();
 					container : 'body'
 				});
 				
-				$("#jqgrid-cluster-delete").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple').dialog('open');	
-					}
-				});
-
-				$("#jqgrid-cluster-start").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple').dialog('open');	
-					}
-				});
-
-				$("#jqgrid-cluster-stop").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple').dialog('open');	
-					}
-				});
-
-				$("#jqgrid-cluster-edit").click(function(){
-					var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-					if(id == null){
-						alert("请选择一条数据");
-					}else{
-						$('#dialog_simple').dialog('open');	
-					}
-				});
-				
 				$("#jqgrid-cluster-add").click(function() {
 				   	addForm("ajax/jqgrid-cluster-add");
   				});
 
 			    $(window).on('resize.jqGrid', function () {
 					jQuery("#jqgrid").jqGrid('setGridWidth', $("#content").width() );
-				})
+				});
 			}
 
 	        function changeAreaData(obj_data){
@@ -514,14 +502,14 @@ getXMLRequester();
 	        			break;
 	        		case 0:
 	        			alert("警告信息"+obj_data.msg);
-						console.warn("警告信息"+obj_data.msg);
+						console.log("警告信息"+obj_data.msg);
 			            break;
 			        case -1:
 			        	alert("错误信息"+obj_data.msg);
-			        	console.error("错误信息"+obj_data.msg);
+			        	console.log("错误信息"+obj_data.msg);
 			        	break;
 			        case -9:
-			        	console.error("错误信息"+obj_data.msg);
+			        	console.log("错误信息"+obj_data.msg);
 			    		window.location="login.html";
 			        	break;
 	        		default:

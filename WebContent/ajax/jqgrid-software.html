@@ -23,11 +23,9 @@
 					console.log("成功信息"+obj_data.msg);
 					break;
 					case 0:
-					alert("警告信息"+obj_data.msg);
 					console.warn("警告信息"+obj_data.msg);
 					break;
 					case -1:
-					alert("错误信息"+obj_data.msg);
 					console.error("错误信息"+obj_data.msg);
 					break;
 					case -9:
@@ -37,7 +35,6 @@
 					default:
 					console.log("返回result异常");
 				}
-
 			}
 		}
 		getXMLRequester();
@@ -146,6 +143,7 @@
 				<div class="row">
 					<!-- NEW WIDGET START -->
 					<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<br>
 						<div>
 							<strong>软件名称</strong>
 							<input type="text" id="software-search-text" name="search">
@@ -195,7 +193,6 @@
 <script src="./host.js"></script>
 <script type="text/javascript">
 	function linkTask(obj_id){
-
 		$.ajax({
 			url:host+"/upm_api/v1.0/tasks?objId="+obj_id.value,
 			method: "get",
@@ -311,7 +308,7 @@
 					show	:true
 				}).on("hidden.bs.modal", function() {  
 					$(this).removeData("bs.modal"); 
-					pagefunction();
+					getAreaData();
 				});
 			}
 
@@ -335,11 +332,7 @@
 					click : function() {
 						$(this).dialog("close");
 					}
-				}],
-				close: function() {
-					isSetJqgrid = 1;
-					pagefunction();
-				}
+				}]
 			});
 
 			$('#dialog_simple_start').dialog({
@@ -362,11 +355,7 @@
 					click : function() {
 						$(this).dialog("close");
 					}
-				}],
-				close: function() {
-					isSetJqgrid = 1;
-					pagefunction();
-				}
+				}]
 			});
 
 			$('#dialog_simple_stop').dialog({
@@ -389,11 +378,7 @@
 					click : function() {
 						$(this).dialog("close");
 					}
-				}],
-				close: function() {
-					isSetJqgrid = 1;
-					pagefunction();
-				}
+				}]
 			});
 
 
@@ -405,7 +390,7 @@
 						$("#pjqgrid").html("");
 						var html="<table id='jqgrid'></table>"
 						$("#pjqgrid").append(html);
-						pagefunction();
+						getAreaData();
 						break;
 					case 0:
 						alert("提示信息："+obj_data.msg);
@@ -477,6 +462,42 @@
 		         	});
 	        }
 
+    	 //软件镜像
+         	$("#jqgrid-software-images-add").click(function() {
+         		addForm("ajax/jqgrid-software-add");
+         	});
+
+
+         	$("#jqgrid-software-images-delete").click(function(){
+         		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+         		if(id == null){
+         			alert("请选择一条数据");
+         		}else{
+         			$('#dialog_simple').dialog('open');
+         		}
+
+         	});
+
+         	$("#jqgrid-software-images-start").click(function(){
+         		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+         		if(id == null){
+         			alert("请选择一条数据");
+         		}else{
+         			$('#dialog_simple_start').dialog('open');
+         		}
+
+         	});
+         	
+         	$("#jqgrid-software-images-stop").click(function(){
+         		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+         		if(id == null){
+         			alert("请选择一条数据");
+         		}else{
+         			$('#dialog_simple_stop').dialog('open');
+         		}
+
+         	});
+
 	        function cLink(cellvalue, options, rowObject){
 	         		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
 	        }
@@ -540,42 +561,6 @@
 		         		container : 'body'
 		         	});
 
-		         	 //软件镜像
-		         	$("#jqgrid-software-images-add").click(function() {
-		         		addForm("ajax/jqgrid-software-add");
-		         	});
-
-
-		         	$("#jqgrid-software-images-delete").click(function(){
-		         		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-		         		if(id == null){
-		         			alert("请选择一条数据");
-		         		}else{
-		         			$('#dialog_simple').dialog('open');
-		         		}
-
-		         	});
-
-		         	$("#jqgrid-software-images-start").click(function(){
-		         		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-		         		if(id == null){
-		         			alert("请选择一条数据");
-		         		}else{
-		         			$('#dialog_simple_start').dialog('open');
-		         		}
-
-		         	});
-		         	
-		         	$("#jqgrid-software-images-stop").click(function(){
-		         		var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-		         		if(id == null){
-		         			alert("请选择一条数据");
-		         		}else{
-		         			$('#dialog_simple_stop').dialog('open');
-		         		}
-
-		         	});
-
 		         	jQuery("#m1").click(function() {
 		         		var s;
 		         		s = jQuery("#jqgrid").jqGrid('getGridParam', 'selarrrow');
@@ -591,12 +576,9 @@
 					$(".ui-jqgrid-labels, .ui-search-toolbar").children().removeClass("ui-state-default ui-th-column ui-th-ltr");
 					$(".ui-jqgrid-pager").removeClass("ui-state-default");
 					$(".ui-jqgrid").removeClass("ui-widget-content");
-
 				    // add classes
 				    $(".ui-jqgrid-htable").addClass("table table-bordered table-hover");
 				    $(".ui-jqgrid-btable").addClass("table table-bordered table-striped");
-
-
 				    $(".ui-pg-div").removeClass().addClass("btn btn-sm btn-primary");
 				    $(".ui-icon.ui-icon-plus").removeClass().addClass("fa fa-plus");
 				    $(".ui-icon.ui-icon-pencil").removeClass().addClass("fa fa-pencil");
@@ -605,7 +587,6 @@
 				    $(".ui-icon.ui-icon-refresh").removeClass().addClass("fa fa-refresh");
 				    $(".ui-icon.ui-icon-disk").removeClass().addClass("fa fa-save").parent(".btn-primary").removeClass("btn-primary").addClass("btn-success");
 				    $(".ui-icon.ui-icon-cancel").removeClass().addClass("fa fa-times").parent(".btn-primary").removeClass("btn-primary").addClass("btn-danger");
-
 				    $( ".ui-icon.ui-icon-seek-prev" ).wrap( "<div class='btn btn-sm btn-default'></div>" );
 				    $(".ui-icon.ui-icon-seek-prev").removeClass().addClass("fa fa-backward");
 
@@ -853,7 +834,7 @@
    			$("#pjqgrid").html("");
    			var html="<table id='jqgrid'></table>"
    			$("#pjqgrid").append(html);
-   			pagefunction();
+   			//getAreaData();
    		}
    	});
 
@@ -867,7 +848,7 @@
    			$("#pjqgridSoftware").html("");
 	   		var html="<table id='jqgridSoftware'></table>"
    			$("#pjqgridSoftware").append(html);
-   			pagefunction();
+   			//getAreaData();
    		}
    	});
 

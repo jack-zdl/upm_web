@@ -190,7 +190,7 @@
 						show	:true
 					}).on("hidden.bs.modal", function() {  
 						$(this).removeData("bs.modal"); 
-						run_jqgrid_function();
+						 getAreaData();
 					});
 				}
 
@@ -204,7 +204,6 @@
 						html : "<i class='fa fa-trash-o'></i>&nbsp;删除",
 						"class" : "btn btn-danger",
 						click : function() {
-							
 							var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 							deleteArea(id);
 							$(this).dialog("close");
@@ -215,10 +214,7 @@
 						click : function() {
 							$(this).dialog("close");
 						}
-					}],
-					close: function() {
-						run_jqgrid_function();
-					}
+					}]
 				});
 
 				$('#dialog_simple_stop').dialog({
@@ -231,7 +227,6 @@
 						html : "<i class='fa fa-trash-o'></i>&nbsp;确定",
 						"class" : "btn btn-danger",
 						click : function() {
-
 							var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 							stopArea(id);
 							$(this).dialog("close");
@@ -242,11 +237,7 @@
 						click : function() {
 							$(this).dialog("close");
 						}
-					}],
-					close: function() {
-						isSetJqgrid = 1;
-						run_jqgrid_function();
-					}
+					}]
 				});
 
 				$('#dialog_simple_start').dialog({
@@ -269,11 +260,7 @@
 						click : function() {
 							$(this).dialog("close");
 						}
-					}],
-					close: function() {
-						isSetJqgrid = 1;
-						run_jqgrid_function();
-					}
+					}]
 				});
 
 				function changeDeleteAreaData(obj_data){
@@ -284,7 +271,7 @@
 						$("#pjqgrid").html("");
 						var html="<table id='jqgrid'></table>"
 						$("#pjqgrid").append(html);
-						pagefunction();
+						getAreaData();
 						break;
 						case 0:
 						alert("警告信息"+obj_data.msg);
@@ -372,8 +359,54 @@
 					});
 				}
 
+				///
+				$("#jqgrid-area-delete").click(function(){
+					debugger;
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						 if(id === null){
+						 	alert("请选择一条数据");
+						 }else {
+						 	$('#dialog_simple').dialog('open');	 
+						 }
+				});
+
+				$("#jqgrid-area-stop").click(function(){
+						debugger;
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						 if(id === null){
+						 	alert("请选择一条数据");
+						 }else{
+						 	$('#dialog_simple_stop').dialog('open');	 
+						 }
+				});
+
+				$("#jqgrid-area-start").click(function(){
+						debugger;
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						 if(id === null){
+						 	alert("请选择一条数据");
+						 }else{
+						 	$('#dialog_simple_start').dialog('open');	 
+						 }
+				});
+
+				$("#jqgrid-area-bedata").click(function(){
+						debugger;
+						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+						var rowData = $("#jqgrid").jqGrid("getRowData",id);
+						var val= rowData.id;
+						 if(id === null){
+						 	alert("请选择一条数据");
+						 }else if(rowData.enabled === "true"){
+							alert("该区域处于启用状态，无法编辑");
+						 }else{
+						 	addForm("ajax/jqgrid-area-edit");
+						 }
+				});
+
 				function imageLink(cellvalue, options, rowObject){
-	        		if(cellvalue === true){
+	        		if(cellvalue === "是"){
 	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
 	        		}else{
 	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
@@ -392,8 +425,8 @@
 							{ name : "name", index : "name"},
 							{ name : "description", index : "description",  },
 							{ name : "backupStorageName",index : "backupStorageName"},
-							{ name : "enabledText", index : "enabledText", align : "left",formatter:imageLink },
-							{ name : "enabled", index : "enabled", align : "left",width:0,hidden:true},
+							{ name : "enabledText", index : "enabledText", align : "left" ,formatter:imageLink},
+							{ name : "enabled", index : "enabled", align : "left" ,width:0,hidden:true},
 							{ name : "backupStorageId", index : "backupStorageId", align : "left",width:0,hidden:true}],
 							rowNum : 10000,
 							editurl : "dummy.html",
@@ -435,50 +468,7 @@
 						container : 'body'
 					});
 
-					$("#jqgrid-area-delete").click(function(){
-						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-						var rowData = $("#jqgrid").jqGrid("getRowData",id);
-						 if(id === null){
-						 	alert("请选择一条数据");
-						 }else if(rowData.enabled === true){
-						 	$('#dialog_simple').dialog('open');	 
-						 }else{
-						 	alert("该区域处于启用状态，无法删除");
-						 }
-					});
-
-					$("#jqgrid-area-stop").click(function(){
-						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-						 if(id === null){
-						 	alert("请选择一条数据");
-						 }else{
-						 	$('#dialog_simple_stop').dialog('open');	 
-						 }
-					});
-
-					$("#jqgrid-area-start").click(function(){
-						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-						 //var rowData = $("#jqgrid").jqGrid("getRowData",id);
-						 // var val= rowData.id;
-						 if(id === null){
-						 	alert("请选择一条数据");
-						 }else{
-						 	$('#dialog_simple_start').dialog('open');	 
-						 }
-					});
-
-					$("#jqgrid-area-bedata").click(function(){
-						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-						var rowData = $("#jqgrid").jqGrid("getRowData",id);
-						var val= rowData.id;
-						 if(id === null){
-						 	alert("请选择一条数据");
-						 }else if(rowData.enabled === true){
-							alert("该区域处于启用状态，无法编辑");
-						 }else{
-						 	addForm("ajax/jqgrid-area-edit");
-						 }
-					});
+					
 
 					$("#jqgrid-area-add").click(function() {
 						addForm("ajax/jqgrid-area-add");
@@ -583,16 +573,17 @@
 
 	   $("#search").click(function(){
 			 if($("#search-text").val() === ""){
-				alert("区域名称不能为空");
+				//alert("区域名称不能为空");
 			}else if($("#item_nm").val().length >= 64){
 				alert("区域名称最大长度不能超过64位");
 			}else{
-				alert("提示信息:查询成功");
+				
+			}
+			alert("提示信息:查询成功");
 			   	$("#pjqgrid").html("");
 			   	var html="<table id='jqgrid'></table>";
 			   	$("#pjqgrid").append(html);
 			   	pagefunction();
-			}
 	   });
 
 </script>

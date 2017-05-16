@@ -34,6 +34,11 @@
       <div class="add-site-form">
       <form id="add-area-form">
           <table>
+
+            <tr style="display: none;">
+              <td >区域编码</td>
+              <td><input id="id" name="id" type="text"  /></td>
+            </tr>
             <tr>
               <td ><sup class="start-color-red">*</sup>区域名称 </td>
               <td><input id="areaName"  name="name" type="text"  placeholder="请输入区域名称" /></td>
@@ -51,8 +56,8 @@
            </tr>
          </table>
          <div class="modal-footer">
+          <button type="submit" id="ajax-btn" class="btn btn-primary">保存</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="submit" id="ajax-btn" class="btn btn-primary">确认</button>
         </div>
       </form>
     </div>
@@ -102,6 +107,7 @@
             data:params,
             dataType: "json",
             success: function(result, status, xhr) {
+              debugger;
              changeAreaData(result);
            },
            error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -160,9 +166,49 @@
     	   //将表格数据填入摸态框form中
           function editAreaFun(){
               var id = $("#jqgrid").jqGrid('getGridParam','selrow');
-              var rowData = $("#jqgrid").jqGrid("getRowData",id);
-              $("#areaName").val(rowData.name);
-              $("#description").html(rowData.description);
+             var rowData = $("#jqgrid").jqGrid("getRowData",id);
+            
+              function getArea(){
+                $.ajax({
+                  url:host+"/upm_api/v1.0/areas/"+id,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                   changeEditAreaData(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                    console.error("未连接服务器 =" + status);
+                  }
+                });
+              }
+              getArea();
+
+               function changeEditAreaData(obj_data){
+
+                    switch (obj_data.result){
+                      case 1:
+                        $("#areaName").val(obj_data.data.name);
+                        $("#description").html(obj_data.data.description);
+                        break;
+                      case 0:
+                        alert("警告信息"+obj_data.msg);
+                        console.warn("警告信息"+obj_data.msg);
+                        break;
+                      case -1:
+                        alert("错误信息"+obj_data.msg);
+                        console.error("错误信息"+obj_data.msg);
+                        break;
+                      case -9:
+                        console.error("错误信息"+obj_data.msg);
+                        window.location="login.html";
+                        break;
+                      default:
+                      console.log("返回result异常");
+                    }
+                }
+
               function getNfsSelf(){
                 $.ajax({
                   url:host+"/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1&id="+id,

@@ -61,21 +61,21 @@
                            </select>
                       </td>
                       </tr>
-                       <tr>
+                    <!--    <tr>
                       <td><sup class="start-color-red">*</sup>备份储存</td>
                       <td><select class="selectpicker  form-control" multiple data-max-options="1"  id="selectNfs" name="nfsBackupId"  title="请选择备份存储">
                             
                           </select> 
 					            </td>
-                      </tr>
+                      </tr> -->
                       
                       <tr>
                       <td><sup class="start-color-red">*</sup>最大使用率</td>
-                      <td><input name="maxUsage" type="text"  placeholder="   请输入最大使用率" /></td>
+                      <td><input name="maxUsage" type="text" style=" width:94%;" placeholder="   请输入最大使用率" /><span><strong>%</strong></span></td>
                       </tr>
                        <tr>
                       <td><sup class="start-color-red">*</sup>最大主机数量</td>
-                      <td><input name="maxHostCount" type="text" placeholder="   请输入最大主机数量"/></td>
+                      <td><input name="maxHostCount" type="text"  placeholder="   请输入最大主机数量"/></td>
                       </tr>
                     </table>
                     <div class="modal-footer">
@@ -178,7 +178,7 @@
           }
 
       }
-      getNfsFunction();
+    //  getNfsFunction();
 
       function changeData(obj_data){
                 switch (obj_data.result){
