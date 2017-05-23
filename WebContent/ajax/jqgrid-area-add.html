@@ -25,7 +25,6 @@
  </style> 
 </head>
 <body>
-
   <div id="dialog-message" title="Dialog Simple Title">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -40,7 +39,7 @@
               <td><input id="siteId" name="siteId" type="text" value="79affb2429ef48faa57c802a88dd8e7f" /></td>
             </tr>
             <tr>
-              <td ><sup class="start-color-red">*</sup>区域名称 </td>
+              <td ><sup class="start-color-red">*</sup>区域名称</td>
               <td><input  name="name" type="text" placeholder="  请输入区域名称" /></td>
             </tr>
             <tr>
@@ -123,8 +122,10 @@
           }
         });
       // 校验
- 	 
+ 	  
       $().ready(function() {
+         // 提示图标
+            var errorIcon = '<i aria-hidden="true" class="fa fa-exclamation-triangle"></i>';
          $("#add-area-form").validate({
               rules: {
                 siteId:{
@@ -144,18 +145,18 @@
               },
                messages: {
                 siteId:{
-                  required:"请输入站点信息"
+                  required:errorIcon+"请输入站点信息"
                 },
                 name:{
-                  required:"请输入名称",
-                  maxlength:"最大长度64位"
+                  required:errorIcon+"请输入名称",
+                  maxlength:errorIcon+"最大长度64位"
                 },
                 description:{
-                  required:"请输入描述",
-                  maxlength:"最大长度为1024位"
+                  required:errorIcon+"请输入描述",
+                  maxlength:errorIcon+"最大长度为1024位"
                 },
                 backupStorageId:{
-                  required:"请选择备份存储"
+                  required:errorIcon+"请选择备份存储"
                 }
                }
          });

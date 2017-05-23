@@ -198,6 +198,7 @@ function pagefunction(url) {
 				}
 			}]
 		});
+
 		//启动的弹出框，确定启动
 		$('#dialog_simple_start').dialog({
 			autoOpen : false,
@@ -223,6 +224,7 @@ function pagefunction(url) {
 				}
 			}]
 		});
+		
 		//停止的弹出框，确定停止
 		$('#dialog_simple_stop').dialog({
 			autoOpen : false,
@@ -457,17 +459,6 @@ function pagefunction(url) {
 			//模态框
 			$("#jqgrid-nfs-add").click(function() {
 				addForm("ajax/nfsBackup-add");
-				// $('#myModal').modal({
-				// 	remote:'ajax/nfsBackup-add.html',
-				// 	show	:true
-				// }).on("hidden.bs.modal", function() {  
-				// 	$(this).removeData("bs.modal");  
-				// 	 run_jqgrid_function();
-				// }).draggable({
-				// 	cursor: "move",
-				// 	handle: '.modal-header',
-				// 	refreshPositions: false  
-				// });
 			});
 
 			
@@ -499,7 +490,6 @@ function pagefunction(url) {
 		    $(window).on('resize.jqGrid', function () {
 		    	jQuery("#jqgrid").jqGrid( 'setGridWidth', $("#content").width() );
 		    });
-
 		}
     	//end  setJqgrid 
     	function changenfsData(obj_data){
@@ -552,6 +542,7 @@ function pagefunction(url) {
 				},
 				success: function(result, status, xhr) {
 					data=result;
+					//changenfsData(result);
 				},
 				error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
 					alert("未连接服务器");
@@ -565,6 +556,7 @@ function pagefunction(url) {
 		}
 		// nfs 的主函数
 		function nfsMainFun(){
+
 			var result = getnfsData();
 			var data = changenfsData(result);
 			setJqgrid(data);

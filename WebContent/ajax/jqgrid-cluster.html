@@ -115,9 +115,9 @@ getXMLRequester();
 		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="" >
 					<button class="btn btn-default btn-success" id="jqgrid-cluster-add" type="submit">新增</button>
-				<!-- 	<button class="btn btn-default  btn-primary" id="jqgrid-cluster-start" type="submit">启用</button>
-					<button class="btn btn-default btn-warning" id="jqgrid-cluster-stop" type="submit">停用</button> -->
-				<!-- 	<button class="btn btn-default btn-info"  id="jqgrid-cluster-edit" type="submit">编辑</button> -->
+					<button class="btn btn-default  btn-primary" id="jqgrid-cluster-start" type="submit">启用</button>
+					<button class="btn btn-default btn-warning" id="jqgrid-cluster-stop" type="submit">停用</button>
+					<button class="btn btn-default btn-info"  id="jqgrid-cluster-edit" type="submit">编辑</button>
 					<button class="btn btn-default btn-danger" id="jqgrid-cluster-delete" type="submit">删除</button>
 				</div>
 				<br>
@@ -306,7 +306,7 @@ getXMLRequester();
 
 	     	function startCluster(obj_id){
 	     		$.ajax({
-                	url:host+ "/upm_api/v1.0/clusters/"+obj_id,
+                	url:host+ "/upm_api/v1.0/clusters/"+obj_id+"/enable",
 	                method: "put",
 	                async: true,
 	                dataType: "json",
@@ -329,7 +329,7 @@ getXMLRequester();
 	     	
 	     	function stopCluster(obj_id){
 	     		$.ajax({
-                	url:host+ "/upm_api/v1.0/clusters/"+obj_id,
+                	url:host+ "/upm_api/v1.0/clusters/"+obj_id+"/disable",
 	                method: "put",
 	                async: true,
 	                dataType: "json",
@@ -364,7 +364,7 @@ getXMLRequester();
 					if(id == null){
 						alert("请选择一条数据");
 					}else{
-						$('#dialog_simple').dialog('open');	
+						$('#dialog_simple_start').dialog('open');	
 					}
 			});
 
@@ -373,7 +373,7 @@ getXMLRequester();
 					if(id == null){
 						alert("请选择一条数据");
 					}else{
-						$('#dialog_simple').dialog('open');	
+						$('#dialog_simple_stop').dialog('open');	
 					}
 			});
 
@@ -382,7 +382,7 @@ getXMLRequester();
 					if(id == null){
 						alert("请选择一条数据");
 					}else{
-						$('#dialog_simple').dialog('open');	
+						addForm("ajax/jqgrid-cluster-edit");
 					}
 			});
 
@@ -408,14 +408,16 @@ getXMLRequester();
 						data : obj_after_data,
 						datatype : "local",
 						height : 'auto',
-						colNames : ["所属区域","集群名称","最大使用率","最大主机数量","软件","启用/停用"],
+						colNames : ["所属区域","集群名称","最大使用率","最大主机数量","包含软件","启用/停用","",""],
 						colModel : [
 							{ name : "areaName", index : "areaName", editable : true },
 							{ name : "name", index : "name", editable : true },
 							{ name : "maxUsage", index : "maxUsage", editable : true },
 							{ name : "maxHostCount", index : "maxHostCount", editable : true },
 							{ name : "definitionSubServList", index : "definitionSubServList", editable : true, formatter: setDefintionList },
-							{ name : "enabled", index : "enabled", editable : true ,formatter:imageLink }
+							{ name : "enabled", index : "enabled", editable : true ,formatter:imageLink },
+							{ name : "enabledText", index : "enabledText", editable : true ,width:0,hidden:true},
+							{ name : "areaId", index : "areaId", editable : true ,width:0,hidden:true}
 							],
 						rowNum : 10000,
 						toolbarfilter: true,
@@ -519,7 +521,7 @@ getXMLRequester();
 
 	        function getAreaData(){
 	        	$.ajax({
-                	url:host+ "/upm_api/v1.0/clusters?siteId="+siteId,
+                	url:host+ "/upm_api/v1.0/clusters?site_id="+siteId,
 	                method: "get",
 	                async: false,
 	                dataType: "json",

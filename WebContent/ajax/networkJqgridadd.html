@@ -177,6 +177,8 @@
         });
 
         $().ready(function() {
+          // 提示图标
+            var errorIcon = '<i aria-hidden="true" class="fa fa-exclamation-triangle"></i>';
            // 在键盘按下并释放及提交后验证提交表单
              $("#add-network-form").validate({
                  rules: {
@@ -190,52 +192,61 @@
                    ipType:{
                       required:true
                    },
-                   // startIp1:{
-                   //   required:true,
-                   //    maxlength: 3
-                   // },
-                   // startIp2:{
-                   //   required:true,
-                   //    maxlength: 3
-                   // },
-                   // startIp3:{
-                   //   required:true,
-                   //    maxlength: 3
-                   // },
+                   startIp1:{
+                     required:true,
+                      digits:true,
+                      maxlength: 3
+                   },
+                   startIp2:{
+                     required:true,
+                      digits:true,
+                      maxlength: 3
+                   },
+                   startIp3:{
+                     required:true,
+                      digits:true,
+                      maxlength: 3
+                   },
                    startIp4:{
+                      required:true,
+                      digits:true,
+                      maxlength: 3
+                   },
+                    endIp1:{
+                       required:true,
+                       digits:true,
+                      maxlength: 3
+                   },
+                    endIp2:{
                       required:true,
                        digits:true,
                       maxlength: 3
                    },
-                   //  endIp1:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  endIp2:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  endIp3:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
+                    endIp3:{
+                      required:true,
+                       digits:true,
+                      maxlength: 3
+                   },
                    endIp4:{
                       required:true,
                        digits:true,
                       maxlength: 3
                    },
-                   // gateway1:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  gateway2:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
-                   //  gateway3:{
-                   //    required:true,
-                   //    maxlength: 3
-                   // },
+                   gateway1:{
+                       required:true,
+                       digits:true,
+                      maxlength: 3
+                   },
+                    gateway2:{
+                       required:true,
+                       digits:true,
+                      maxlength: 3
+                   },
+                    gateway3:{
+                       required:true,
+                       digits:true,
+                      maxlength: 3
+                   },
                     gateway4:{
                       required:true,
                        digits:true,
@@ -243,35 +254,80 @@
                    },
                    vlanId:{
                       required:true,
-                        digits:true,
+                      digits:true,
                       maxlength: 11,
                       number:true
                    }
                  },
                  messages: {
                   areaId:{
-                    required: "请选择所属区域"
+                    required: errorIcon+"请选择所属区域"
                   },
                   name:{
-                    required: "请输入网段名称"
+                    required: errorIcon+"请输入网段名称"
                   },
                   ipType:{
-                    required:"请选择IP类型"
+                    required:errorIcon+"请选择IP类型"
+                  },
+                   startIp1:{
+                     required:"",
+                      digits:"",
+                      maxlength: ""
+                  },
+                   startIp2:{
+                     required:"",
+                      digits:"",
+                      maxlength: ""
+                  },
+                   startIp3:{
+                     required:"",
+                      digits:"",
+                      maxlength: ""
                   },
                   startIp4:{
-                     required:"请输入起始IP",
-                      digits:"  必须输入整数",
-                      maxlength: "最大输入长度为3位"
+                     required:errorIcon+"请输入起始IP",
+                      digits:errorIcon+"必须输入整数",
+                      maxlength: errorIcon+"最大输入长度为3位"
+                  },
+                  endIp1:{
+                      required:"",
+                          digits:"",
+                      maxlength: ""
+                  },
+                    endIp2:{
+                      required:"",
+                          digits:"",
+                      maxlength: ""
+                  },
+                  endIp3:{
+                      required:"",
+                          digits:"",
+                      maxlength: ""
                   },
                   endIp4:{
-                      required:"请输入结束IP",
-                          digits:"  必须输入整数",
-                      maxlength: "最大输入长度为3位"
+                      required:errorIcon+"请输入结束IP",
+                          digits:errorIcon+"必须输入整数",
+                      maxlength: errorIcon+"最大输入长度为3位"
+                  },
+                   gateway1:{
+                      required:"",
+                      digits:"",
+                      maxlength: ""
+                  },
+                   gateway2:{
+                      required:"",
+                          digits:"",
+                      maxlength: ""
+                  },
+                   gateway3:{
+                      required:"",
+                          digits:"",
+                      maxlength: ""
                   },
                   gateway4:{
-                      required:"请输入网关",
-                          digits:"  必须输入整数",
-                      maxlength: "最大输入长度为3位"
+                      required:errorIcon+"请输入网关",
+                          digits:errorIcon+"必须输入整数",
+                      maxlength: errorIcon+"最大输入长度为3位"
                   },
                   vlanId:{
                     required: "请输入VLAN ID",

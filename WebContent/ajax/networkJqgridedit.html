@@ -53,7 +53,7 @@
                   
                        <tr>
                       <td><sup class="start-color-red">*</sup>网段名称</td>
-                      <td><input name="name" type="text" placeholder="  请输入网段名称" /></td>
+                      <td><input name="name" id="name" type="text" placeholder="  请输入网段名称" /></td>
                       </tr>
                        <tr>
                       <tr>
@@ -94,7 +94,7 @@
                       </tr> -->
                        <tr>
                       <td><sup class="start-color-red">*</sup>VLAN ID</td>
-                      <td><input name="vlanId" type="text" placeholder="请输入标示VlanId"/></td>
+                      <td><input name="vlanId" id="vlanId"  type="text" placeholder="请输入标示VlanId"/></td>
                       </tr>
                     </table>
                      <div class="modal-footer">
@@ -107,35 +107,117 @@
 
 <script>
   $(function(){ 
-        selectarea();
-        networkType();
+      
+        editNetworkFun();
   });
+
       function editNetworkFun(){
           var id = $("#jqgrid").jqGrid('getGridParam','selrow');
           var rowData = $("#jqgrid").jqGrid("getRowData",id);
-          $("#name").html();
-      }
+          $.ajax({
+                url:host+"/upm_api/v1.0/networkings/"+id,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  timeout:30000,
+                  beforeSend:function(){
+                    $('#loading').showLoading();
+                  },
+                  success: function(result, status, xhr) {
+                    changeData(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                      console.error("未连接服务器 =" + status);
+                  },
+                  complete:function(){
+                    $('#loading').hideLoading();
+                  }
+          });
 
-      function selectarea(){
+          function changeData(obj_data){
+            switch (obj_data.result){
+              case 1:
+                editNetworkForm(obj_data.data);
+                selectarea();
+                networkType();
+                break;
+              case 0:
+                alert("警告信息"+obj_data.msg);
+                  break;
+              case -1:
+                alert("错误信息"+obj_data.msg);
+                break;
+              case -9:
+                window.location="login.html";
+                break;
+              default:
+                alert("测试代码");
+            }
+          }
+
+          function editNetworkForm(obj_data){
+            $("#name").val(obj_data.name);
+            $("#vlanId").val(obj_data.vlanId);
+            $("#vlanId").attr("disabled","disabled");
+            editStartIp();
+            editEndIp();
+            editGetWay();
+              function editStartIp(){
+                var startIpArray = obj_data.startIp.split(".");
+                $("#startIp1").val(startIpArray[0]);
+                 $("#startIp1").attr("disabled","disabled");
+                  $("#startIp2").val(startIpArray[1]);
+                 $("#startIp2").attr("disabled","disabled");
+                  $("#startIp3").val(startIpArray[2]);
+                 $("#startIp3").attr("disabled","disabled");
+                  $("#startIp4").val(startIpArray[3]);
+                 $("#startIp4").attr("disabled","disabled");
+              }
+              function editEndIp(){
+                var endIpArray = obj_data.endIp.split(".");
+                $("#endIp1").val(endIpArray[0]);
+                 $("#endIp1").attr("disabled","disabled");
+                  $("#endIp2").val(endIpArray[1]);
+                 $("#endIp2").attr("disabled","disabled");
+                  $("#endIp3").val(endIpArray[2]);
+                 $("#endIp3").attr("disabled","disabled");
+                  $("#endIp4").val(endIpArray[3]);
+                 $("#endIp4").attr("disabled","disabled");
+              }
+              function editGetWay(){
+                var gatwayArray = obj_data.startIp.split(".");
+                $("#gateway1").val(gatwayArray[0]);
+                 $("#gateway1").attr("disabled","disabled");
+                  $("#gateway2").val(gatwayArray[1]);
+                 $("#gateway2").attr("disabled","disabled");
+                  $("#gateway3").val(gatwayArray[2]);
+                 $("#gateway3").attr("disabled","disabled");
+                  $("#gateway4").val(gatwayArray[3]);
+                 $("#gateway4").attr("disabled","disabled");
+              }
+          }
+
+           function selectarea(){
         $.ajax({
                 url:host+"/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1",
                   method: "get",
                   async: true,
                   dataType: "json",
                   timeout:30000,
-	                beforeSend:function(){
-	                	$('#loading').showLoading();
-	                },
+                  beforeSend:function(){
+                    $('#loading').showLoading();
+                  },
                   success: function(result, status, xhr) {
-                    debugger;
                     var json;
                     console.log(json);
                     for(i in result){                     
                       json=result[i];
-                      var html="<option value='"+json.id+"'>"+json.text+"</option>"
+                      var html="<option value='"+json.id+"'>"+json.text+"</option>";
                       $("#areaId").append(html);
                     }
-                      $('.selectpicker').selectpicker('refresh');
+                    $("#areaId").selectpicker('val',rowData.areaId);
+                    $('.selectpicker').selectpicker('refresh');
                     
                   },
                   error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -143,8 +225,8 @@
                       console.error("未连接服务器 =" + status);
                   },
                   complete:function(){
-	                	$('#loading').hideLoading();
-	                }
+                    $('#loading').hideLoading();
+                  }
             });
       }
 
@@ -155,16 +237,15 @@
                   async: true,
                   dataType: "json",
                   success: function(result, status, xhr) {
-                    debugger;
                     var data;
                     for(i in result){                     
                       data=result[i];
-                      var html="<option value='"+data.id+"'>"+data.text+"</option>"
+                      var html="<option value='"+data.id+"'>"+data.text+"</option>";
                       $("#networkType").append(html);
                     }
+                     $("#networkType").selectpicker('val',rowData.ipType);
+                      $("#networkType").attr("disabled","disabled");
                      $('.selectpicker').selectpicker('refresh');
-
-                    
                   },
                   error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
                     alert("未连接服务器");
@@ -172,6 +253,10 @@
                   }
             });
       }
+
+      }
+
+     
 </script>
 <script type="text/javascript">
      //校验数据
@@ -285,17 +370,19 @@
       }
 
     function ajaxMain(){
+        var id = $("#jqgrid").jqGrid('getGridParam','selrow');
         IPclick();
         $("#siteId").attr("value",siteId);// 填充内容
         var params = $("#add-network-form").serializeObject();
         console.log(params);
-        params.vlanId = Number(params.vlanId);
-        params.prefix = Number(params.prefix);
-        debugger;
+        console.log("vlanid="+$("#vlanId").val());
+          console.log("ipType="+$("#vlanId").val());
+        params.vlanId = Number($("#vlanId").val());
+        params.ipType = $("#networkType").val()[0];
         console.log(params);
         $.ajax({
-              url:host+ "/upm_api/v1.0/networkings",
-              method: "post",
+              url:host+ "/upm_api/v1.0/networkings/"+id,
+              method: "put",
               async: true,
               contentType: "application/json; charset=utf-8",
               data:JSON.stringify(params),

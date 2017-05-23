@@ -112,7 +112,7 @@ getXMLRequester();
 					<button class="btn btn-default btn-success" id="jqgrid-network-add" type="submit">新增</button>
 					<button class="btn btn-default  btn-primary" id="jqgrid-network-start" type="submit">启用</button>
 					<button class="btn btn-default btn-warning" id="jqgrid-network-stop" type="submit">停用</button>
-					<!-- <button class="btn btn-default btn-info"  id="jqgrid-network-bedata" type="submit">编辑</button> -->
+					<button class="btn btn-default btn-info"  id="jqgrid-network-bedata" type="submit">编辑</button>
 					<button class="btn btn-default  btn-danger" id="jqgrid-network-delete">删除</button>
 					
 				</div>
@@ -293,8 +293,11 @@ getXMLRequester();
 
 			$('#jqgrid-network-bedata').click(function() {
 	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+	 			var rowData = $("#jqgrid").jqGrid("getRowData",id);
 				if(id === null){
 					 alert("请选择一条数据");
+				}else if(rowData.enabledText ==="是"){
+					alert("该网段处于启用状态，无法编辑");
 				}else{
 					$('#myModal').modal({
 			      	remote:'ajax/networkJqgridedit.html',
@@ -430,7 +433,7 @@ getXMLRequester();
 						data : obj_after_data,
 						datatype : "local",
 					height : 'auto',
-					colNames : [ '所属区域', '网段名称', 'IP类型','起始IP', '结束IP', '掩码',"网关","标记vlanID","启用/停用"],
+					colNames : [ '所属区域', '网段名称', 'IP类型','起始IP', '结束IP', '掩码',"网关","标记vlanID","启用/停用","","",""],
 					colModel : [
 						{ name : 'areaName', index : 'areaName', editable : true }, 
 						{ name : 'name', index : 'networkIp', editable : true }, 
@@ -440,7 +443,10 @@ getXMLRequester();
 						{ name : 'prefix', index : 'prefix', editable : true },
 						{ name : 'gateway', index : 'gateway', editable : true },
 						{ name : 'vlanId', index : 'vlanId', editable : true },
-						{ name : 'enabled', index : 'enabled', formatter:imageLink}],
+						{ name : 'enabled', index : 'enabled', formatter:imageLink},
+						{ name : 'enabledText', index : 'enabledText',width:0,hidden:true},
+						{ name : 'areaId', index : 'areaId',width:0,hidden:true},
+						{ name : 'ipType', index : 'ipType',width:0,hidden:true}],
 						rowNum : 10,
 						toolbarfilter: true,
 						viewrecords : true,

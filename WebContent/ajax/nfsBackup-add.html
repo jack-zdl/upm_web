@@ -53,6 +53,7 @@
                       <td><sup class="start-color-red">*</sup>备份存储名称</td>
                       <td><input name="name" type="text" placeholder="  请输入备份存储名称"  /></td>
                     </tr>
+
                     <tr >
                         <td><sup class="start-color-red">*</sup>类型</td>
                         <td>
@@ -62,7 +63,7 @@
                     </tr>
                     <tr>
                       <td><sup class="start-color-red">*</sup>IP地址</td>
-                      <td><input type="hidden" name="ip" id="nfsIp"/>
+                      <td><input type="hidden"  name="ip" id="nfsIp"/>
                         <input style="width:91px"  name="nfsIp1" id="nfsIp1" type="text"  maxlength="3"/>
                         <span>&nbsp;.&nbsp;&nbsp;<input style="width:91px" name="nfsIp2" id="nfsIp2" type="text"  maxlength="3"/></span>
                         <span>&nbsp;.&nbsp;&nbsp;<input style="width:91px" name="nfsIp3" id="nfsIp3" type="text"  maxlength="3"/></span>
@@ -117,7 +118,7 @@
                      console.log("返回result异常");
                    }
                  }
-                 function sendnfsAddFun(){
+              function sendnfsAddFun(){
                   var nfsIp1= $("#nfsIp1").val();
                   var nfsIp2= $("#nfsIp2").val();
                   var nfsIp3= $("#nfsIp3").val();
@@ -163,6 +164,9 @@
            });
            $().ready(function() {
            // 在键盘按下并释放及提交后验证提交表单
+           // 提示图标
+            var errorIcon = '<i aria-hidden="true" class="fa fa-exclamation-triangle"></i>';
+
              $("#add-nfs-form").validate({
                  rules: {
                    name:{
@@ -172,9 +176,21 @@
                    type:{
                    	required:true
                    },
+                   nfsIp1:{
+                      required:true,
+                        maxlength: 3
+                   },
+                   nfsIp2:{
+                      required:true,
+                        maxlength: 3
+                   },
+                   nfsIp3:{
+                      required:true,
+                        maxlength: 3
+                   },
                    nfsIp4:{
-                   	required:true,
-                  	 	maxlength: 3
+                      required:true,
+                        maxlength: 3
                    },
                    dir:{
                    	required:true,
@@ -191,32 +207,62 @@
                  },
                  messages: {
                	  name:{
-               		  required: "请输入备份存储名称",
-                   	maxlength: "最大长度为64位"  
+               		  required: errorIcon+"请输入备份存储名称",
+                   	maxlength: errorIcon+"最大长度为64位"  
                	  },
                	  type:{
-               		  required: "请选择类型"
+               		  required: errorIcon+"请选择类型"
                	  },
-               	  nfsIp4:{
-               		  required: "请输入ip地址",
-               		  maxlength: "最大长度为3位" 
-               	  },
+                   nfsIp1:{
+                      required:"",
+                      maxlength: ""
+                   },
+                    nfsIp2:{
+                      required:"",
+                       maxlength: ""
+                   },
+                    nfsIp3:{
+                      required:"",
+                       maxlength: ""
+                   },
+                  nfsIp4:{
+                      required:errorIcon+"请输入IP地址",
+                       maxlength: errorIcon+"最大长度为15位"
+                   },
                	  dir:{
-                     	  required: "请输入源目录",
-                    	  maxlength: "最大长度为255位"
+                     	  required: errorIcon+"请输入源目录",
+                    	  maxlength: errorIcon+"最大长度为255位"
                      },
                      mountDir:{
-                     	  required: "请输入挂载目录",
-                    	  maxlength: "最大长度为255位"
+                     	  required: errorIcon+"请输入挂载目录",
+                    	  maxlength: errorIcon+"最大长度为255位"
                      },
                      mountOpts:{
-                     	 required: "请输入挂载参数",
-                    	 maxlength: "最大长度为1024位"
+                     	 required: errorIcon+"请输入挂载参数",
+                    	 maxlength: errorIcon+"最大长度为1024位"
                      }
                	  
-                 }
+                  }
+                //   ,
                 // errorPlacement: function(error, element) {
-                //    element.closest('.form-group').append(error);
+                //    // element.closest('.form-group').append(error);
+                //    $(element).parent().after("<tr><td></td><td><input value="+error+"></input></td></tr>");
+                // }
+                 //使用div标签，包裹提示信息，而后插入DOM
+               //  wrapper:"div",
+
+                //   //单条校验失败，后会调用此方法，在此方法中，编写错误消息如何显示 及  校验失败回调方法
+                // showErrors : function(errorMap, errorList) {
+                //     // 遍历错误列表
+                //     for(var obj in errorMap) {
+                //         // 自定义错误提示效果
+                //         $('#' + obj).addClass('has-error');
+                //     }
+                //     // 此处注意，一定要调用默认方法，这样保证提示消息的默认效果
+                //     this.defaultShowErrors();
+                // }
+                // success:function(label) {
+                //     $(label).parent().prev().removeClass('has-error');
                 // }
              });
            });

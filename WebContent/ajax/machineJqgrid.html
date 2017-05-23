@@ -114,9 +114,9 @@
 				<button class="btn btn-default btn-success" id="jqgrid-machine-register" type="submit">注册</button>
 				<button class="btn btn-info" id="dialog_add">入库</button>
 				<button class="btn btn-default btn-danger" id="jqgrid-machine-delete" type="submit">出库</button>	
-			<!-- 	<button class="btn btn-default  btn-primary" id="jqgrid-machine-start" type="submit">启用</button>
+				<button class="btn btn-default  btn-primary" id="jqgrid-machine-start" type="submit">启用</button>
 				<button class="btn btn-default btn-warning" id="jqgrid-machine-stop" type="submit">停用</button>
-				<button class="btn btn-default btn-info"  id="jqgrid-machine-edit" type="submit">编辑</button> -->
+				<button class="btn btn-default btn-info"  id="jqgrid-machine-edit" type="submit">编辑</button>
 				<button class="btn btn-default btn-danger" id="dialog_link">注销</button>				
 			</div>
 			<br>
@@ -393,7 +393,7 @@
 	     	//启动主机函数
 	     	function startmachine(obj_id){
 	     		$.ajax({
-	     			url:host+ "/upm_api/v1.0/hosts/"+obj_id,
+	     			url:host+ "/upm_api/v1.0/hosts/"+obj_id+"/enable",
 	     			method: "put",
 	     			async: true,
 	     			dataType: "json",
@@ -429,7 +429,7 @@
 	     	//停用主机函数
 	     	function stopmachine(obj_id){
 	     		$.ajax({
-	     			url:host+ "/upm_api/v1.0/hosts/"+obj_id,
+	     			url:host+ "/upm_api/v1.0/hosts/"+obj_id+"/disable",
 	     			method: "put",
 	     			async: true,
 	     			dataType: "json",
@@ -586,7 +586,7 @@
 	     				data : obj_after_data,
 	     				datatype : "local",
 	     				height : 'auto',
-	     				colNames : [ '主机名称', '主机IP', '所属区域', '所属集群', '机房',"机位","启用/停用"," 运行状态","任务详情"],
+	     				colNames : [ '主机名称', '主机IP', '所属区域', '所属集群', '机房',"机位","启用/停用"," 运行状态","任务详情","","",""],
 	     				colModel : [
 	     				{ name : 'name', index : 'name', editable : true }, 
 	     				{ name : 'sshIp', index : 'sshIp', editable : true }, 
@@ -596,7 +596,11 @@
 	     				{ name : 'seat', index : 'seat', editable : true },
 	     				{ name : 'enabled', index : 'enabled', editable : true,formatter : imagesCLink },
 	     				{ name : 'statusText', index : 'statusText', editable : true },
-	     				{ name : 'actiion',index : 'action' , formatter : cLink}],
+	     				{ name : 'actiion',index : 'action' , formatter : cLink},
+	     				{ name : 'areaId',index : 'areaId' ,width:0,hidden:true},
+	     				{ name : 'clusterId',index : 'clusterId' , width:0,hidden:true},
+	     				{ name : 'nicPhyType',index : 'nicPhyType' , width:0,hidden:true}
+ 	     				],
 	     				rowNum : 10,
 	     				toolbarfilter: true,
 	     				viewrecords : true,

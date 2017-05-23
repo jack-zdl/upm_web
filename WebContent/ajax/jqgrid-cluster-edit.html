@@ -30,16 +30,12 @@
 <body>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">集群新增</h4>
+        <h4 class="modal-title" id="myModalLabel">集群编辑</h4>
       </div>
       <div class="modal-body">
           <div class="add-site-form">
             <form id="add-cluster-form">
                     <table>
-                     <tr style="display: none;">
-                      <td>站点id</td>
-                      <td><input id="siteId" name="siteId" type="text" /></td>
-                      </tr>
                       <tr>
                       <td><sup class="start-color-red">*</sup>所属区域</td>
                       <td> <select class="selectpicker  form-control" multiple data-max-options="1"  id="selectArea" title="请选择区域" name="areaId">
@@ -48,7 +44,7 @@
                       </tr>
                       <tr>
                       <td><sup class="start-color-red">*</sup>集群名称</td>
-                      <td><input name="name" type="text" placeholder="   请输入集群名称" /></td>
+                      <td><input name="name" id="name" type="text" placeholder="   请输入集群名称" /></td>
                       </tr>
                       <tr>
                       <td><sup class="start-color-red">*</sup>包含软件</td>
@@ -62,11 +58,11 @@
                       </tr>
                       <tr>
                       <td><sup class="start-color-red">*</sup>最大使用率</td>
-                      <td><input name="maxUsage" type="text" style=" width:94%;" placeholder="   请输入最大使用率" /><span><strong>%</strong></span></td>
+                      <td><input name="maxUsage" id="maxUsage" type="text" style=" width:94%;" placeholder="   请输入最大使用率" /><span><strong>%</strong></span></td>
                       </tr>
                        <tr>
                       <td><sup class="start-color-red">*</sup>最大主机数量</td>
-                      <td><input name="maxHostCount" type="text"  placeholder="   请输入最大主机数量"/></td>
+                      <td><input name="maxHostCount" id="maxHostCount" type="text"  placeholder="   请输入最大主机数量"/></td>
                       </tr>
                     </table>
                     <div class="modal-footer">
@@ -85,16 +81,81 @@
   	  	多选框的设置
   	   */
   	
-  	   $('#selectSoftware').selectpicker({
+  	   $('#selectArea').selectpicker({
   	        'selectedText': 'cat'
   	    });
+        $('#selectSoftware').selectpicker({
+            'selectedText': 'cat'
+        });
+
+        //将原来的集群的信息填入form表单中
+        //1 调用接口
+        //2 填入信息和一些选择的信息一起填入
+        function editCluster(){
+          var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+        
+          // var areaId= rowData.areaId;
+          // var definitionSubServList = rowData.definitionSubServList;
+          // var softwaresList = [];
+          //得到页面的所有软件列表
+          // for (var i = definitionSubServList.length - 1; i >= 0; i--) {
+          //    softwaresList.push(definitionSubServList[i]);
+          //  } 
+            //获得指定单个集群信息
+          $.ajax({
+                  url:host+ "/upm_api/v1.0/clusters/"+id,
+                  method: "get",
+                  async: true,
+                  dataType: "json",
+                  success: function(result, status, xhr) {
+                     changeData(result);
+                  },
+                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                    alert("未连接服务器");
+                      console.error("未连接服务器 =" + status);
+                  }
+          });
+          
+          function changeData(obj_data){
+            switch (obj_data.result){
+              case 1:
+                 editMain(obj_data.data);
+                 // getAreaFunction();
+                break;
+              case 0:
+                alert("警告信息"+obj_data.msg);
+                console.warn("警告信息"+obj_data.msg);
+                  break;
+              case -1:
+                alert("错误信息"+obj_data.msg);
+                console.error("错误信息"+obj_data.msg);
+                break;
+              case -9:
+                console.error("错误信息"+obj_data.msg);
+                window.location="login.html";
+                break;
+              default:
+                alert("测试代码");
+            }
+          }
+
+          function editMain(obj_data){
+            $("#name").val(obj_data.name);
+            $("#maxUsage").val(obj_data.maxUsage.replace("%",""));      
+            $("#maxHostCount").val(obj_data.maxHostCount);      
+            getAreaFunction(id,obj_data.areaId);
+            getSoftwareFunction(obj_data.definitionSubServList);
+          }
+
+        }
   	  
+      editCluster();
 		  /**
-       * 获得所有区域 
+       * 获得所有区域和指定区域
        */
-      function getAreaFunction(){
+      function getAreaFunction(obj_id,obj_area){
         $.ajax({
-                  url:host+ "/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1",
+                  url:host+ "/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1&id="+obj_id,
                   method: "get",
                   async: true,
                   dataType: "json",
@@ -111,15 +172,16 @@
             for (var i = obj_data.length - 1; i >= 0; i--) {
                $("#selectArea").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
             }
+            $("#selectArea").selectpicker('val',obj_area);//选中指定的区域
             $('.selectpicker').selectpicker('refresh');
           }
       }
-      getAreaFunction();
+    
       /**
        * 获得所有软件列表
        * @description  无法查询到数据 error
        */
-      function getSoftwareFunction(){
+      function getSoftwareFunction(obj_software){
          $.ajax({
                   url:host+ "/upm_api/v1.0/selections/softwares",
                   method: "get",
@@ -138,38 +200,45 @@
         	  for (var i = obj_data.length - 1; i >= 0; i--) {
                    $("#selectSoftware").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
                 }
+            var softwareArrayId = [];
+            for (var j = obj_software.length - 1; j >= 0; j--) {
+               softwareArrayId.push(obj_software[j].id);
+            }
+            $("#selectSoftware").selectpicker('val',softwareArrayId);//选中指定的区域
         	  $('.selectpicker').selectpicker('refresh');
         	   
           }
 
       }
-      getSoftwareFunction();
+    
       /**
        * 获得nfs
        */
-      function getNfsFunction(){
-         $.ajax({
-                  url:host+ "/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1",
-                  method: "get",
-                  async: true,
-                  dataType: "json",
-                  success: function(result, status, xhr) {
-                     setOption(result);
-                  },
-                  error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-                    alert("未连接服务器");
-                    console.error("未连接服务器 =" + status);
-                  }
-              });
-         function setOption(obj_data){
-            for (var i = obj_data.length - 1; i >= 0; i--) {
-               $("#selectNfs").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
-            }
-            $('.selectpicker').selectpicker('refresh');
-          }
+      // function getNfsFunction(){
+      //    $.ajax({
+      //             url:host+ "/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1",
+      //             method: "get",
+      //             async: true,
+      //             dataType: "json",
+      //             success: function(result, status, xhr) {
+      //                setOption(result);
+      //             },
+      //             error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+      //               alert("未连接服务器");
+      //               console.error("未连接服务器 =" + status);
+      //             }
+      //         });
+      //    function setOption(obj_data){
+      //       for (var i = obj_data.length - 1; i >= 0; i--) {
+      //          $("#selectNfs").append("<option value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+      //       }
+      //       $('.selectpicker').selectpicker('refresh');
+      //     }
 
-      }
+      // }
     //  getNfsFunction();
+    //  
+    /****************************************************************************************************************/
 
       function changeData(obj_data){
                 switch (obj_data.result){
@@ -196,7 +265,9 @@
       }
 
       function ajaxMain() {
-          $("#siteId").attr("value",siteId);// 填充内容
+          var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+        
+        
           var params = $("#add-cluster-form").serializeObject();
           //将字符串转成数字
            params.maxUsage= Number(params.maxUsage);
@@ -208,8 +279,8 @@
                       'Accept': 'application/json',
                       'Content-Type': 'application/json' 
                   },
-                  url:host+ "/upm_api/v1.0/clusters",
-                  method: "post",
+                  url:host+ "/upm_api/v1.0/clusters/"+id,
+                  method: "put",
                   data:JSON.stringify(params),
                   dataType: "json",
                   success: function(result, status, xhr) {

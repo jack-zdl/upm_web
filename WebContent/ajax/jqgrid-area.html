@@ -361,7 +361,6 @@
 
 				///
 				$("#jqgrid-area-delete").click(function(){
-					debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						var rowData = $("#jqgrid").jqGrid("getRowData",id);
 						 if(id === null){
@@ -372,7 +371,6 @@
 				});
 
 				$("#jqgrid-area-stop").click(function(){
-						debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						 if(id === null){
 						 	alert("请选择一条数据");
@@ -382,7 +380,6 @@
 				});
 
 				$("#jqgrid-area-start").click(function(){
-						debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						 if(id === null){
 						 	alert("请选择一条数据");
@@ -392,7 +389,6 @@
 				});
 
 				$("#jqgrid-area-bedata").click(function(){
-						debugger;
 						var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 						var rowData = $("#jqgrid").jqGrid("getRowData",id);
 						var val= rowData.id;

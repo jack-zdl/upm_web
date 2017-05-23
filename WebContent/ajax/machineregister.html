@@ -39,13 +39,7 @@
             <form  id="machine_form">
          
                     <table>
-                      <tr>
-                      <td><sup class="start-color-red">*</sup>主机名&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td> <input name="name" type="text" placeholder="  请输入主机名" /> </td>
-                      <td><sup class="start-color-red">*</sup>主机IP&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td> <input name="sshIp" type="text" placeholder="  请输入主机IP" /> </td>
-                      </tr>
-                      <tr>
+                     <tr>
                       <td><sup class="start-color-red">*</sup>所属区域&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td ><select class="selectpicker form-control"  multiple data-max-options="1" id="areaId" name="areaId" title="请选择区域" style="150px" >
                                         
@@ -56,12 +50,14 @@
                           </select> 
                       </td>
                       </tr>
-                       <tr>
-                      <td><sup class="start-color-red">*</sup>容器上限&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td> <input name="maxContainer" type="text" placeholder="  请输入容器上限" />
-                          
-					           </td>
+                      <tr>
+                      <td><sup class="start-color-red">*</sup>主机名&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td> <input name="name" type="text" placeholder="  请输入主机名" /> </td>
+                      <td><sup class="start-color-red">*</sup>主机IP&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td> <input name="sshIp" type="text" placeholder="  请输入主机IP" /> </td>
                       </tr>
+                     
+                     
                       <tr>
                       <td><sup class="start-color-red">*</sup>SSH用户名&nbsp;&nbsp;&nbsp;</td>
                       <td><input name="sshUser" type="text" placeholder="  请输入SSH用户名" /></td>
@@ -75,18 +71,17 @@
                       <td><input name="seat" type="text" placeholder="  请输入机位标识"/></td>
                       </tr>
                        <tr>
-                      <td><sup class="start-color-red">*</sup>HDD设备&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="hddDev" type="text" placeholder="  请输入HHD设备标识" /></td>
-                      <td><sup class="start-color-red">*</sup>SSD设备&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="ssdDev" type="text" placeholder="  请输入SSD设备标识"/></td>
+                      <td>HDD设备&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td><input name="hddDev" id="hddDev" type="text" placeholder="  请输入HHD设备标识" /></td>
+                      <td>SSD设备&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td><input name="ssdDev" id="ssdDev" type="text" placeholder="  请输入SSD设备标识"/></td>
                       </tr>
+                    
                        <tr>
-                       <!-- 
-                      <td>外部存储&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><select class="form-control" id="sanId" name="sanId">
-                            <option  value="">请选择</option>              
-                          </select> </td>
-                           -->
+                            <td><sup class="start-color-red">*</sup>容器上限&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td> <input name="maxContainer" type="text" placeholder="  请输入容器上限" />
+                          
+                     </td>
                       <td><sup class="start-color-red">*</sup>网卡类型&nbsp;&nbsp;&nbsp;&nbsp;</td>
                       <td><select class=" selectpicker form-control" multiple data-max-options="1" id="nicPhyType" name="nicPhyType" title="请选择网卡">
                                        
@@ -213,7 +208,7 @@
 			  
 	             var areaId = $(this).children('option:selected').val(); 
 	             $.ajax({
-	                      url:host+ "/upm_api/v1.0/selections/clusters?areaId="+areaId,
+	                      url:host+ "/upm_api/v1.0/selections/clusters?area_id="+areaId+"&enabled=1",
 	                      method: "get",
 	                      async: false,
 	                      contentType: "application/json; charset=utf-8",
@@ -223,7 +218,6 @@
 	  	                	$('#loading').showLoading();
 	  	                },
 	                      success: function(result, status, xhr) {
-	                    	  
 	                         changeAreaData(result);
 	                      },
 	                      error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -245,13 +239,21 @@
 		  
       </script>
       <script type="text/javascript">
+      //对ssd和hhd设备进行验证
          $.validator.setDefaults({
-               submitHandler: function() {
-                 ajaxMain();
-               }
+              submitHandler: function() {
+                // if($("#hddDev").val() || $("#ssdDev").val()){
+                   ajaxMain();
+                // }else{
+                //   alert("请至少输入一个 'HDD设备'和'SSD设备' ");
+                // }
+              }
         });
 
         $().ready(function() {
+
+            // 提示图标
+            var errorIcon = '<i aria-hidden="true" class="fa fa-exclamation-triangle"></i>';
            // 在键盘按下并释放及提交后验证提交表单
              $("#machine_form").validate({
                  rules: {
@@ -260,7 +262,8 @@
                        maxlength: 64
                    },
                    sshIp:{
-                      required: true
+                      required: true,
+                      maxlength:15
                    },
                    areaId:{
                       required:true
@@ -269,25 +272,43 @@
                       required:true
                    },
                    maxContainer:{
-                      required:true
+                      required:true,
+                      digits:true,
+                        max:100
                    },
                     sshUser:{
-                      required:true
+                      required:true,
+                      maxlength:64
                    },
                    sshPassword:{
-                      required:true
+                      required:true,
+                       maxlength:64
                    },
                    room:{
-                     required:true
+                     required:true,
+                      maxlength:64
                    },
                    seat:{
-                     required:true
+                     required:true,
+                      maxlength:64
                    },
                    hddDev:{
-                    required:true
+                    required:function(){
+                       if($("#ssdDev").val() == ""){
+                          return true;
+                        }else{
+                          return false;
+                        }
+                    }
                    },
                    ssdDev:{
-                      required:true
+                      required:function(){
+                       if($("#hddDev").val() == ""){
+                          return true;
+                        }else{
+                          return false;
+                        }
+                    }
                    },
                    nicPhyType:{
                       required:true
@@ -295,41 +316,48 @@
                  },
                  messages: {
                    name:{
-                      required: "请输入主机名称",
-                       maxlength: "最大长度为64位"
+                      required: errorIcon+"请输入主机名称",
+                       maxlength: errorIcon+"最大长度为64位"
                    },
                    sshIp:{
-                      required: "请输入主机IP"
+                      required: errorIcon+"请输入主机IP",
+                      maxlength:errorIcon+"最大长度15位"
                    },
                    areaId:{
-                      required:"请选择所属区域"
+                      required:errorIcon+"请选择所属区域"
                    },
                    clusterId:{
-                      required:"请选择所属集群"
+                      required:errorIcon+"请选择所属集群"
                    },
                    maxContainer:{
-                      required:"请输入容器上限"
+                      required:errorIcon+"请输入容器上限",
+                      digits:errorIcon+"请输入整数",
+                        max:errorIcon+"最大数值不超过100"
                    },
                     sshUser:{
-                      required:"请输入SSH用户名"
+                      required:errorIcon+"请输入SSH用户名",
+                       maxlength:errorIcon+"最大长度为64位"
                    },
                    sshPassword:{
-                      required:"请输入SSH密码"
+                      required:errorIcon+"请输入SSH密码",
+                       maxlength:errorIcon+"最大长度为64位"
                    },
                    room:{
-                     required:"请输入机房"
+                     required:errorIcon+"请输入机房",
+                      maxlength:errorIcon+"最大长度为64位"
                    },
                    seat:{
-                     required:"请输入机位"
+                     required:errorIcon+"请输入机位",
+                      maxlength:errorIcon+"最大长度为64位"
                    },
                    hddDev:{
-                    required:"请输入HDD设备"
+                    required:errorIcon+"请输入HDD设备"
                    },
                    ssdDev:{
-                      required:"请输入SSD设备"
+                      required:errorIcon+"请输入SSD设备"
                    },
                   nicPhyType:{
-                      required:"请选择网卡类型"
+                      required:errorIcon+"请选择网卡类型"
                    }
                   
                  }
@@ -349,7 +377,6 @@
       	
       		params.sanId=null;
       	}
-      	  debugger;
       	  console.log(params);
       	  
       	  if(params.sanId==""){

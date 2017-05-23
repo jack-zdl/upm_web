@@ -32,7 +32,7 @@
 <body>
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">主机注册</h4>
+        <h4 class="modal-title" id="myModalLabel">主机编辑</h4>
       </div>
       <div class="modal-body">
           <div class="add-site-form" >
@@ -41,9 +41,9 @@
                     <table>
                       <tr>
                       <td><sup class="start-color-red">*</sup>主机名&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td> <input name="name" type="text" placeholder="  请输入主机名" /> </td>
+                      <td> <input name="name" id="name" type="text" placeholder="  请输入主机名" /> </td>
                       <td><sup class="start-color-red">*</sup>主机IP&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td> <input name="sshIp" type="text" placeholder="  请输入主机IP" /> </td>
+                      <td> <input name="sshIp" id="sshIp" type="text" placeholder="  请输入主机IP" /> </td>
                       </tr>
                       <tr>
                       <td><sup class="start-color-red">*</sup>所属区域&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -58,27 +58,27 @@
                       </tr>
                        <tr>
                       <td><sup class="start-color-red">*</sup>容器上限&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td> <input name="maxContainer" type="text" placeholder="  请输入容器上限" />
+                      <td> <input name="maxContainer" id="maxContainer" type="text" placeholder="  请输入容器上限" />
                           
 					           </td>
                       </tr>
                       <tr>
                       <td><sup class="start-color-red">*</sup>SSH用户名&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="sshUser" type="text" placeholder="  请输入SSH用户名" /></td>
+                      <td><input name="sshUser" id="sshUser" type="text" placeholder="  请输入SSH用户名" /></td>
                       <td><sup class="start-color-red">*</sup>SSH密码&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="sshPassword" type="password" placeholder="  请输入SSH密码"/></td>
+                      <td><input name="sshPassword" id="sshPassword" type="password" placeholder="  请输入SSH密码"/></td>
                       </tr>
                         <tr>
                       <td><sup class="start-color-red">*</sup>机房&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="room" type="text" placeholder="  请输入机房标识" /></td>
+                      <td><input name="room" id="room" type="text" placeholder="  请输入机房标识" /></td>
                       <td><sup class="start-color-red">*</sup>机位&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="seat" type="text" placeholder="  请输入机位标识"/></td>
+                      <td><input name="seat" id="seat" type="text" placeholder="  请输入机位标识"/></td>
                       </tr>
                        <tr>
                       <td><sup class="start-color-red">*</sup>HDD设备&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="hddDev" type="text" placeholder="  请输入HHD设备标识" /></td>
+                      <td><input name="hddDev" id="hddDev" type="text" placeholder="  请输入HHD设备标识" /></td>
                       <td><sup class="start-color-red">*</sup>SSD设备&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td><input name="ssdDev" type="text" placeholder="  请输入SSD设备标识"/></td>
+                      <td><input name="ssdDev" id="ssdDev" type="text" placeholder="  请输入SSD设备标识"/></td>
                       </tr>
                        <tr>
                        <!-- 
@@ -113,13 +113,71 @@
 	        'selectedText': 'cat'
 	    });
       $(function(){ 
-    	  selectarea();
-    	  selectnicPhyType();
+
+        function editMachine(){
+          var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+           $.ajax({
+                  url:host+"/upm_api/v1.0/hosts/"+id,
+                    method: "get",
+                    async: true,
+                    dataType: "json",
+                    timeout:30000,
+                    success: function(result, status, xhr) {
+                      changeData(result);
+                    },
+                    error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                      alert("未连接服务器");
+                        console.error("未连接服务器 =" + status);
+                    }
+              });
+
+           function changeData(obj_data){
+              switch (obj_data.result){
+              case 1:
+                 editMain(obj_data.data);
+                break;
+              case 0:
+                alert("警告信息"+obj_data.msg);
+                console.warn("警告信息"+obj_data.msg);
+                  break;
+              case -1:
+                alert("错误信息"+obj_data.msg);
+                console.error("错误信息"+obj_data.msg);
+                break;
+              case -9:
+                console.error("错误信息"+obj_data.msg);
+                window.location="login.html";
+                break;
+              default:
+                alert("测试代码");
+            }
+           }
+
+           function editMain(obj_data){
+              $("#name").val(obj_data.name);
+              $("#sshIp").val(obj_data.sshIp);
+              $("#maxContainer").val(obj_data.maxContainer);
+              $("#sshUser").val(obj_data.sshUser);
+              $("#sshPassword").val(obj_data.sshPassword);
+              $("#room").val(obj_data.room);
+              $("#seat").val(obj_data.seat);
+              $("#hddDev").val(obj_data.hddDev);
+              $("#ssdDev").val(obj_data.ssdDev);
+               selectarea(obj_data.areaId);
+               selectnicPhyType(obj_data.nicPhyType);
+              getClusterByAreaId(obj_data.areaId,obj_data.clusterId);
+           }
+
+        }
+editMachine();
+
+    	 
  	 });
-		  function selectarea(){
+
+		  function selectarea(obj_area_id){
 			//  alert("host"+host);
 			  $.ajax({
-	              	url:host+"/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1",
+	              	url:host+"/upm_api/v1.0/selections/areas?site_id="+siteId+"&enabled=1&id="+obj_area_id,
 		                method: "get",
 		                async: true,
 		                dataType: "json",
@@ -135,6 +193,8 @@
 		                		var html="<option value='"+json.id+"'>"+json.text+"</option>"
 		                		$("#areaId").append(html);
 		                	}
+                      //选中指定的区域
+                       $("#areaId").selectpicker('val',obj_area_id);//选中指定的区域
 		                	 $('.selectpicker').selectpicker('refresh');
 		                	
 		                },
@@ -148,7 +208,7 @@
 	          	});
       }
 
-		  function selectnicPhyType(){
+		  function selectnicPhyType(obj_type_id){
 			  $.ajax({
 	              	url:host+"/upm_api/v1.0/selections/nic-phy-types",
 		                method: "get",
@@ -166,6 +226,8 @@
 		                		var html="<option value='"+json.id+"'>"+json.text+"</option>"
 		                		$("#nicPhyType").append(html);
 		                	}
+                      //选择指定的类型
+                        $("#nicPhyType").selectpicker('val',obj_type_id);//选中指定的区域
 		                	 $('.selectpicker').selectpicker('refresh');
 		                	
 		                },
@@ -178,42 +240,45 @@
 		                }
 	          	});
       }
-
-		  function selectsanId(){
-			  $.ajax({
-	              	url:host+"/upm_api/v1.0/selections/storage-types",
-		                method: "get",
-		                async: true,
-		                dataType: "json",
-		                timeout:30000,
-		                beforeSend:function(){
-		                	$('#loading').showLoading();
-		                },
-		                success: function(result, status, xhr) {
-		                	var json;
-		                	console.log(json);
-		                	for(i in result){	                		
-		                		json=result[i];
-		                		var html="<option value='"+json.id+"'>"+json.text+"</option>"
-		                		$("#sanId").append(html);
-		                	}
-		                	
-		                },
-		                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
-		                	alert("未连接服务器");
-		                    console.error("未连接服务器 =" + status);
-		                },
-		                complete:function(){
-		                	$('#loading').hideLoading();
-		                }
-	          	});
-      }
+      //传入区域id得到指定的集群
+      function getClusterByAreaId(obj_area_id,obj_cluster_id){
+           $.ajax({
+                        url:host+ "/upm_api/v1.0/selections/clusters?area_id="+obj_area_id+"&enabled=1&id="+obj_cluster_id,
+                        method: "get",
+                        async: false,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        timeout:30000,
+                      beforeSend:function(){
+                        $('#loading').showLoading();
+                      },
+                        success: function(result, status, xhr) {
+                           changeAreaData(result);
+                        },
+                        error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+                          alert("未连接服务器");
+                          console.error("未连接服务器 =" + status);
+                        },
+                        complete:function(){
+                        $('#loading').hideLoading();
+                      }
+                    });
+                function changeAreaData(obj_data){
+                  $("#clusterId").empty();
+                  for (var i = obj_data.length - 1; i >= 0; i--) {
+                        $("#clusterId").append("<option  value="+obj_data[i].id+">"+obj_data[i].text+"</option>");
+                  }
+                    $("#clusterId").selectpicker('val',obj_cluster_id);//选中指定的区域
+                  $('.selectpicker').selectpicker('refresh');
+                }
+        }
+		
 
 		  $("#areaId").change(function(){
 			  
 	             var areaId = $(this).children('option:selected').val(); 
 	             $.ajax({
-	                      url:host+ "/upm_api/v1.0/selections/clusters?areaId="+areaId,
+	                      url:host+ "/upm_api/v1.0/selections/clusters?area_id="+areaId,
 	                      method: "get",
 	                      async: false,
 	                      contentType: "application/json; charset=utf-8",
@@ -248,19 +313,23 @@
          $.validator.setDefaults({
                submitHandler: function() {
                  ajaxMain();
+              //  alert("提交成功");
                }
         });
 
         $().ready(function() {
+            // 提示图标
+            var errorIcon = '<i aria-hidden="true" class="fa fa-exclamation-triangle"></i>';
            // 在键盘按下并释放及提交后验证提交表单
              $("#machine_form").validate({
-                 rules: {
+               rules: {
                    name:{
                       required: true,
                        maxlength: 64
                    },
                    sshIp:{
-                      required: true
+                      required: true,
+                      maxlength:15
                    },
                    areaId:{
                       required:true
@@ -269,25 +338,43 @@
                       required:true
                    },
                    maxContainer:{
-                      required:true
+                      required:true,
+                      digits:true,
+                        max:100
                    },
                     sshUser:{
-                      required:true
+                      required:true,
+                      maxlength:64
                    },
                    sshPassword:{
-                      required:true
+                      required:true,
+                       maxlength:64
                    },
                    room:{
-                     required:true
+                     required:true,
+                      maxlength:64
                    },
                    seat:{
-                     required:true
+                     required:true,
+                      maxlength:64
                    },
                    hddDev:{
-                    required:true
+                    required:function(){
+                       if($("#ssdDev").val() == ""){
+                          return true;
+                        }else{
+                          return false;
+                        }
+                    }
                    },
                    ssdDev:{
-                      required:true
+                      required:function(){
+                       if($("#hddDev").val() == ""){
+                          return true;
+                        }else{
+                          return false;
+                        }
+                    }
                    },
                    nicPhyType:{
                       required:true
@@ -295,41 +382,48 @@
                  },
                  messages: {
                    name:{
-                      required: "请输入主机名称",
-                       maxlength: "最大长度为64位"
+                      required: errorIcon+"请输入主机名称",
+                       maxlength: errorIcon+"最大长度为64位"
                    },
                    sshIp:{
-                      required: "请输入主机IP"
+                      required: errorIcon+"请输入主机IP",
+                      maxlength:errorIcon+"最大长度15位"
                    },
                    areaId:{
-                      required:"请选择所属区域"
+                      required:errorIcon+"请选择所属区域"
                    },
                    clusterId:{
-                      required:"请选择所属集群"
+                      required:errorIcon+"请选择所属集群"
                    },
                    maxContainer:{
-                      required:"请输入容器上限"
+                      required:errorIcon+"请输入容器上限",
+                      digits:errorIcon+"请输入整数",
+                        max:errorIcon+"最大数值不超过100"
                    },
                     sshUser:{
-                      required:"请输入SSH用户名"
+                      required:errorIcon+"请输入SSH用户名",
+                       maxlength:errorIcon+"最大长度为64位"
                    },
                    sshPassword:{
-                      required:"请输入SSH密码"
+                      required:errorIcon+"请输入SSH密码",
+                       maxlength:errorIcon+"最大长度为64位"
                    },
                    room:{
-                     required:"请输入机房"
+                     required:errorIcon+"请输入机房",
+                      maxlength:errorIcon+"最大长度为64位"
                    },
                    seat:{
-                     required:"请输入机位"
+                     required:errorIcon+"请输入机位",
+                      maxlength:errorIcon+"最大长度为64位"
                    },
                    hddDev:{
-                    required:"请输入HDD设备"
+                    required:errorIcon+"请输入HDD设备"
                    },
                    ssdDev:{
-                      required:"请输入SSD设备"
+                      required:errorIcon+"请输入SSD设备"
                    },
                   nicPhyType:{
-                      required:"请选择网卡类型"
+                      required:errorIcon+"请选择网卡类型"
                    }
                   
                  }
@@ -341,24 +435,14 @@
 
 
      function ajaxMain(){
-      	  var params = $("#machine_form").serializeObject();
+        var id = $("#jqgrid").jqGrid('getGridParam','selrow');
+      	var params = $("#machine_form").serializeObject();
       	params.maxContainer = Number(params.maxContainer);
-      	if(params.ssdDev==""){
-      		params.ssdDev=null;
-      	}if(params.sanId==""){
-      	
-      		params.sanId=null;
-      	}
       	  debugger;
       	  console.log(params);
-      	  
-      	  if(params.sanId==""){
-      		params.sanId = null;
-      	  }
-      	  console.log(params);
       	  $.ajax({
-                url:host+"/upm_api/v1.0/hosts",
-                method: "post",
+                url:host+"/upm_api/v1.0/hosts/"+id,
+                method: "put",
                 async: true,
                 contentType: "application/json; charset=utf-8",
                 data:JSON.stringify(params),
@@ -368,7 +452,7 @@
                 	$('#loading').showLoading();
                 },
                 success: function(result, status, xhr) {
-                  	
+                  debugger;
                    changenfsData(result);
                 },
                 error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -382,7 +466,6 @@
         }
 
         function changenfsData(obj_data){
-    	  if(obj_data.result!=""){
             switch (obj_data.result){
               case 1:
             	  alert("成功信息:"+obj_data.msg);
@@ -400,7 +483,6 @@
               default:
             	  alert("测试代码");
             }
-    	  }
         }
       </script>
 </body>

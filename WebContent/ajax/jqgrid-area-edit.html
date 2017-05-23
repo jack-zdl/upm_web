@@ -107,7 +107,6 @@
             data:params,
             dataType: "json",
             success: function(result, status, xhr) {
-              debugger;
              changeAreaData(result);
            },
            error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -210,12 +209,15 @@
                 }
 
               function getNfsSelf(){
+debugger;
+  console.log("id="+id);
                 $.ajax({
-                  url:host+"/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1&id="+id,
+                  url:host+"/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1&id="+rowData.backupStorageId,
                   method: "get",
                   async: true,
                   dataType: "json",
                   success: function(result, status, xhr) {
+                    debugger
                     setOption(result);
                   },
                   error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

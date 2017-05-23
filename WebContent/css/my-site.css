@@ -1,0 +1,16 @@
+
+.icon-delete-img { margin: 0px 3px 0px 0px; height: 15px; max-width: 30px; left: 100px; text-align: right; }
+
+.table-in-table { width: 100%; height: 100%; }
+
+.first-td-title { text-align: right; width: 60px; padding: 10px 0px 0px 0px; }
+
+.first-td-position { text-align: right; width: 60px; padding: 0px 0px 10px 0px; }
+
+.second-td-name { text-align: left; padding: 10px 0px 1px 0px; }
+
+.second-td-position { text-align: left; width: 60px; padding: 0px 0px 10px 0px; }
+
+.icon-light { height: 20px; width: 30px; padding: 3px 0px 1px 0px; }
+
+.table-in-table tr td:last-child { width: 50px; }
