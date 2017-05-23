@@ -386,6 +386,14 @@ getXMLRequester();
 					}
 			});
 
+			$("#cluster-search").click(function(){
+				alert("提示信息:查询成功");
+				$("#pjqgrid").html("");
+				var html="<table id='jqgrid'></table>"
+				$("#pjqgrid").append(html);
+				getAreaData();
+			});
+
 			function setDefintionList(cellvalue, options, rowObject){
 				var data = "";
 				for(var  i =0 ; i < cellvalue.length; i++){
@@ -396,9 +404,9 @@ getXMLRequester();
 
 			function imageLink(cellvalue, options, rowObject){
 	        		if(cellvalue === true){
-	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        			return "<div  value='"+rowObject.id+"'><img style='width:20px;hight:20px;' src='img/icon/checked.png' alt='enabled'></div>";
 	        		}else{
-	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        			return "<div  value='"+rowObject.id+"'  ><img style='width:20px;hight:20px;' src='img/icon/cancel.png' alt='disabled'></div>";
 	        		}
 	    	}
 
@@ -554,13 +562,7 @@ getXMLRequester();
        
 	}
 
-	$("#cluster-search").click(function(){
-		alert("提示信息:查询成功");
-		$("#pjqgrid").html("");
-		var html="<table id='jqgrid'></table>"
-		$("#pjqgrid").append(html);
-		pagefunction();
-	});
+	
 
 </script>
 </body>

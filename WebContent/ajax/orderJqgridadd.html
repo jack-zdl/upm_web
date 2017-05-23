@@ -107,7 +107,6 @@ form table td input {width:180px;height:25px}
     </script>
      <script type="text/javascript">
      $("#ajax-btn").click(function (){
-    	 debugger;
          var serviceid=$("#serviceNameId").val();
          var params = $("#order-form").serializeObject();
         
@@ -129,7 +128,6 @@ form table td input {width:180px;height:25px}
                	$('#loading').showLoading();
                },
                success: function(result, status, xhr) {
-                   debugger;
                   changenfsData(result);
                },
                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

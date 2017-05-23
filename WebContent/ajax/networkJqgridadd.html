@@ -122,7 +122,6 @@
 	                	$('#loading').showLoading();
 	                },
                   success: function(result, status, xhr) {
-                    debugger;
                     var json;
                     console.log(json);
                     for(i in result){                     
@@ -150,7 +149,6 @@
                   async: true,
                   dataType: "json",
                   success: function(result, status, xhr) {
-                    debugger;
                     var data;
                     for(i in result){                     
                       data=result[i];
@@ -388,7 +386,6 @@
         console.log(params);
         params.vlanId = Number(params.vlanId);
         params.prefix = Number(params.prefix);
-        debugger;
         console.log(params);
         $.ajax({
               url:host+ "/upm_api/v1.0/networkings",

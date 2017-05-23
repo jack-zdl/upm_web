@@ -917,7 +917,6 @@ getXMLRequester();
 	                async: true,
 	                dataType: "json",
 	                success: function(result, status, xhr) {
-	                	debugger;
 	                	changeData(result);
 	                },
 	                error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -983,7 +982,6 @@ getXMLRequester();
 	            async: true,
 	            dataType: "json",
 	            success: function(result, status, xhr) {
-	            	debugger;
 	            	changeData(result);
 	            },
 	            error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -1405,10 +1403,20 @@ getXMLRequester();
 	            	
 			    	 //处理数据逻辑，将原始数据转换为可以添加到图的数据
 			    	function changeAfterData(obj_data,obj_option){
+			    		debugger;
+			    		 for(var k =0;k< obj_data.length;k++){
+			    		 	for(var ke in obj_data[k]){
+			    		 		if(ke === "warning"){
+									delete  obj_data[k];
+			    		 		}
+			    		 	}
+			    		 		
+			    		 }
 			    		var datalength = obj_data.length;
 			    		//var dataArray  = [];
 			    		//查询几个线的数据即几个对象{"key":[{}{}],"key":[{},{}]}一共二个
 			    		for (var i = datalength - 1; i >= 0; i--) {
+
 			    			for(var key in obj_data[i]){
 			    				obj_option.series[i]={};
 			    				var name =null;

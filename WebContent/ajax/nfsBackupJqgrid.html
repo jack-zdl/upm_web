@@ -43,6 +43,9 @@
 
 	
 </script>
+<style type="text/css">
+	.ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+</style>
 <div class="row">
 
 	<!-- col -->
@@ -379,11 +382,21 @@ function pagefunction(url) {
 				}
 		});
 
+				//查询函数
+		//坑定是关键字的模糊查询，向页面获取输入的内容传递到url中
+		$("#submitButton").click(function (){
+				alert("提示信息:查询成功");
+				$("#jqgridTable").html("");
+				var html="<table id='jqgrid'></table>";
+				$("#jqgridTable").append(html);
+				nfsMainFun();
+		});
+
 		function imageLink(cellvalue, options, rowObject){
 	        	if(cellvalue === "是"){
-	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        		return "<div  value='"+rowObject.id+"'><img style='width:20px;hight:20px;' src='img/icon/checked.png' alt='enabled'></div>";
 	        	}else if(cellvalue === "否"){
-	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        		return "<div  value='"+rowObject.id+"'  ><img style='width:20px;hight:20px;' src='img/icon/cancel.png' alt='disabled'></div>";
 	        	}
 	    }
 		//建立表格
@@ -525,14 +538,8 @@ function pagefunction(url) {
     	}
 		// end changenfsData
 		function getnfsData(){
-			var data;
-			if(typeof(url) =="undefined"){
-				nfsUrl = host+"/upm_api/v1.0/backup-storages?site_id="+siteId;
-			}else{
-				nfsUrl=url;
-			}
 			$.ajax({
-				url:nfsUrl,
+				url:host+"/upm_api/v1.0/backup-storages?site_id="+siteId,
 				method: "get",
 				async: false,
 				dataType: "json",
@@ -578,21 +585,6 @@ function pagefunction(url) {
 
 
 		
-//查询函数
-//坑定是关键字的模糊查询，向页面获取输入的内容传递到url中
-$("#submitButton").click(function (){
-	if($("#item_nm").val() === ""){
-		alert("备份储存名称不能为空");
-	}else if($("#item_nm").val().length >= 64){
-		alert("备份储存名称最大长度不能超过64位");
-	}else{
-		alert("提示信息:查询成功");
-		$("#jqgridTable").html("");
-		var html="<table id='jqgrid'></table>";
-		$("#jqgridTable").append(html);
-		pagefunction("/upm_api/v1.0/backup-storages/f12ea1a750c64121832c143a890d4599");
-	}
-	
-});
+
 </script>
 

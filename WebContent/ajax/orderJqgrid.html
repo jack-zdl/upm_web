@@ -121,7 +121,6 @@
 <script src="host.js"></script>
 <script type="text/javascript">
 function linkTask(obj_id){
-	debugger;
 	$.ajax({
     	url:host+"/upm_api/v1.0/tasks?objName="+obj_id.value,
         method: "get",
@@ -132,7 +131,6 @@ function linkTask(obj_id){
         	$('#loading').showLoading();
         },
         success: function(result, status, xhr) {
-        	debugger;
            changeDeleteAreaData(result);
         },
         error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
@@ -148,7 +146,6 @@ function linkTask(obj_id){
     	switch (obj_data.result){
     		case 1:
     		 	console.log("成功信息"+obj_data.msg);
-    		 	debugger;
     		 	if(obj_data.data[0] != null){
     		 		setTaskDialogText(obj_data.data);
         		 	$('#dialog_simple_task').dialog('open');	
@@ -180,19 +177,22 @@ function linkTask(obj_id){
 				datatype : "local",
 				width : 870,
 				height : 'auto',
-				colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
-				colModel : [
-					{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
-					{ name : "objType", index : "objType",align:"center"  },
-					{ name : "objName", index : "objName" ,align:"center" },
-					{ name : "actionType", index : "actionType",align:"center"  },
-					{ name : "statusText", index : "statusText",align:"center" },
-					{ name : "msg", index : "msg" ,align:"center" }
+				colNames : [ "所属者","操作时间" ,"对象类型","对象名称","任务类型","状态","回执信息"],
+					colModel : [
+					{ name : "createLoginUserName", index : "createLoginUserName",align:"center",width:20},
+					{ name : "startDateTime", index : "startDateTime",align:"center",width:25 },
+					{ name : "objType", index : "objType",align:"center" ,width:20 },
+					{ name : "objName", index : "objName" ,align:"center" ,width:40},
+					{ name : "actionType", index : "actionType",align:"center"  ,width:25},
+					{ name : "statusText", index : "statusText",align:"center" ,width:25},
+					{ name : "msg", index : "msg" ,align:"center" ,width:50}
 					],
-				rowNum : 10000,
-				toolbarfilter: true,
-				viewrecords : true,
-				editurl : "dummy.html",
+					rowNum : 100000,
+					toolbarfilter: true,
+					viewrecords : true,
+					forceFit :true,
+					height:300,
+					editurl : "dummy.html",
 			});
  		}else{
  			jQuery("#jqgrid-task").setGridParam({
@@ -233,10 +233,17 @@ $('#dialog_simple_task').dialog({
 		function run_jqgrid_function() {
 			
 			function cLink(cellvalue, options, rowObject){
-				debugger;
 				return "<button class='btn btn-xs btn-default'  value='"+rowObject.servBusinessName+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
 			}
 			
+	 		$("#submitButton").click(function (){
+	     		alert("提示信息:查询成功");
+				$("#jqgridTable").html("");
+				var html="<table id='jqgrid'></table>"
+				$("#jqgridTable").append(html);
+				getorderData();
+	     	});
+
 			function setJqgrid(obj_after_data){
 				
 				if($("#jqgrid tr:visible").length==0){
@@ -249,7 +256,9 @@ $('#dialog_simple_task').dialog({
 						{ name : 'siteName', index : 'siteName', editable : true }, 
 						{ name : 'servBusinessName', index : 'servBusinessName', editable : true }, 
 						{ name : 'createLoginUserName', index : 'createLoginUserName', editable : true }, 
-						{ name : 'dataDirSize', index : 'dataDirSize',  editable : true }, 
+						{ name : 'dataDirSize', index : 'dataDirSize',  editable : true , formatter : function(value, options, rData){
+						return value + ""+rData['sizeUnit'];
+					} }, 
 						{ name : 'softwareName', index : 'softwareName', editable : true },
 						{ name : 'archName', index : 'archName', editable : true },
 						{ name : 'scaleName', index : 'scaleName', editable : true },
@@ -419,6 +428,7 @@ $('#dialog_simple_task').dialog({
 
 		});
 
+
 		$('#dialog_simple').dialog({
 			autoOpen : false,
 			width : 300,
@@ -447,7 +457,7 @@ $('#dialog_simple_task').dialog({
 		});
 
 			
-	     	function deleteorder(obj_id){	
+	     function deleteorder(obj_id){	
 	     		$.ajax({
              		url:host+"/upm_api/v1.0/orders/"+obj_id,
 	                method: "delete",
@@ -481,8 +491,9 @@ $('#dialog_simple_task').dialog({
 	                	$('#loading').hideLoading();
 	                }
          	});
-	     	}
-	     	 $('#dialog_audit').click(function() {
+	     }
+
+	    $('#dialog_audit').click(function() {
 	     		  var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 	     		  if(id == null){
 	     			  alert("请选择一条数据");
@@ -492,9 +503,9 @@ $('#dialog_simple_task').dialog({
 	     		  }
 	 		
 	   	
-	 		});
+	 	});
 
-	 		$('#dialog_simple_audit').dialog({
+	 	$('#dialog_simple_audit').dialog({
 	 			autoOpen : false,
 	 			width : 300,
 	 			resizable : false,
@@ -520,6 +531,7 @@ $('#dialog_simple_task').dialog({
 	 				}
 	 			}]
 	 		});
+
 	 		function orderaudit(obj_id){
 	     		$.ajax({
              		url:host+"/upm_api/v1.0/orders/"+obj_id+"/audit",
@@ -558,7 +570,7 @@ $('#dialog_simple_task').dialog({
          	});
 	     	}
 	 		//执行
-	 		 $('#dialog_execution').click(function() {
+	 		$('#dialog_execution').click(function() {
 	 			var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 	 			if(id == null){
 	 				alert("请选择一条数据");
@@ -592,6 +604,7 @@ $('#dialog_simple_task').dialog({
 	 				}
 	 			}]
 	 		});
+
 	 		function orderexecution(obj_id,val){
 	     		$.ajax({
              		url:host+"/upm_api/v1.0/orders/"+obj_id+"/execution",
@@ -631,13 +644,7 @@ $('#dialog_simple_task').dialog({
 	     	}
 	 		
 
-	     	$("#submitButton").click(function (){
-	     		alert("提示信息:查询成功");
-				$("#jqgridTable").html("");
-				var html="<table id='jqgrid'></table>"
-				$("#jqgridTable").append(html);
-				pagefunction();
-	     	})
+	     	
 
 </script>
 <script type="text/javascript" src="js/plugin/jqgrid/grid.locale-en.min.js"></script>

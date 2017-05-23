@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en-us" id="extr-page">
+	<head>
+		<meta charset="utf-8">
+		<title> SmartAdmin (AJAX)</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		
+		<!-- #CSS Links -->
+		<!-- Basic Styles -->
+		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
+
+		<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production-plugins.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.min.css">
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
+		<!-- SmartAdmin RTL Support -->
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-rtl.min.css"> 
+		<!-- <link rel="stylesheet" type="text/css" href="css/my-site.css"> -->
+
+		<!-- We recommend you use "your_style.css" to override SmartAdmin
+		     specific styles this will also ensure you retrain your customization with each SmartAdmin update.
+		<link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
+
+		<!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
+		<link rel="stylesheet" type="text/css" media="screen" href="css/demo.min.css">
+
+		<!-- #FAVICONS -->
+		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
+
+		<!-- #GOOGLE FONT -->
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+		<!-- #APP SCREEN / ICONS -->
+		<!-- Specifying a Webpage Icon for Web Clip 
+			 Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+		<link rel="apple-touch-icon" href="img/splash/sptouch-icon-iphone.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="img/splash/touch-icon-ipad.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="img/splash/touch-icon-iphone-retina.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="img/splash/touch-icon-ipad-retina.png">
+		
+		<!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<!-- Startup image for web apps -->
+		<link rel="apple-touch-startup-image" href="img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+		<link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+		<link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+		<style type="text/css">
+	
+		/*.table tr{
+			padding:5px;
+		}
+		.site-table{
+			border: 1px solid #C0C0C0;
+		}*/
+		.icon-delete { width: 50px; }
+
+		.icon-delete-img { margin: 0px 0px 0px 0px; height: 15px; max-width: 30px; left: 100px; text-align: right; }
+		.border-site{
+			border-top: 1px solid #C0C0C0;
+		}
+		.site-table{
+			border:  1px solid #C0C0C0;
+		}
+		.table>tbody>tr>td{
+			border-top:0px solid #ddd ;
+			margin: 10px;
+		}
+		.table{
+			
+		}
+		</style>
+
+	</head>
+	<body id="login">
+		<!-- possible classes: minified, no-right-panel, fixed-ribbon, fixed-header, fixed-width-->
+		<header id="header">
+			<!--<span id="logo"></span>-->
+
+			<div id="logo-group">
+				<span id="logo"> <img src="img/logo.png" alt="SmartAdmin"> </span>
+
+				<!-- END AJAX-DROPDOWN -->
+			</div>
+
+			<!-- <span id="extr-page-header-space"> <span class="hidden-mobile hidden-xs">请选择站点！</span> <a href="login.html" > </span> -->
+				<!-- class="btn btn-danger">Sign In</a>-->
+		</header>
+
+		<div id="main" role="main">
+
+			<!-- MAIN CONTENT -->
+			<div id="content" class="container">
+
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 hidden-xs hidden-sm">
+						
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+						<div class="site-action" >
+							<button class="btn btn-default btn-success" id="jqgrid-site-add" >新增</button>
+					
+							<button class="btn btn-default btn-danger" id="jqgrid-site-delete" >删除</button>
+									<button class="btn btn-default btn-info"  id="jqgrid-site-manage" >管理</button>
+						</div>
+						<br>
+						<div class="layout-table-site" id="table-site">
+						<div class="border-site"></div>
+							<table id="siteTable" class="table">
+								
+							</table>
+						</div>
+						
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-1 col-lg-1 hidden-xs hidden-sm">
+						
+
+						
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		
+
+<div style="overflow-x:auto; " class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog" role="document"  style="width:700px;">
+<div class="modal-content">
+</div>
+</div>
+</div>
+
+<div id="dialog_simple" title="Dialog Simple Title">
+	<p >
+		确认注销
+	</p>
+</div>
+<div id="dialog_simple_manage" title="Dialog Simple Title">
+	<p >
+		设置为默认站点
+		且进入管理页面
+	</p>
+</div>
+
+
+		<!--================================================== -->	
+
+		<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+		<script src="js/plugin/pace/pace.min.js"></script>
+
+	    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+	 	<script src="js/libs/jquery-2.1.1.min.js"></script>
+		<script src="js/libs/jquery-ui-1.10.3.min.js"></script>
+		<!-- IMPORTANT: APP CONFIG -->
+		<script src="js/app.config.js"></script>
+
+		<!-- JS TOUCH : include this plugin for mobile drag / drop touch events 		
+		<script src="js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script> -->
+
+		<!-- BOOTSTRAP JS -->		
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+
+		<!-- JQUERY VALIDATE -->
+		<script src="js/plugin/jquery-validate/jquery.validate.min.js"></script>
+		<script src="js/plugin/my/jquery.serialize-object.min.js" type="text/javascript" ></script>
+		
+		<!-- JQUERY MASKED INPUT -->
+		<script src="js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+		<script type="text/javascript" src="js/plugin/my/cookie.js"></script>
+		
+		<!--[if IE 8]>
+			
+			<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+			
+		<![endif]-->
+
+		<!-- MAIN APP JS FILE -->
+		<script src="js/app.min.js"></script>
+		<script type="text/javascript" src="host.js"></script>
+		<script type="text/javascript">
+			function siteMain(){
+				//传递的站点的json数组
+				function setSiteGrid(obj_data){
+					debugger;
+					var siteGridCeil=  Math.ceil(obj_data.length/3); 
+					var siteGrid = obj_data.length%3;
+					for (var i = 0;i<siteGridCeil;i++) {
+						var tr = "<tr class='siteTable'></tr>";
+						$("#siteTable").append(tr);
+					}
+
+					var td = "<td  class='site-table' ></td>";
+					var threeTd = "<td  class='site-table'></td><td  class='site-table'></td><td  class='site-table'></td>";
+
+					var table ="<table ><tr><td><table><tr><td ><b>站点名称：</b></td><td value=''  onclick='siteTbale(this)' class='siteName'></td><td></td></tr><tr><td ><b>地理名称：</b></td><td class='siteSeat'></td></tr><tr><td>状    态：</td><td vlue='' class='site-status'></td></tr></table></td></tr></table>";
+
+					$(".siteTable").each(function(index,el){
+						debugger;
+						if(index < siteGridCeil){
+							$(this).append(threeTd);
+						}else{
+							debugger;
+							for(var p = 0;p<siteGrid;p++){
+								debugger;
+								$(this).append(td);
+							}
+						}
+					});
+					// for(var j = 0; j<obj_data.length;j++){
+					// 	$(".siteTable").append(td);
+					// }
+					$(".site-table").append(table);
+
+					$(".siteName").each(function(index,el){
+						$(this).html(obj_data[index].name);
+						$(this).attr("value",obj_data[index].id);
+					});
+					
+					$(".siteSeat").each(function(index,el){
+						$(this).html(obj_data[index].regionText);
+						$(this).attr("value",obj_data[index].regionCode);
+					});
+
+					$(".site-status").each(function(index,el){
+						$(this).html(obj_data[index].mgmStatusText);
+						$(this).attr("value",obj_data[index].mgmStatusCode);
+					});
+
+						// $(".siteName").html(obj_data[k].name);
+						// 	$(".siteName").attr("value",obj_data[k].id);
+						// 	$(".siteSeat").html(obj_data[k].regionText);
+						// 	$(".siteSeat").attr("value",obj_data[k].regionCode);
+						// 	$(".site-status").html(obj_data[k].mgmStatusText);
+						// 	$(".site-status").attr("value",obj_data[k].mgmStatusCode);
+						
+				}
+					
+			
+				
+				function getSiteData(){
+					$.ajax({
+						url:host+ "/upm_api/v1.0/sites",
+						method: "get",
+						async: true,
+						dataType: "json",
+						timeout:30000,
+						success: function(result, status, xhr) {
+							changeData(result);
+						},
+						error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+							alert("未连接服务器");
+							console.error("未连接服务器 =" + status);
+						}
+					});
+
+					function changeData(obj_data){
+						switch (obj_data.result){
+							case 1:
+							setSiteGrid(obj_data.data);
+							break;
+							case 0:
+							alert("警告信息"+obj_data.msg);
+							
+							console.warn("警告信息"+obj_data.msg);
+							break;
+							case -1:
+							alert("错误信息"+obj_data.msg);
+							console.error("错误信息"+obj_data.msg);
+							break;
+							case -9:
+							console.error("错误信息"+obj_data.msg);
+							window.location="login.html";
+							break;
+							default:
+							console.log("返回result异常");
+						}
+					}
+
+				}
+				getSiteData();
+
+
+				var id =null;
+				function siteAction(){
+					
+					$('#dialog_simple').dialog({
+							autoOpen : false,
+							width : 300,
+							resizable : false,
+							modal : true,
+							title : "注销提示",
+							buttons : [{
+								html : "<i class='fa fa-trash-o'></i>&nbsp;注销",
+								"class" : "btn btn-danger",
+								click : function() {
+									deleteSite(id);
+									id = null;					
+									$(this).dialog("close");
+								}
+							}, {
+								html : "<i class='fa fa-times'></i>&nbsp;取消",
+								"class" : "btn btn-default",
+								click : function() {
+
+									$(this).dialog("close");
+								}
+							}]
+					});
+
+					
+
+
+					function addForm(name){
+						$('#myModal').modal({
+							remote:name+'.html',
+							show	:true
+						}).on("hidden.bs.modal", function() {  
+							$(this).removeData("bs.modal"); 
+							 getAreaData();
+						});
+					}
+
+				
+
+					$("#jqgrid-site-add").click(function(){
+						addForm("site-add");
+					});
+
+				}
+				siteAction();
+			}
+			siteMain();
+
+				function deleteSite(){
+						$.ajax({
+								url:host+"/upm_api/v1.0/sites/"+id,
+								method: "delete",
+								async: true,
+								dataType: "json",
+								timeout:30000,
+								success: function(result, status, xhr) {
+									changemachineData(result);
+								},
+								error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {
+									alert("未连接服务器");
+									alert("未连接服务器 =" + status);
+								}
+						});
+						function changemachineData(){
+							switch (obj_data.result){
+								case 1:
+								alert("成功消息"+obj_data.msg);
+								break;
+								case 0:
+								alert("警告信息"+obj_data.msg);
+								setJqgrid([]);
+								break;
+								case -1:
+								alert("错误信息"+obj_data.msg);
+								break;
+								case -9:
+								alert("错误信息"+obj_data.msg);
+								window.location="login.html";
+								break;
+								default:
+								alert("测试代码");
+							}
+						}
+					}
+
+					$("#jqgrid-site-delete").click(function(){
+						if(id === null){
+							alert("请选择一条数据");
+						}else{
+							$('#dialog_simple').dialog('open');
+						}
+					});
+
+					$("#jqgrid-site-manage").click(function(){
+						debugger;
+						if(id === null){
+							alert("请选择一条数据");
+						}else{
+							$('#dialog_simple_manage').dialog('open');
+						}
+					});
+					$('#dialog_simple_manage').dialog({
+							autoOpen : false,
+							width : 300,
+							resizable : false,
+							modal : true,
+							title : "确认提示",
+							buttons : [{
+								html : "<i class='fa fa-trash-o'></i>&nbsp;确认",
+								"class" : "btn btn-danger",
+								click : function() {
+									debugger;
+									$.cookie("siteId",id);	
+									window.location="index.html#ajax/dashboard.html";		
+									$(this).dialog("close");
+								}
+							}, {
+								html : "<i class='fa fa-times'></i>&nbsp;取消",
+								"class" : "btn btn-default",
+								click : function() {
+
+									$(this).dialog("close");
+								}
+							}]
+					});
+
+			function siteTbale(obj_id){
+				id = $(obj_id).attr("value");
+
+			}
+			
+		</script>
+
+	</body>
+</html>

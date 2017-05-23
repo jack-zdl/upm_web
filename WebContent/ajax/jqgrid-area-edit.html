@@ -209,7 +209,6 @@
                 }
 
               function getNfsSelf(){
-debugger;
   console.log("id="+id);
                 $.ajax({
                   url:host+"/upm_api/v1.0/selections/backup-storages?site_id="+siteId+"&enabled=1&id="+rowData.backupStorageId,
@@ -217,7 +216,6 @@ debugger;
                   async: true,
                   dataType: "json",
                   success: function(result, status, xhr) {
-                    debugger
                     setOption(result);
                   },
                   error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

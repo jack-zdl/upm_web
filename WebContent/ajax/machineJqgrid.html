@@ -41,6 +41,9 @@
 	getXMLRequester();
 </script>
 <meta charset="utf-8">
+<style type="text/css">
+	.ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+</style>
 <div class="row">
 
 	<!-- col -->
@@ -159,11 +162,15 @@
 		确认停用
 	</p>
 </div>
-<div id="dialog_simple_task" title="Dialog Simple Title">
-	<div id="pjqgrid-task" class="tab-pane">
+
+
+
+<div style="overflow-x:auto; width:800px;"  id="dialog_simple_task" title="Dialog Simple Title">
+	<div id="pjqgrid-task" style="width:700px;" class="tab-pane">
 		<table id="jqgrid-task" ></table>
 	</div>
 </div>
+
 <script type="text/javascript">
 	function linkTask(obj_id){
 		$.ajax({
@@ -222,18 +229,21 @@
 					datatype : "local",
 					width : 870,
 					height : 'auto',
-					colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
+					colNames : [ "所属者","操作时间" ,"对象类型","对象名称","任务类型","状态","回执信息"],
 					colModel : [
-					{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
-					{ name : "objType", index : "objType",align:"center"  },
-					{ name : "objName", index : "objName" ,align:"center" },
-					{ name : "actionType", index : "actionType",align:"center"  },
-					{ name : "statusText", index : "statusText",align:"center" },
-					{ name : "msg", index : "msg" ,align:"center" }
+					{ name : "createLoginUserName", index : "createLoginUserName",align:"center",width:20},
+					{ name : "startDateTime", index : "startDateTime",align:"center",width:25 },
+					{ name : "objType", index : "objType",align:"center" ,width:20 },
+					{ name : "objName", index : "objName" ,align:"center" ,width:40},
+					{ name : "actionType", index : "actionType",align:"center"  ,width:25},
+					{ name : "statusText", index : "statusText",align:"center" ,width:25},
+					{ name : "msg", index : "msg" ,align:"center" ,width:50}
 					],
-					rowNum : 10000,
+					rowNum : 100000,
 					toolbarfilter: true,
 					viewrecords : true,
+					forceFit :true,
+					height:300,
 					editurl : "dummy.html",
 				});
 			}else{
@@ -243,6 +253,7 @@
 				}).trigger("reloadGrid");
 
 			}
+			//jQuery("#jqgrid-task").jqGrid('setGridHeight',200);
 		}
 	}
 	$('#dialog_simple_task').dialog({
@@ -255,6 +266,9 @@
 			html : "<i class='fa fa-check'></i>&nbsp;确定",
 			"class" : "btn btn-primary",
 			click : function() {
+				$("#pjqgrid-task").html("");
+				var html="<table id='jqgrid-task'></table>";
+				$("#pjqgrid-task").append(html);
 				$(this).dialog("close");
 			}
 		}]
@@ -348,7 +362,6 @@
 					html : "<i class='fa fa-times'></i>&nbsp;取消",
 					"class" : "btn btn-default",
 					click : function() {
-
 						$(this).dialog("close");
 					}
 				}]
@@ -569,11 +582,21 @@
 					});
 				});
 
+				
+			$("#submitButton").click(function (){
+				alert("提示信息:查询成功");
+				$("#jqgridTable").html("");
+				var html="<table id='jqgrid'></table>";
+				$("#jqgridTable").append(html);
+				getmachineData();
+			});
+
+
 	     	function imagesCLink(cellvalue, options, rowObject){
 	     		if(cellvalue === true){
-	     			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	     			return "<div  value='"+rowObject.id+"'><img style='width:20px;hight:20px;' src='img/icon/checked.png' alt='enabled'></div>";
 	     		}else{
-	     			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	     			return "<div  value='"+rowObject.id+"'  ><img style='width:20px;hight:20px;' src='img/icon/cancel.png' alt='disabled'></div>";
 	     		}
 	     	}
 
@@ -742,14 +765,6 @@
 
 
 
-	$("#submitButton").click(function (){
-		alert("提示信息:查询成功");
-		$("#jqgridTable").html("");
-		var html="<table id='jqgrid'></table>"
-		$("#jqgridTable").append(html);
-		pagefunction();
-	})
-
 
 	$('#dialog_simple_add').dialog({
 		autoOpen : false,
@@ -761,7 +776,6 @@
 			html : "<i class='fa fa-check'></i>&nbsp;入库",
 			"class" : "btn btn-primary",
 			click : function() {
-				debugger;
 				var id = $("#jqgrid").jqGrid('getGridParam','selrow');
 					//var selectedIds = $("#jqgrid").jqGrid("getGridParam", "selarrrow");
 					//for(i in selectedIds){
@@ -781,8 +795,8 @@
 				}
 			}]
 		});
+
 	function addmachine(obj_id){
-		
 		$.ajax({
 			url:host+ "/upm_api/v1.0/hosts/"+obj_id+"/input",
 			method: "put",

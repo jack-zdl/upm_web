@@ -40,6 +40,9 @@ function getXMLRequester( ){
 }
 getXMLRequester();
 </script>
+<style type="text/css">
+	.ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+</style>
 </head>
 <body>
 <div class="row">
@@ -200,26 +203,35 @@ getXMLRequester();
 						run_jqgrid_function();
 					}
 				});
-	     	
+	     	$("#search").click(function(){
+				alert("提示信息:查询成功");
+				$("#pjqgrid").html("");
+				var html="<table id='jqgrid'></table>"
+				$("#pjqgrid").append(html);
+				getAreaData();
+			});
+
 			function setJqgrid(obj_after_data){
 				if($("#jqgrid tr:visible").length==0){
 					jQuery("#jqgrid").jqGrid({
 						data : obj_after_data,
 						datatype : "local",
 						height : 'auto',
-						colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
+						colNames : [ '所属者', '操作时间','对象类型','对象名称','任务类型','状态','回执信息'],
 						colModel : [
-							{ name : "createLoginUserName", index : "createLoginUserName" },
-							{ name : "objType", index : "objType" },
-							{ name : "objName", index : "objName" },
-							{ name : "actionType", index : "actionType" },
-							{ name : "statusText", index : "statusText"},
-							{ name : "msg", index : "msg" }
-							],
+								{ name : 'createLoginUserName', index : 'createLoginUserName',width:20},
+								{ name : 'startDateTime', index : 'startDateTime',width:25 },
+								{ name : 'objType', index : 'objType',width:20 },
+								{ name : 'objName', index : 'objName' ,width:40},
+								{ name : 'actionType', index : 'actionType'  ,width:25},
+								{ name : 'statusText', index : 'statusText' ,width:25},
+								{ name : 'msg', index : 'msg'  ,width:50}
+						],
 						rowNum : 10000,
 						toolbarfilter: true,
 						viewrecords : true,
 						editurl : "dummy.html",
+						forceFit :true,
 						caption : "任务列表",
 				//		multiselect : true,
 						rownumbers : true,
@@ -363,13 +375,8 @@ getXMLRequester();
        
 
 	}
-	  $("#search").click(function(){
-				alert("提示信息:查询成功");
-				$("#pjqgrid").html("");
-				var html="<table id='jqgrid'></table>"
-				$("#pjqgrid").append(html);
-				pagefunction();
-	        });
+
+	
 
 	//loadScript("js/plugin/jqgrid/grid.locale-en.min.js", pagefunction);
 

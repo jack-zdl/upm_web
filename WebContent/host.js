@@ -1,6 +1,6 @@
 //upm_api主机ip
-//var host="http://192.168.2.189:8080";
-var host="http://localhost:8080"
+var host="http://192.168.2.189:8080";
+//var host="http://localhost:8080"
 //var host="http://192.168.2.248:8080";
 
 

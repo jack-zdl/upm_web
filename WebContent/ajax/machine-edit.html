@@ -438,7 +438,6 @@ editMachine();
         var id = $("#jqgrid").jqGrid('getGridParam','selrow');
       	var params = $("#machine_form").serializeObject();
       	params.maxContainer = Number(params.maxContainer);
-      	  debugger;
       	  console.log(params);
       	  $.ajax({
                 url:host+"/upm_api/v1.0/hosts/"+id,
@@ -452,7 +451,6 @@ editMachine();
                 	$('#loading').showLoading();
                 },
                 success: function(result, status, xhr) {
-                  debugger;
                    changenfsData(result);
                 },
                 error: function(XMLHttpRequest, status, jqXHR, textStatus, e) {

@@ -401,11 +401,19 @@
 						 }
 				});
 
+				 $("#search").click(function(){
+					alert("提示信息:查询成功");
+				   	$("#pjqgrid").html("");
+				   	var html="<table id='jqgrid'></table>";
+				   	$("#pjqgrid").append(html);
+				   	getAreaData();
+	   			});
+
 				function imageLink(cellvalue, options, rowObject){
 	        		if(cellvalue === "是"){
-	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        			return "<div  value='"+rowObject.id+"'><img style='width:20px;hight:20px;' src='img/icon/checked.png' alt='enabled'></div>";
 	        		}else{
-	        			return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        			return "<div  value='"+rowObject.id+"'  ><img style='width:20px;hight:20px;' src='img/icon/cancel.png' alt='disabled'></div>";
 	        		}
 	    		}
 
@@ -567,20 +575,7 @@
        //	setTimeout(setTime,500);
    		}
 
-	   $("#search").click(function(){
-			 if($("#search-text").val() === ""){
-				//alert("区域名称不能为空");
-			}else if($("#item_nm").val().length >= 64){
-				alert("区域名称最大长度不能超过64位");
-			}else{
-				
-			}
-			alert("提示信息:查询成功");
-			   	$("#pjqgrid").html("");
-			   	var html="<table id='jqgrid'></table>";
-			   	$("#pjqgrid").append(html);
-			   	pagefunction();
-	   });
+	  
 
 </script>
 </body>

@@ -40,6 +40,9 @@ function getXMLRequester( ){
 }
 getXMLRequester();
 </script>
+<style type="text/css">
+	.ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+</style>
 </head>
 <body>
 <div class="row">
@@ -318,19 +321,22 @@ function linkTask(obj_id){
 				datatype : "local",
 				width : 870,
 				height : 'auto',
-				colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
-				colModel : [
-					{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
-					{ name : "objType", index : "objType",align:"center"  },
-					{ name : "objName", index : "objName" ,align:"center" },
-					{ name : "actionType", index : "actionType",align:"center"  },
-					{ name : "statusText", index : "statusText",align:"center" },
-					{ name : "msg", index : "msg" ,align:"center" }
+				colNames : [ "所属者","操作时间" ,"对象类型","对象名称","任务类型","状态","回执信息"],
+					colModel : [
+					{ name : "createLoginUserName", index : "createLoginUserName",align:"center",width:20},
+					{ name : "startDateTime", index : "startDateTime",align:"center",width:25 },
+					{ name : "objType", index : "objType",align:"center" ,width:20 },
+					{ name : "objName", index : "objName" ,align:"center" ,width:40},
+					{ name : "actionType", index : "actionType",align:"center"  ,width:25},
+					{ name : "statusText", index : "statusText",align:"center" ,width:25},
+					{ name : "msg", index : "msg" ,align:"center" ,width:50}
 					],
-				rowNum : 10000,
-				toolbarfilter: true,
-				viewrecords : true,
-				editurl : "dummy.html",
+					rowNum : 100000,
+					toolbarfilter: true,
+					viewrecords : true,
+					forceFit :true,
+					height:300,
+					editurl : "dummy.html",
 			});
  		}else{
  			jQuery("#jqgrid-task").setGridParam({

@@ -245,7 +245,6 @@
 			        data: JSON.stringify({"status":"approved","msg":null}),
 	                dataType: "json",
 	                success: function(result, status, xhr) {
-	                	debugger;
 						if(result.result==-1){
 							alert("提示信息："+result.msg)
 						}else if(result.result==0){
@@ -276,7 +275,6 @@
 			        data: JSON.stringify({"definitionSubServ":[{"id":"df_subserv_mysql"}]}),
 	                dataType: "json",
 	                success: function(result, status, xhr) {
-	                	debugger;
 						if(result.result==-1){
 							alert("提示信息："+result.msg)
 						}else if(result.result==0){
@@ -341,6 +339,14 @@
 	     			$('#dialog_simple').dialog('open');
 	     		}
 			});
+				
+	     	$("#submitButton").click(function (){
+	     		alert("提示信息:查询成功");
+				$("#jqgridTable").html("");
+				var html="<table id='jqgrid'></table>"
+				$("#jqgridTable").append(html);
+				getorderData();
+	     	});
 
 			function setJqgrid(obj_after_data){
 				if($("#jqgrid tr:visible").length==0){
@@ -353,7 +359,9 @@
 						{ name : 'siteName', index : 'siteName', editable : true }, 
 						{ name : 'servBusinessName', index : 'servBusinessName', editable : true }, 
 						{ name : 'createLoginUserName', index : 'createLoginUserName', editable : true }, 
-						{ name : 'dataDirSize', index : 'dataDirSize',  editable : true }, 
+						{ name : 'dataDirSize', index : 'dataDirSize',  editable : true , formatter : function(value, options, rData){
+						return value + ""+rData['sizeUnit'];
+					} }, 
 						{ name : 'backupDirSize', index : 'backupDirSize', editable : true },
 						{ name : 'softwareName', index : 'softwareName', editable : true },
 						{ name : 'archName', index : 'archName', editable : true },
@@ -362,17 +370,9 @@
 						rowNum : 10,
 						toolbarfilter: true,
 						viewrecords : true,
+						sortname:"所属站点",
+						autowidth:true,
 						sortorder : "asc",
-						gridComplete: function(){
-							var ids = jQuery("#jqgrid").jqGrid("getDataIDs");
-							for(var i=0;i < ids.length;i++){
-								var cl = ids[i];
-								be = "<button class='btn btn-xs btn-default' data-original-title='Edit Row' onclick=\"jQuery('#jqgrid').editRow('"+cl+"');\"><i class='fa fa-pencil'></i></button>";
-								se = "<button class='btn btn-xs btn-default' data-original-title='Save Row' onclick=\"jQuery('#jqgrid').saveRow('"+cl+"');\"><i class='fa fa-save'></i></button>";
-								ca = "<button class='btn btn-xs btn-default' data-original-title='Cancel' onclick=\"jQuery('#jqgrid').restoreRow('"+cl+"');\"><i class='fa fa-times'></i></button>";
-								jQuery("#jqgrid").jqGrid('setRowData',ids[i],{act:be+se+ca});
-							}
-						},
 						editurl : "dummy.html",
 						caption : "工单列表",
 						rownumbers : true,
@@ -498,14 +498,7 @@
 	 		
 
 	 		
-	 		
-	     	$("#submitButton").click(function (){
-	     		alert("提示信息:查询成功");
-				$("#jqgridTable").html("");
-				var html="<table id='jqgrid'></table>"
-				$("#jqgridTable").append(html);
-				pagefunction();
-	     	})
+	 	
 
 </script>
 <script type="text/javascript" src="js/plugin/jqgrid/grid.locale-en.min.js"></script>

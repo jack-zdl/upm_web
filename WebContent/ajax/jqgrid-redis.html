@@ -42,6 +42,9 @@ function getXMLRequester( ){
 }
 getXMLRequester();
 </script>
+<style type="text/css">
+	.ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+</style>
 </head>
 <body>
 <div class="row">
@@ -230,18 +233,21 @@ getXMLRequester();
 					datatype : "local",
 					width : 870,
 					height : 'auto',
-					colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
+					colNames : [ "所属者","操作时间" ,"对象类型","对象名称","任务类型","状态","回执信息"],
 					colModel : [
-						{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
-						{ name : "objType", index : "objType",align:"center"  },
-						{ name : "objName", index : "objName" ,align:"center" },
-						{ name : "actionType", index : "actionType",align:"center"  },
-						{ name : "statusText", index : "statusText",align:"center" },
-						{ name : "msg", index : "msg" ,align:"center" }
-						],
-					rowNum : 10000,
+					{ name : "createLoginUserName", index : "createLoginUserName",align:"center",width:20},
+					{ name : "startDateTime", index : "startDateTime",align:"center",width:25 },
+					{ name : "objType", index : "objType",align:"center" ,width:20 },
+					{ name : "objName", index : "objName" ,align:"center" ,width:40},
+					{ name : "actionType", index : "actionType",align:"center"  ,width:25},
+					{ name : "statusText", index : "statusText",align:"center" ,width:25},
+					{ name : "msg", index : "msg" ,align:"center" ,width:50}
+					],
+					rowNum : 100000,
 					toolbarfilter: true,
 					viewrecords : true,
+					forceFit :true,
+					height:300,
 					editurl : "dummy.html",
 				});
 	 		}else{
@@ -557,6 +563,14 @@ getXMLRequester();
 			   	addForm("ajax/jqgrid-area-add");
 			});
 
+			$("#search").click(function(){
+				alert("提示信息:查询成功");
+				$("#pjqgrid").html("");
+				var html="<table id='jqgrid'></table>";
+				$("#pjqgrid").append(html);
+				getAreaData();
+	        });
+
 			function accessPointListList(cellvalue, options, rowObject){
 				var data = "";
 				for(var  i =0 ; i < cellvalue.length; i++){
@@ -666,10 +680,6 @@ getXMLRequester();
 					jQuery("#jqgrid").jqGrid('setGridWidth', $("#content").width() );
 				});
 			}
-			
-			
-			
-			
 			
 			//停止mysql服务
 			function stopMysql(obj_id){
@@ -804,13 +814,7 @@ getXMLRequester();
        
 
 	}
-	  $("#search").click(function(){
-				alert("提示信息:查询成功");
-				$("#pjqgrid").html("");
-				var html="<table id='jqgrid'></table>";
-				$("#pjqgrid").append(html);
-				pagefunction();
-	        });
+	
 
 	//loadScript("js/plugin/jqgrid/grid.locale-en.min.js", pagefunction);
 

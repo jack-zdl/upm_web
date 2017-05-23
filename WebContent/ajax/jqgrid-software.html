@@ -39,6 +39,9 @@
 		}
 		getXMLRequester();
 	</script>
+	<style type="text/css">
+	.ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+</style>
 </head>
 <body>
 	<div class="row">
@@ -249,18 +252,21 @@
 					datatype : "local",
 					width : 870,
 					height : 'auto',
-					colNames : [ "所属者", "对象类型","对象名称","任务类型","状态","回执信息"],
+					colNames : [ "所属者","操作时间", "对象类型","对象名称","任务类型","状态","回执信息"],
 					colModel : [
-					{ name : "createLoginUserName", index : "createLoginUserName",align:"center" },
-					{ name : "objType", index : "objType",align:"center"  },
-					{ name : "objName", index : "objName" ,align:"center" },
-					{ name : "actionType", index : "actionType",align:"center"  },
-					{ name : "statusText", index : "statusText",align:"center" },
-					{ name : "msg", index : "msg" ,align:"center" }
+					{ name : "createLoginUserName", index : "createLoginUserName",align:"center",width:20},
+					{ name : "startDateTime", index : "startDateTime",align:"center",width:25 },
+					{ name : "objType", index : "objType",align:"center" ,width:20 },
+					{ name : "objName", index : "objName" ,align:"center" ,width:40},
+					{ name : "actionType", index : "actionType",align:"center"  ,width:25},
+					{ name : "statusText", index : "statusText",align:"center" ,width:25},
+					{ name : "msg", index : "msg" ,align:"center" ,width:50}
 					],
 					rowNum : 10000,
 					toolbarfilter: true,
 					viewrecords : true,
+					forceFit :true,
+					height:300,
 					editurl : "dummy.html",
 				});
 			}else{
@@ -498,15 +504,24 @@
 
          	});
 
+
+   			//软件镜像查询
+   			$("#search").click(function(){
+		   			$("#pjqgrid").html("");
+		   			var html="<table id='jqgrid'></table>"
+		   			$("#pjqgrid").append(html);
+		   			getAreaData();
+   			});
+
 	        function cLink(cellvalue, options, rowObject){
 	         		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  onclick=\"linkTask(this)\"><i class='fa fa-file-text'></i></button>";
 	        }
 
 	        function imageLink(cellvalue, options, rowObject){
 	        	if(cellvalue === true){
-	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-up'></i></button>";
+	        		return "<div  value='"+rowObject.id+"'><img style='width:20px;hight:20px;' src='img/icon/checked.png' alt='enabled'></div>";
 	        	}else{
-	        		return "<button class='btn btn-xs btn-default'  value='"+rowObject.id+"'  ><i class='fa fa-thumbs-down'></i></button>";
+	        		return "<div  value='"+rowObject.id+"'  ><img style='width:20px;hight:20px;' src='img/icon/cancel.png' alt='disabled'></div>";
 	        	}
 	        }
 
@@ -699,6 +714,8 @@
 	         			console.log("测试代码");
 	         		}
 	         	}
+	         	   	//软件查询
+   				
 
 	         	function iconLink(cellvalue, options, rowObject){
 	         		if(cellvalue === "mysql-logo.png"){
@@ -729,19 +746,8 @@
 	         				sortorder : "asc",
 	         				editurl : "dummy.html",
 	         				caption : "软件列表",
-								//	multiselect : true,
 								rownumbers : true,
 								autowidth : true
-									/* onSelectRow: function(id,status){   
-										if(status==false){  
-							                //      $("#jqgrid").resetSelection();
-							        			 jQuery("#jqgridSoftware").jqGrid('resetSelection');
-							                  }  
-										    
-										    return(true);
-										}, */
-
-
 									});
 	         		}else{
 	         			jQuery("#jqgridSoftware").setGridParam({
@@ -810,8 +816,14 @@
     			    })
 	    		}
 	    	}
-
 	    	getSoftwareFun();
+
+	    	$("#search-software").click(function(){
+		   			$("#pjqgridSoftware").html("");
+			   		var html="<table id='jqgridSoftware'></table>"
+		   			$("#pjqgridSoftware").append(html);
+   					getSoftwareFun();
+   			});
 
 		} // end function
 
@@ -824,33 +836,8 @@
 
    	}
 
-   	//软件镜像查询
-   	$("#search").click(function(){
-   		if($("#software-images-search-text").val() === ""){
-			alert("软件镜像名称不能为空");
-   		}else if($("#software-images-search-text").val().length >= 64){
-   			alert("软件镜像名称最大长度不能超过64位");
-   		}else{
-   			$("#pjqgrid").html("");
-   			var html="<table id='jqgrid'></table>"
-   			$("#pjqgrid").append(html);
-   			//getAreaData();
-   		}
-   	});
 
-   	//软件查询
-   	$("#search-software").click(function(){
-   		if($("#software-search-text").val() === ""){
-			alert("软件名称不能为空");
-   		}else if($("#software-search-text").val().length >= 64){
-   			alert("软件名称最大长度不能超过64位");
-   		}else{
-   			$("#pjqgridSoftware").html("");
-	   		var html="<table id='jqgridSoftware'></table>"
-   			$("#pjqgridSoftware").append(html);
-   			//getAreaData();
-   		}
-   	});
+
 
    </script>
 </body>
